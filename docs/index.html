@@ -1422,8 +1422,6 @@ function renderSmsList() {
 }
 
 function sendSms() {
-    // ... 下面不用动，sendSms 函数还是原来的
-function sendSms() {
     const contact = document.getElementById('sms-contact').value.trim() || '未知号码';
     const content = document.getElementById('sms-content').value.trim();
     if (!content) { alert('短信内容不能为空'); return; }
@@ -1492,11 +1490,11 @@ function setupDesktopPhotoWidget() {
 
 // ==================== 相册逻辑 ====================
 async function renderAll() {
-    // 相册
+   // 相册
 const box = document.getElementById('album-box');
 box.innerHTML = '';
 
-// 🆕 空状态判断
+// 空状态判断
 if (photos.length === 0) {
     box.innerHTML = `
         <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 20px; text-align:center; grid-column:span 4;">
@@ -1506,24 +1504,21 @@ if (photos.length === 0) {
             <button onclick="document.getElementById('upload-trigger').click()" style="background:var(--theme-primary); color:white; border:none; padding:10px 24px; border-radius:20px; font-size:14px; font-weight:500; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.1);">📤 上传第一张照片</button>
         </div>
     `;
-    // ⚠️ 注意：空状态占满网格，所以要设置 grid-column:span 4
 } else {
     const fragment = document.createDocumentFragment();
     for (const id of photos) {
-        for (const id of photos) {
-    const div = document.createElement('div');
-    div.dataset.imgId = id;
-    div.className = 'album-thumb';
-    try {
-        const fileBlob = await getImageFromDB(id);
-        const url = URL.createObjectURL(fileBlob);
-        div.style.backgroundImage = `url(${url})`;
-        div.dataset.blobUrl = url;
-    } catch (e) {
-        div.style.background = '#ccc';
-    }
-    fragment.appendChild(div);
-}
+        const div = document.createElement('div');
+        div.dataset.imgId = id;
+        div.className = 'album-thumb';
+        try {
+            const fileBlob = await getImageFromDB(id);
+            const url = URL.createObjectURL(fileBlob);
+            div.style.backgroundImage = `url(${url})`;
+            div.dataset.blobUrl = url;
+        } catch (e) {
+            div.style.background = '#ccc';
+        }
+        fragment.appendChild(div);
     }
     box.appendChild(fragment);
 }
@@ -2088,4 +2083,3 @@ window.closeMod = window.closeMod || function(id) {
 </script>
 </body>
 </html>
-
