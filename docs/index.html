@@ -827,12 +827,13 @@
             <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span>
         </div>
     </div>
-</div>
+        </div>  <!-- 这里是五子棋棋盘gobang-container的闭合 -->
         <div style="padding:10px; background:#f7f7f7; display:flex; gap:10px; padding-bottom: 25px;">
-    <button id="chat-toggle-btn" style="background:none; border:none; font-size:24px; cursor:pointer; padding:0 8px; color:var(--theme-primary);" title="展开/收起工具">➕</button>
-    <input type="text" id="chat-in" placeholder="用回车发送..." style="flex:1; ...">
-    <button id="send-btn" ...>发送</button>
-</div>
+            <button id="chat-toggle-btn" style="background:none; border:none; font-size:24px; cursor:pointer; padding:0 8px; color:var(--theme-primary);" title="展开/收起工具">➕</button>
+            <input type="text" id="chat-in" placeholder="用回车发送..." style="flex:1; padding:10px; border-radius:8px; border:1px solid #ddd;">
+            <button id="send-btn" style="background:var(--theme-primary); color:#fff; border:none; padding:0 15px; border-radius:8px;">发送</button>
+        </div>
+    </div>  <!-- 结束 p-chat -->
 
     <!-- ========== 相册页面 ========== -->
     <div class="page" id="p-album">
@@ -920,7 +921,6 @@
         <span>📷 摄影</span>
         <span>🎮 游戏</span>
         <span>📚 阅读</span>
-        </div>
         </div>
         <div class="forum-sections" id="forum-sections"></div>
         <div class="forum-current-section">
@@ -1343,16 +1343,15 @@ if (musicList.length === 0) {
         if (id === 'p-profile') renderProfile();
         if (id === 'p-diary') renderDiaries();
         if (id === 'p-sms') renderSmsList();
-        if (id === 'p-forum') {
-            if (!currentSectionId) {
-                const first = forumSections.find(s => !s.requireAuth && !s.requireContribution);
-                currentSectionId = first ? first.id : 'tools';
-            }
-            renderForumSections();
-            const name = forumSections.find(s => s.id === currentSectionId)?.name || '工具补给站';
-            document.getElementById('forum-section-header').innerText = name;
-            renderPosts(currentSectionId);
-        }
+       if (id === 'p-forum') {
+    if (!currentSectionId) {
+        currentSectionId = forumSections[0].id; // 默认第一个分区
+    }
+    renderForumSections();
+    const name = forumSections.find(s => s.id === currentSectionId)?.name || forumSections[0].name;
+    document.getElementById('forum-section-header').innerText = name;
+    renderPosts(currentSectionId);
+}
     };
 
     // 打开弹窗（整合论坛世界观 + 智谱）
@@ -2278,9 +2277,7 @@ window.closeMod = window.closeMod || function(id) {
 let gobangBoard = [];          // 9x9棋盘，0空，1黑（用户），2白（木木）
 let gobangGameActive = false; // 游戏是否进行中
 let gobangPlayerTurn = true;  // true=黑棋（用户），false=白棋（木木）
-let gobangStonesContainer = document.getElementById('gobang-stones');
-let gobangTurnText = document.getElementById('gobang-turn-text');
-let gobangTurnIndicator = document.getElementById('gobang-turn-indicator');
+
 
 // 初始化空棋盘
 function initGobangBoard() {
@@ -2449,6 +2446,7 @@ function startGobangGame() {
         bindGobangBoardClick();
         window.gobangBound = true;
     }
+}
 // ========== 聊天工具栏折叠/展开（独立版，自动绑定）==========
 (function() {
     function bindToggleButton() {
