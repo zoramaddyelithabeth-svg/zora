@@ -466,6 +466,146 @@
             width: calc(100% - 24px);
             height: calc(100% - 88px);
         }
+/* ----- 论坛世界观风格（打工摸鱼）----- */
+.forum-header {
+    background: var(--note-bg-white);
+    border-bottom: 1px solid var(--note-border);
+    padding: 16px var(--note-spacing);
+    margin: 0 var(--note-spacing) var(--note-spacing);
+    border-radius: var(--note-radius-soft);
+    box-shadow: 0 1px 3px var(--note-shadow-light);
+}
+.forum-slogan {
+    color: var(--note-text-dark);
+    font-size: 14px;
+    font-style: italic;
+    margin-bottom: 8px;
+}
+.forum-tags {
+    display: flex;
+    gap: 12px;
+    font-size: 12px;
+    color: var(--note-text-gray);
+}
+.forum-sections {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 0 var(--note-spacing);
+    margin-bottom: 20px;
+}
+.section-card {
+    background: var(--note-bg-white);
+    border: 1px solid var(--note-border);
+    border-radius: var(--note-radius-soft);
+    padding: 16px 12px;
+    cursor: pointer;
+    transition: var(--note-transition);
+}
+.section-card:hover {
+    background: var(--note-hover);
+    transform: translateY(-2px);
+}
+.section-card .icon {
+    font-size: 28px;
+    margin-bottom: 6px;
+}
+.section-card .name {
+    font-weight: 600;
+    color: var(--note-text-dark);
+    margin-bottom: 4px;
+}
+.section-card .desc {
+    font-size: 12px;
+    color: var(--note-text-gray);
+}
+.section-card.locked {
+    opacity: 0.6;
+    filter: grayscale(0.5);
+}
+.forum-current-section {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 var(--note-spacing);
+}
+.section-header {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--note-text-dark);
+    padding: 8px 0;
+    border-bottom: 1px solid var(--note-border);
+    margin-bottom: 12px;
+}
+.forum-posts {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.post-card {
+    background: var(--note-bg-white);
+    border: 1px solid var(--note-border);
+    border-radius: var(--note-radius-soft);
+    padding: 14px;
+    box-shadow: 0 1px 2px var(--note-shadow-light);
+}
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 12px;
+    color: var(--note-text-gray);
+}
+.post-author {
+    font-weight: 500;
+    color: var(--note-accent);
+}
+.post-content {
+    color: var(--note-text-dark);
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 8px;
+    word-wrap: break-word;
+}
+.post-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: var(--note-text-gray);
+}
+.post-stats span {
+    margin-right: 12px;
+}
+.forum-post-btn {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    background: var(--theme-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    cursor: pointer;
+    transition: var(--note-transition);
+    z-index: 100;
+}
+.forum-post-btn:hover {
+    transform: scale(1.1);
+}
+/* 匿名标签 */
+.anonymous-badge {
+    background: var(--note-hover);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    color: var(--note-text-gray);
+    margin-left: 6px;
+}
     </style>
 </head>
 <body>
@@ -596,19 +736,35 @@
         </div>
     </div>
 
-    <!-- ========== 🆕 论坛页面（占位） ========== -->
-    <div class="page" id="p-forum">
-        <div class="nav-bar">
-            <span class="nav-back" data-home="p-home" style="color:var(--ios-blue)">〈 返回</span>
-            <b>论坛</b>
-            <span style="width:40px;"></span>
-        </div>
-        <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--note-text-gray);">
-            <i style="font-size:48px; margin-bottom:20px; color:var(--theme-primary);">🗣️</i>
-            <p>论坛建设中……</p>
-            <p style="font-size:14px; margin-top:20px;">后续可发帖、评论、点赞</p>
+  <!-- ========== 打工人摸鱼论坛 ========== -->
+<div class="page" id="p-forum">
+    <div class="nav-bar">
+        <span class="nav-back" data-home="p-home" style="color:var(--ios-blue)">〈 返回</span>
+        <b>打工人摸鱼论坛</b>
+        <span onclick="openMod('m-forum-world')" style="color:var(--ios-blue); font-size:13px;">🌍 世界观</span>
+    </div>
+    <!-- 论坛头部：口号、文化符号 -->
+    <div class="forum-header">
+        <div class="forum-slogan">“在这里，每一段漂流都是为了更好的靠岸”</div>
+        <div class="forum-tags">
+            <span>🎣 钓鱼</span>
+            <span>🤿 潜水</span>
+            <span>🏊 漂流</span>
+            <span>⛵ 上岸</span>
         </div>
     </div>
+    <!-- 分区导航卡片 -->
+    <div class="forum-sections" id="forum-sections"></div>
+    <!-- 当前分区帖子列表 -->
+    <div class="forum-current-section">
+        <div class="section-header" id="forum-section-header"></div>
+        <div class="forum-posts" id="forum-posts"></div>
+    </div>
+    <!-- 发帖按钮（悬浮） -->
+    <div class="forum-post-btn" onclick="openForumPostModal()">
+        <span>✏️</span>
+    </div>
+</div>
 
     <!-- ========== 🆕 日记本页面（全功能） ========== -->
     <div class="page" id="p-diary">
@@ -780,6 +936,198 @@
             request.onerror = () => reject(request.error);
         });
     }
+
+// ========== 论坛世界观设定 ==========
+const FORUM_WORLD = {
+    name: "打工人摸鱼论坛",
+    slogan: "在这里，每一段漂流都是为了更好的靠岸",
+    users: ["漂流者", "钓鱼人", "潜水员"],
+    sections: [
+        { id: "tools", name: "工具补给站", desc: "漂流技巧交流区", icon: "🛠️" },
+        { id: "energy", name: "能量补给站", desc: "餐饮求生指南区", icon: "🍱" },
+        { id: "wind", name: "风向观测塔", desc: "行业八卦情报区", icon: "🗼" },
+        { id: "valve", name: "情绪泄压阀", desc: "职场吐槽树洞区", icon: "🌊" },
+        { id: "side", name: "副业小艇", desc: "需审核进入", icon: "🚤", requireAuth: true },
+        { id: "log", name: "航海日志库", desc: "核心贡献者专属", icon: "📚", requireContribution: true }
+    ],
+    rules: [
+        "禁止传播极端积极的工作态度",
+        "禁止泄露公司机密或他人隐私",
+        "禁止人身攻击和职场歧视",
+        "禁止非法兼职、传销等违法内容",
+        "禁止过度负能量",
+        "禁止宣传不摸鱼为老板好等恐怖言论"
+    ],
+    anonymous: true // 默认匿名发帖
+};
+
+// ========== 论坛数据 ==========
+let forumSections = FORUM_WORLD.sections;
+let currentSectionId = 'tools'; // 默认显示第一个分区
+let forumPosts = JSON.parse(localStorage.getItem('m_forum_posts') || '[]');
+
+// 首次启动时，插入几条示例帖子（符合打工人摸鱼主题）
+if (forumPosts.length === 0) {
+    forumPosts = [
+        { id: 'p1', sectionId: 'tools', author: '匿名漂流者', time: '10:23', content: '分享一下我的“走动式摸鱼”：每半小时接水一次，路过老板位时拿个文件，完美～', anonymous: true, likes: 15, replies: 3 },
+        { id: 'p2', sectionId: 'energy', author: '外卖猎人', time: '12:05', content: '今天测评公司楼下新开的轻食，三明治配羽衣甘蓝，28元，送券后23，味道3.5星，饱腹感一般。', anonymous: false, likes: 7, replies: 2 },
+        { id: 'p3', sectionId: 'valve', author: '树洞用户9527', time: '15:47', content: '老板今天又在我身后站了10分钟，什么话都没说，我假装在改PPT，其实在逛论坛……', anonymous: true, likes: 42, replies: 8 }
+    ];
+    localStorage.setItem('m_forum_posts', JSON.stringify(forumPosts));
+}
+function renderForumSections() {
+    const container = document.getElementById('forum-sections');
+    if (!container) return;
+    container.innerHTML = '';
+    forumSections.forEach(section => {
+        const card = document.createElement('div');
+        card.className = `section-card ${section.requireAuth || section.requireContribution ? 'locked' : ''}`;
+        card.onclick = () => {
+            // 特殊分区处理（可加审核弹窗）
+            if (section.requireAuth) {
+                alert('副业小艇需要人工审核，请联系管理员');
+                return;
+            }
+            if (section.requireContribution) {
+                alert('航海日志库仅对核心贡献者开放');
+                return;
+            }
+            currentSectionId = section.id;
+            renderSectionHeader(section.name);
+            renderPosts(section.id);
+        };
+        card.innerHTML = `
+            <div class="icon">${section.icon}</div>
+            <div class="name">${section.name}</div>
+            <div class="desc">${section.desc}</div>
+        `;
+        container.appendChild(card);
+    });
+}
+function renderSectionHeader(name) {
+    const header = document.getElementById('forum-section-header');
+    if (header) header.innerText = name;
+}
+
+function renderPosts(sectionId) {
+    const postsContainer = document.getElementById('forum-posts');
+    if (!postsContainer) return;
+    postsContainer.innerHTML = '';
+    const filtered = forumPosts.filter(p => p.sectionId === sectionId).reverse(); // 最新在上
+    filtered.forEach(post => {
+        const postEl = document.createElement('div');
+        postEl.className = 'post-card';
+        postEl.innerHTML = `
+            <div class="post-header">
+                <span class="post-author">${post.author}${post.anonymous ? '<span class="anonymous-badge">匿名</span>' : ''}</span>
+                <span>${post.time}</span>
+            </div>
+            <div class="post-content">${post.content}</div>
+            <div class="post-footer">
+                <div class="post-stats">
+                    <span>👍 ${post.likes}</span>
+                    <span>💬 ${post.replies}</span>
+                </div>
+                <div onclick="likePost('${post.id}')" style="cursor:pointer;">点赞</div>
+            </div>
+        `;
+        postsContainer.appendChild(postEl);
+    });
+}
+
+// 点赞功能（演示）
+function likePost(postId) {
+    const post = forumPosts.find(p => p.id === postId);
+    if (post) {
+        post.likes += 1;
+        localStorage.setItem('m_forum_posts', JSON.stringify(forumPosts));
+        renderPosts(currentSectionId);
+    }
+}
+function openForumPostModal() {
+    // 动态创建弹窗（或使用已存在的模态框）
+    const modalHtml = `
+        <div class="modal" id="m-forum-post" style="display:flex;">
+            <div class="modal-body">
+                <h3>漂流日记 · 发布新帖</h3>
+                <select id="post-section" style="margin-bottom:12px;">
+                    ${forumSections.filter(s => !s.requireAuth && !s.requireContribution).map(s => `<option value="${s.id}">${s.name}</option>`).join('')}
+                </select>
+                <textarea id="post-content" rows="5" placeholder="分享你的漂流心得..." style="width:100%;"></textarea>
+                <label style="display:flex; align-items:center; margin:12px 0;">
+                    <input type="checkbox" id="post-anonymous" checked> 匿名发布
+                </label>
+                <button class="modal-btn" id="submit-post-btn">发布</button>
+                <button class="modal-cancel" onclick="closeMod('m-forum-post')">取消</button>
+            </div>
+        </div>
+    `;
+    // 插入到 body 末尾
+    const div = document.createElement('div');
+    div.innerHTML = modalHtml;
+    document.body.appendChild(div);
+    document.getElementById('submit-post-btn').onclick = submitForumPost;
+}
+
+function submitForumPost() {
+    const sectionId = document.getElementById('post-section').value;
+    const content = document.getElementById('post-content').value.trim();
+    if (!content) { alert('内容不能为空'); return; }
+    const anonymous = document.getElementById('post-anonymous').checked;
+    const now = new Date();
+    const timeStr = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+    const newPost = {
+        id: Date.now() + '-' + Math.random().toString(36).substr(2, 4),
+        sectionId,
+        author: anonymous ? '匿名漂流者' : `漂流者${Math.floor(Math.random()*1000)}`,
+        time: timeStr,
+        content,
+        anonymous,
+        likes: 0,
+        replies: 0
+    };
+    forumPosts.push(newPost);
+    localStorage.setItem('m_forum_posts', JSON.stringify(forumPosts));
+    closeMod('m-forum-post');
+    // 移除动态添加的弹窗
+    setTimeout(() => {
+        const el = document.getElementById('m-forum-post');
+        if (el) el.remove();
+    }, 100);
+    renderPosts(currentSectionId);
+}
+function openMod(id) {
+    // ... 保留原有 openMod 逻辑，额外处理 'm-forum-world'
+    if (id === 'm-forum-world') {
+        const modalHtml = `
+            <div class="modal" id="m-forum-world" style="display:flex;">
+                <div class="modal-body">
+                    <h3>🌍 打工人摸鱼论坛 · 世界观</h3>
+                    <p style="margin-bottom:12px;"><strong>口号：</strong>“在这里，每一段漂流都是为了更好的靠岸”</p>
+                    <p style="margin-bottom:12px;"><strong>文化符号：</strong>带薪拉屎 · 钓鱼 · 潜水 · 上岸</p>
+                    <p style="margin-bottom:12px;"><strong>绝对禁忌：</strong></p>
+                    <ul style="padding-left:20px; color:var(--note-text-gray);">
+                        ${FORUM_WORLD.rules.map(r => `<li style="margin-bottom:4px;">${r}</li>`).join('')}
+                    </ul>
+                    <button class="modal-cancel" onclick="closeMod('m-forum-world')">关闭</button>
+                </div>
+            </div>
+        `;
+        const div = document.createElement('div');
+        div.innerHTML = modalHtml;
+        document.body.appendChild(div);
+        return;
+    }
+    // 其他原有弹窗逻辑...
+}
+function to(id) {
+    // ... 保留原有路由代码，在最后添加：
+    if (id === 'p-forum') {
+        renderForumSections();
+        renderSectionHeader(forumSections.find(s => s.id === currentSectionId)?.name || '工具补给站');
+        renderPosts(currentSectionId);
+    }
+}
 
     // ==================== 数据持久化（全功能）====================
     let photos = JSON.parse(localStorage.getItem('m_photos') || '[]');
