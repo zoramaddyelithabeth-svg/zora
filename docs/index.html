@@ -747,7 +747,6 @@
             <h1 id="big-clock">00:00</h1>
             <p id="big-date"></p>
         </div>
-        <!-- ✅ 桌面图片小组件已移入正确位置 -->
         <div class="photo-widget" id="desktop-photo-widget">
             <div class="photo-widget-placeholder" id="photo-widget-placeholder">
                 <span>📷</span>
@@ -780,60 +779,53 @@
             <span class="nav-setting" data-mod="m-api" style="color:var(--ios-blue); font-size:13px;">设置</span>
         </div>
         <div id="chat-flow"></div>
-       <!-- ========== 互动工具条 ========== -->
-<div id="chat-toolbar" style="display:flex; gap:12px; padding:8px 16px; background:var(--note-bg-white); border-bottom:1px solid var(--note-border);">
-    <button id="chat-dice-btn" style="background:none; border:none; font-size:22px; cursor:pointer; padding:4px;" title="掷骰子">🎲</button>
-    <button id="chat-hongbao-btn" style="background:none; border:none; font-size:22px; cursor:pointer; padding:4px;" title="发红包">🧧</button>
-    <button id="chat-gobang-btn" style="background:none; border:none; font-size:22px; cursor:pointer; padding:4px;" title="五子棋">♟️</button>
-</div>
-<!-- ========== 五子棋棋盘（默认隐藏）========== -->
-<div id="gobang-container" style="display: none; margin-bottom: 12px; justify-content:center;">
-   <div class="gobang-widget-mini">
-    <div class="gobang-header-mini">
-        <div class="status">
-    <div class="stone-indicator black" id="gobang-turn-indicator"></div>
-    <span id="gobang-turn-text">轮到黑棋（你）</span>
-</div>
-        <div class="more-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
+        <!-- 互动工具条（骰子、红包、五子棋） -->
+        <div id="chat-toolbar" style="display:flex; gap:12px; padding:8px 16px; background:var(--note-bg-white); border-bottom:1px solid var(--note-border);">
+            <button id="chat-dice-btn" style="background:none; border:none; font-size:22px; cursor:pointer; padding:4px;" title="掷骰子">🎲</button>
+            <button id="chat-hongbao-btn" style="background:none; border:none; font-size:22px; cursor:pointer; padding:4px;" title="发红包">🧧</button>
+            <button id="chat-gobang-btn" style="background:none; border:none; font-size:22px; cursor:pointer; padding:4px;" title="五子棋">♟️</button>
         </div>
-    </div>
-    <div class="gobang-board-mini">
-        <div class="grid-lines">
-            <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
-            <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
-            <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
-            <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
-            <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
-            <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
-            <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
-            <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+        <!-- 五子棋棋盘（默认隐藏） -->
+        <div id="gobang-container" style="display: none; margin-bottom: 12px; justify-content:center;">
+            <div class="gobang-widget-mini">
+                <div class="gobang-header-mini">
+                    <div class="status">
+                        <div class="stone-indicator black" id="gobang-turn-indicator"></div>
+                        <span id="gobang-turn-text">轮到黑棋（你）</span>
+                    </div>
+                    <div class="more-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
+                    </div>
+                </div>
+                <div class="gobang-board-mini" id="gobang-board">
+                    <div class="grid-lines">
+                        <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+                        <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+                        <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+                        <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+                        <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+                        <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+                        <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+                        <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+                    </div>
+                    <div class="star-points">
+                        <div class="star-point"></div><div class="star-point"></div><div class="star-point"></div><div class="star-point"></div><div class="star-point"></div>
+                    </div>
+                    <div class="stones" id="gobang-stones"></div>
+                    <div class="coords coords-top"><span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span><span>G</span><span>H</span><span>I</span></div>
+                    <div class="coords coords-bottom"><span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span><span>G</span><span>H</span><span>I</span></div>
+                    <div class="coords coords-left"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div>
+                    <div class="coords coords-right"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div>
+                </div>
+            </div>
         </div>
-        <div class="star-points">
-            <div class="star-point"></div><div class="star-point"></div><div class="star-point"></div><div class="star-point"></div><div class="star-point"></div>
-        </div>
-        <div class="stones">
-        </div>
-        <div class="coords coords-top">
-            <span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span><span>G</span><span>H</span><span>I</span>
-        </div>
-        <div class="coords coords-bottom">
-            <span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span><span>G</span><span>H</span><span>I</span>
-        </div>
-        <div class="coords coords-left">
-            <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span>
-        </div>
-        <div class="coords coords-right">
-            <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span>
-        </div>
-    </div>
-        </div>  <!-- 这里是五子棋棋盘gobang-container的闭合 -->
+        <!-- 输入框区域（带加号按钮） -->
         <div style="padding:10px; background:#f7f7f7; display:flex; gap:10px; padding-bottom: 25px;">
             <button id="chat-toggle-btn" style="background:none; border:none; font-size:24px; cursor:pointer; padding:0 8px; color:var(--theme-primary);" title="展开/收起工具">➕</button>
             <input type="text" id="chat-in" placeholder="用回车发送..." style="flex:1; padding:10px; border-radius:8px; border:1px solid #ddd;">
             <button id="send-btn" style="background:var(--theme-primary); color:#fff; border:none; padding:0 15px; border-radius:8px;">发送</button>
         </div>
-    </div>  <!-- 结束 p-chat -->
+    </div>
 
     <!-- ========== 相册页面 ========== -->
     <div class="page" id="p-album">
@@ -907,20 +899,21 @@
         </div>
     </div>
 
-    <!-- ========== 打工人摸鱼论坛 ========== -->
+    <!-- ========== 论坛页面 ========== -->
     <div class="page" id="p-forum">
         <div class="nav-bar">
             <span class="nav-back" data-home="p-home" style="color:var(--ios-blue)">〈 返回</span>
-            <b>打工人摸鱼论坛</b>
-            <span onclick="openMod('m-forum-world')" style="color:var(--ios-blue); font-size:13px;">🌍 世界观</span>
+            <b>智慧岛 · 全能论坛</b>
+            <span onclick="openMod('m-forum-world')" style="color:var(--ios-blue); font-size:13px;">🌍 岛规</span>
         </div>
         <div class="forum-header">
-    <div class="forum-slogan">“每一个声音都值得被听见”</div>
-    <div class="forum-tags">
-        <span>💬 闲聊</span>
-        <span>📷 摄影</span>
-        <span>🎮 游戏</span>
-        <span>📚 阅读</span>
+            <div class="forum-slogan">“每一个声音都值得被听见”</div>
+            <div class="forum-tags">
+                <span>💬 闲聊</span>
+                <span>📷 摄影</span>
+                <span>🎮 游戏</span>
+                <span>📚 阅读</span>
+            </div>
         </div>
         <div class="forum-sections" id="forum-sections"></div>
         <div class="forum-current-section">
@@ -953,8 +946,8 @@
 
     <!-- ========== 所有弹窗（按ID排序）========== -->
     <div class="modal" id="m-anni"><div class="modal-body"><h3>新纪念日</h3><input type="text" id="at" placeholder="事项名称"><input type="date" id="ad"><button class="modal-btn" id="save-anni-btn">保存</button><button class="modal-cancel" data-mod="m-anni" style="width:100%; background:none; border:none; margin-top:10px; color:#999;">取消</button></div></div>
-    <div class="modal" id="m-api"><div class="modal-body"><h3>⚙️ 设置与主题</h3><label style="display:block; margin-bottom:8px;"><input type="checkbox" id="api-toggle"> 开启 AI 响应</label><input type="text" id="api-url" placeholder="API URL (含 v1/chat/completions)"><input type="password" id="api-key" placeholder="API Key"><div style="margin:20px 0 10px; border-top:1px solid #eee; padding-top:15px;"><h4 style="margin-bottom:10px;">🎨 主题颜色</h4><div id="theme-color-presets" class="theme-color-picker"><div class="theme-color-option" style="background:#AED5F3;" data-color="#AED5F3" title="便签蓝"></div><div class="theme-color-option" style="background:#5856D6;" data-color="#5856D6" title="紫色"></div><div class="theme-color-option" style="background:#FF2D55;" data-color="#FF2D55" title="粉色"></div><div class="theme-color-option" style="background:#FF9500;" data-color="#FF9500" title="橙色"></div><div class="theme-color-option" style="background:#34C759;" data-color="#34C759" title="绿色"></div><div class="theme-color-option" style="background:#8E8E93;" data-color="#8E8E93" title="灰色"></div></div><div style="display:flex; align-items:center; margin-top:10px;"><span style="margin-right:8px;">自定义:</span><input type="color" id="custom-color-picker" value="#AED5F3" style="width:50px; height:40px; border:none; background:transparent;"></div></div><button class="modal-btn" id="save-api-btn">保存设置</button><!-- 放在保存设置按钮下方，取消按钮上方 -->
-<button class="modal-btn" id="export-data-btn" style="margin-top:10px; background:#34C759;">📥 导出数据</button><button class="modal-cancel" data-mod="m-api" style="width:100%; background:none; border:none; margin-top:10px; color:#999;">取消</button></div></div>
+    <div class="modal" id="m-api"><div class="modal-body"><h3>⚙️ 设置与主题</h3><label style="display:block; margin-bottom:8px;"><input type="checkbox" id="api-toggle"> 开启 AI 响应</label><input type="text" id="api-url" placeholder="API URL (含 v1/chat/completions)"><input type="password" id="api-key" placeholder="API Key"><div style="margin:20px 0 10px; border-top:1px solid #eee; padding-top:15px;"><h4 style="margin-bottom:10px;">🎨 主题颜色</h4><div id="theme-color-presets" class="theme-color-picker"><div class="theme-color-option" style="background:#AED5F3;" data-color="#AED5F3" title="便签蓝"></div><div class="theme-color-option" style="background:#5856D6;" data-color="#5856D6" title="紫色"></div><div class="theme-color-option" style="background:#FF2D55;" data-color="#FF2D55" title="粉色"></div><div class="theme-color-option" style="background:#FF9500;" data-color="#FF9500" title="橙色"></div><div class="theme-color-option" style="background:#34C759;" data-color="#34C759" title="绿色"></div><div class="theme-color-option" style="background:#8E8E93;" data-color="#8E8E93" title="灰色"></div></div><div style="display:flex; align-items:center; margin-top:10px;"><span style="margin-right:8px;">自定义:</span><input type="color" id="custom-color-picker" value="#AED5F3" style="width:50px; height:40px; border:none; background:transparent;"></div></div><button class="modal-btn" id="save-api-btn">保存设置</button>
+    <button class="modal-btn" id="export-data-btn" style="margin-top:10px; background:#34C759;">📥 导出数据</button><button class="modal-cancel" data-mod="m-api" style="width:100%; background:none; border:none; margin-top:10px; color:#999;">取消</button></div></div>
     <div class="modal" id="m-bubble-style"><div class="modal-body"><h3>气泡样式</h3><select id="bubble-style-select"><option value="note">便签梯形（当前）</option><option value="round">圆角标准</option><option value="simple">极简边框</option></select><button class="modal-btn" id="save-bubble-style-btn">应用</button><button class="modal-cancel" data-mod="m-bubble-style" style="width:100%; background:none; border:none; margin-top:10px; color:#999;">取消</button></div></div>
     <div class="modal" id="m-con"><div class="modal-body"><h3>新联系人</h3><input type="text" id="cn" placeholder="姓名"><button class="modal-btn" id="save-con-btn">添加</button><button class="modal-cancel" data-mod="m-con" style="width:100%; background:none; border:none; margin-top:10px; color:#999;">取消</button></div></div>
     <div class="modal" id="m-diary-add"><div class="modal-body"><h3>写日记</h3><textarea id="diary-content" rows="5" placeholder="今天发生了什么？" style="resize: vertical;"></textarea><button class="modal-btn" id="save-diary-btn">保存</button><button class="modal-cancel" data-mod="m-diary-add" style="margin-top:10px;">取消</button></div></div>
@@ -965,11 +958,11 @@
     <div class="modal" id="m-profile-region"><div class="modal-body"><h3>修改地区</h3><input type="text" id="profile-region-input" placeholder="省/市" value="冰岛"><button class="modal-btn" id="save-profile-region-btn">保存</button><button class="modal-cancel" data-mod="m-profile-region" style="width:100%; background:none; border:none; margin-top:10px; color:#999;">取消</button></div></div>
     <div class="modal" id="m-profile-signature"><div class="modal-body"><h3>修改个性签名</h3><input type="text" id="profile-signature-input" placeholder="输入新签名" value="PrettyWhenuCry"><button class="modal-btn" id="save-profile-signature-btn">保存</button><button class="modal-cancel" data-mod="m-profile-signature" style="width:100%; background:none; border:none; margin-top:10px; color:#999;">取消</button></div></div>
     <div class="modal" id="m-sms-compose"><div class="modal-body"><h3>新短信</h3><input type="text" id="sms-contact" placeholder="联系人"><textarea id="sms-content" rows="3" placeholder="短信内容"></textarea><button class="modal-btn" id="send-sms-btn">发送</button><button class="modal-cancel" data-mod="m-sms-compose">取消</button></div></div>
-    <!-- 智谱 AI 配置弹窗（已修正位置） -->
+    <!-- 智谱 AI 配置弹窗 -->
     <div class="modal" id="m-zhipu-config">
         <div class="modal-body">
             <h3>🧠 智谱 AI 漂流瓶</h3>
-            <p style="color:var(--note-text-gray); margin-bottom:12px;">启用后点击🧠按钮，AI 会自动生成符合当前分区的摸鱼帖子。</p>
+            <p style="color:var(--note-text-gray); margin-bottom:12px;">启用后点击🧠按钮，AI 会自动生成符合当前分区的帖子。</p>
             <label style="display:flex; align-items:center; margin-bottom:12px;">
                 <input type="checkbox" id="zhipu-enable" style="width:auto; margin-right:8px;"> 启用 AI 生成
             </label>
@@ -993,8 +986,9 @@
         </div>
     </div>
 </div>
+
 <script>
-    // ==================== SmartOS 核心脚本 · 无重复·全功能 ====================
+    // ==================== SmartOS 核心脚本 · 最终完整版 ====================
 
     // -------------------- IndexedDB 图片仓库 --------------------
     let db;
@@ -1041,59 +1035,54 @@
         });
     }
 
-    // -------------------- 论坛世界观设定 --------------------
-   // -------------------- 论坛世界观设定（全能版）--------------------
-const FORUM_WORLD = {
-    name: "智慧岛 · 全能论坛",        // 您自己取的名字
-    slogan: "每一个声音都值得被听见", // 您自己写的口号
-    users: ["岛民", "旅人", "学者"],
-    sections: [
-        { id: "tech", name: "💻 科技前沿", desc: "编程、数码、黑科技", icon: "💻" },
-        { id: "life", name: "🌿 生活杂谈", desc: "美食、旅行、日常", icon: "🌿" },
-        { id: "emotion", name: "💕 情感树洞", desc: "悄悄话、心事、恋爱", icon: "💕" },
-        { id: "secondhand", name: "🔄 二手交易", desc: "闲置交换、求购", icon: "🔄" },
-        { id: "game", name: "🎮 游戏天地", desc: "攻略、开黑、Steam", icon: "🎮" },
-        { id: "study", name: "📚 学习成长", desc: "考研、技能、读书", icon: "📚" },
-        { id: "job", name: "💼 求职招聘", desc: "内推、面经、职场", icon: "💼" },
-        { id: "pet", name: "🐾 萌宠乐园", desc: "猫狗、仓鼠、爬宠", icon: "🐾" }
-    ],
-    rules: [
-        "禁止人身攻击和歧视言论",
-        "禁止色情、赌博、违法信息",
-        "禁止恶意刷屏、广告骚扰",
-        "交易请走正规平台，注意防骗",
-        "尊重他人，理性讨论",
-        "原创内容请注明出处"
-    ],
-    anonymous: true   // 保留匿名发帖
-};
+    // -------------------- 论坛世界观设定（全能版）--------------------
+    const FORUM_WORLD = {
+        name: "智慧岛 · 全能论坛",
+        slogan: "每一个声音都值得被听见",
+        users: ["岛民", "旅人", "学者"],
+        sections: [
+            { id: "tech", name: "💻 科技前沿", desc: "编程、数码、黑科技", icon: "💻" },
+            { id: "life", name: "🌿 生活杂谈", desc: "美食、旅行、日常", icon: "🌿" },
+            { id: "emotion", name: "💕 情感树洞", desc: "悄悄话、心事、恋爱", icon: "💕" },
+            { id: "secondhand", name: "🔄 二手交易", desc: "闲置交换、求购", icon: "🔄" },
+            { id: "game", name: "🎮 游戏天地", desc: "攻略、开黑、Steam", icon: "🎮" },
+            { id: "study", name: "📚 学习成长", desc: "考研、技能、读书", icon: "📚" },
+            { id: "job", name: "💼 求职招聘", desc: "内推、面经、职场", icon: "💼" },
+            { id: "pet", name: "🐾 萌宠乐园", desc: "猫狗、仓鼠、爬宠", icon: "🐾" }
+        ],
+        rules: [
+            "禁止人身攻击和歧视言论",
+            "禁止色情、赌博、违法信息",
+            "禁止恶意刷屏、广告骚扰",
+            "交易请走正规平台，注意防骗",
+            "尊重他人，理性讨论",
+            "原创内容请注明出处"
+        ],
+        anonymous: true
+    };
 
     // -------------------- 论坛数据 --------------------
     let forumSections = FORUM_WORLD.sections;
-    let currentSectionId = FORUM_WORLD.sections[0].id; // 默认显示第一个分区
+    let currentSectionId = forumSections[0].id;
     let forumPosts = JSON.parse(localStorage.getItem('m_forum_posts') || '[]');
 
-    // 首次启动插入示例帖子
     if (forumPosts.length === 0) {
-    forumPosts = [
-        { id: 'p1', sectionId: 'tech', author: '岛民小智', time: '10:23', content: '大家最近有在玩什么新的AI工具吗？分享一下～', anonymous: false, likes: 5, replies: 2 },
-        { id: 'p2', sectionId: 'life', author: '旅行猫', time: '12:05', content: '周末去了植物园，拍到了超美的郁金香！🌷', anonymous: false, likes: 12, replies: 3 },
-        { id: 'p3', sectionId: 'emotion', author: '树洞用户', time: '15:47', content: '喜欢的人好像有对象了，很难受……', anonymous: true, likes: 24, replies: 7 }
-    ];
-    localStorage.setItem('m_forum_posts', JSON.stringify(forumPosts));
-}
+        forumPosts = [
+            { id: 'p1', sectionId: 'tech', author: '岛民小智', time: '10:23', content: '大家最近有在玩什么新的AI工具吗？分享一下～', anonymous: false, likes: 5, replies: 2 },
+            { id: 'p2', sectionId: 'life', author: '旅行猫', time: '12:05', content: '周末去了植物园，拍到了超美的郁金香！🌷', anonymous: false, likes: 12, replies: 3 },
+            { id: 'p3', sectionId: 'emotion', author: '树洞用户', time: '15:47', content: '喜欢的人好像有对象了，很难受……', anonymous: true, likes: 24, replies: 7 }
+        ];
+        localStorage.setItem('m_forum_posts', JSON.stringify(forumPosts));
+    }
 
-    // 渲染分区卡片
     function renderForumSections() {
         const container = document.getElementById('forum-sections');
         if (!container) return;
         container.innerHTML = '';
         forumSections.forEach(section => {
             const card = document.createElement('div');
-            card.className = `section-card ${section.requireAuth || section.requireContribution ? 'locked' : ''}`;
+            card.className = 'section-card';
             card.onclick = () => {
-                if (section.requireAuth) { alert('副业小艇需要人工审核，请联系管理员'); return; }
-                if (section.requireContribution) { alert('航海日志库仅对核心贡献者开放'); return; }
                 currentSectionId = section.id;
                 renderSectionHeader(section.name);
                 renderPosts(section.id);
@@ -1102,26 +1091,28 @@ const FORUM_WORLD = {
             container.appendChild(card);
         });
     }
+
     function renderSectionHeader(name) {
         const header = document.getElementById('forum-section-header');
         if (header) header.innerText = name;
     }
+
     function renderPosts(sectionId) {
         const postsContainer = document.getElementById('forum-posts');
         if (!postsContainer) return;
         postsContainer.innerHTML = '';
         const filtered = forumPosts.filter(p => p.sectionId === sectionId).reverse();
         if (filtered.length === 0) {
-    postsContainer.innerHTML = `
-        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 20px; text-align:center;">
-            <span style="font-size:64px; margin-bottom:16px;">🏝️</span>
-            <p style="font-size:16px; font-weight:500; color:var(--note-text-dark); margin-bottom:8px;">这里还没有漂流瓶</p>
-            <p style="font-size:14px; color:var(--note-text-gray); margin-bottom:20px;">写下你的摸鱼心得，随浪飘向远方～</p>
-            <button onclick="openForumPostModal()" style="background:var(--theme-primary); color:white; border:none; padding:10px 24px; border-radius:20px; font-size:14px; font-weight:500; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.1);">✏️ 发布漂流瓶</button>
-        </div>
-    `;
-    return;
-}
+            postsContainer.innerHTML = `
+                <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 20px; text-align:center;">
+                    <span style="font-size:64px; margin-bottom:16px;">🏝️</span>
+                    <p style="font-size:16px; font-weight:500; color:var(--note-text-dark); margin-bottom:8px;">这里还没有漂流瓶</p>
+                    <p style="font-size:14px; color:var(--note-text-gray); margin-bottom:20px;">写下你的心得，随浪飘向远方～</p>
+                    <button onclick="openForumPostModal()" style="background:var(--theme-primary); color:white; border:none; padding:10px 24px; border-radius:20px; font-size:14px; font-weight:500; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.1);">✏️ 发布漂流瓶</button>
+                </div>
+            `;
+            return;
+        }
         filtered.forEach(post => {
             const postEl = document.createElement('div');
             postEl.className = 'post-card';
@@ -1139,22 +1130,21 @@ const FORUM_WORLD = {
             postsContainer.appendChild(postEl);
         });
     }
-    // 点赞
+
     window.likePost = function(postId) {
         const post = forumPosts.find(p => p.id === postId);
         if (post) { post.likes++; localStorage.setItem('m_forum_posts', JSON.stringify(forumPosts)); renderPosts(currentSectionId); }
     };
 
-    // 打开发帖弹窗
     window.openForumPostModal = function() {
-        const availableSections = forumSections.filter(s => !s.requireAuth && !s.requireContribution);
+        const availableSections = forumSections;
         const optionsHtml = availableSections.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
         const modalHtml = `
             <div class="modal" id="m-forum-post" style="display:flex;">
                 <div class="modal-body">
-                    <h3>漂流日记 · 发布新帖</h3>
+                    <h3>发布新帖</h3>
                     <select id="post-section" style="margin-bottom:12px; width:100%; padding:12px; border:1px solid var(--note-border); border-radius:var(--note-radius-hard);">${optionsHtml}</select>
-                    <textarea id="post-content" rows="5" placeholder="分享你的漂流心得..." style="width:100%; resize:vertical;"></textarea>
+                    <textarea id="post-content" rows="5" placeholder="分享你的心得..." style="width:100%; resize:vertical;"></textarea>
                     <label style="display:flex; align-items:center; margin:12px 0;"><input type="checkbox" id="post-anonymous" checked> 匿名发布</label>
                     <button class="modal-btn" id="submit-post-btn">发布</button>
                     <button class="modal-cancel" onclick="closeMod('m-forum-post')">取消</button>
@@ -1165,7 +1155,7 @@ const FORUM_WORLD = {
         document.body.appendChild(div);
         document.getElementById('submit-post-btn').onclick = submitForumPost;
     };
-    // 提交帖子
+
     window.submitForumPost = function() {
         const sectionId = document.getElementById('post-section').value;
         const content = document.getElementById('post-content').value.trim();
@@ -1185,13 +1175,11 @@ const FORUM_WORLD = {
         renderPosts(currentSectionId);
     };
 
-    // -------------------- 智谱 AI 配置（独立）--------------------
+    // -------------------- 智谱 AI 配置 --------------------
     let zhipuConfig = JSON.parse(localStorage.getItem('m_zhipu_config') || '{"enabled":false,"apiKey":"","model":"glm-4"}');
 
-    // 点击🧠按钮：未启用则打开配置，已启用则直接生成
     window.openAIConfigOrGenerate = function() {
         if (!zhipuConfig.enabled) {
-            // 回填配置弹窗
             const enableCheck = document.getElementById('zhipu-enable');
             const apiKeyInput = document.getElementById('zhipu-apikey');
             const modelSelect = document.getElementById('zhipu-model');
@@ -1206,7 +1194,6 @@ const FORUM_WORLD = {
         }
     };
 
-    // 保存智谱配置
     window.saveZhipuConfig = function() {
         zhipuConfig.enabled = document.getElementById('zhipu-enable').checked;
         zhipuConfig.apiKey = document.getElementById('zhipu-apikey').value.trim();
@@ -1216,7 +1203,6 @@ const FORUM_WORLD = {
         if (zhipuConfig.enabled && zhipuConfig.apiKey) alert('配置已保存，点击🧠按钮即可生成帖子');
     };
 
-    // AI 生成帖子
     async function generateAIPost() {
         if (!zhipuConfig.enabled || !zhipuConfig.apiKey) {
             alert('请先在🧠配置中启用并填写 API Key');
@@ -1228,14 +1214,14 @@ const FORUM_WORLD = {
         const btn = document.querySelector('.forum-ai-btn');
         btn.style.background = '#999'; btn.style.pointerEvents = 'none'; btn.innerHTML = '⏳';
         try {
-            const prompt = `你是「打工人摸鱼论坛」的“漂流瓶生成器”，论坛口号：${FORUM_WORLD.slogan}。请为「${section.name}」分区生成一条匿名帖子，内容幽默、真实、短小精悍，20~60字，符合该分区主题。直接返回帖子正文，不要任何解释，不要加引号。`;
+            const prompt = `你是「${FORUM_WORLD.name}」的“漂流瓶生成器”，论坛口号：${FORUM_WORLD.slogan}。请为「${section.name}」分区生成一条匿名帖子，内容幽默、真实、短小精悍，20~60字，符合该分区主题。直接返回帖子正文，不要任何解释，不要加引号。`;
             const response = await fetch('https://open.bigmodel.cn/api/paas/v4/chat/completions', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${zhipuConfig.apiKey}` },
                 body: JSON.stringify({
                     model: zhipuConfig.model,
                     messages: [
-                        { role: 'system', content: '你是一个风趣幽默的打工人，擅长分享职场摸鱼技巧和日常吐槽。' },
+                        { role: 'system', content: '你是一个风趣幽默的用户，擅长分享各种生活日常和知识。' },
                         { role: 'user', content: prompt }
                     ],
                     temperature: 0.8, max_tokens: 150
@@ -1272,55 +1258,49 @@ const FORUM_WORLD = {
     let messages = JSON.parse(localStorage.getItem('m_messages') || '{}');
     let currentChatContactId = null;
     let themeColor = localStorage.getItem('m_theme_color') || '#AED5F3';
-
-    // 个人资料
     let profile = JSON.parse(localStorage.getItem('m_profile') || '{"nickname":"韩闻熙","signature":"PrettyWhenuCry","region":"冰岛","birthday":"2000-03-14","avatarId":null}');
-
-   // 表情包库（完整20个）
-const DEFAULT_EMOTICONS = [
-    { url: "https://i.imgs.ovh/2026/01/21/yRkuGr.gif", name: "潦草黄狗-跳舞" },
-    { url: "https://i.imgs.ovh/2026/01/21/yRkBjh.gif", name: "潦草黄狗-比心" },
-    { url: "https://i.imgs.ovh/2026/01/21/yRkX6e.gif", name: "潦草黄狗-笑哭" },
-    { url: "https://i.imgs.ovh/2026/01/21/yRkwla.gif", name: "潦草黄狗-摇尾巴" },
-    { url: "https://i.imgs.ovh/2026/01/21/yRk37t.gif", name: "潦草黄狗-草裙舞" },
-    { url: "https://i.imgs.ovh/2026/01/21/yRkNAq.gif", name: "潦草黄狗-佛光" },
-    { url: "https://i.imgs.ovh/2026/01/21/yRkiJC.gif", name: "潦草黄狗-生病" },
-    { url: "https://i.imgs.ovh/2026/01/21/yRq0w4.gif", name: "潦草黄狗-请" },
-    { url: "https://i.imgs.ovh/2026/01/21/yRqCLA.gif", name: "潦草黄狗-拿外卖" },
-    { url: "https://i.imgs.ovh/2026/01/21/yRqyMN.gif", name: "潦草黄狗-拖延症" },
-    { url: "https://i.imgs.ovh/2026/01/21/yRqOGH.gif", name: "潦草黄狗-被可爱暴击" },
-    { url: "https://i.imgs.ovh/2026/01/21/yRqacU.gif", name: "潦草黄狗-啃脑袋" },
-    { url: "https://i.imgs.ovh/2026/01/21/yRqj6X.gif", name: "潦草黄狗-被打鸡血" },
-    { url: "https://i.imgs.ovh/2026/01/21/yRqclQ.gif", name: "潦草黄狗-墨镜下无声痛苦" },
-    { url: "https://i.imgs.ovh/2026/01/21/yRqrCF.gif", name: "潦草黄狗-打嗝" },
-    { url: "https://i.imgs.ovh/2026/01/21/yRqvAm.gif", name: "潦草黄狗-叉腰" },
-    { url: "https://i.imgs.ovh/2026/01/21/yRqFJ9.gif", name: "潦草黄狗-盯（严肃）" }
-];
-let emoticons = JSON.parse(localStorage.getItem('m_emoticons') || '[]');
-if (emoticons.length === 0) {
-    emoticons = DEFAULT_EMOTICONS.map((e, index) => ({ ...e, id: Date.now() + index + '-' + Math.random().toString(36).substr(2, 4) }));
-    localStorage.setItem('m_emoticons', JSON.stringify(emoticons));
-}
-
-// 音乐库（已添加可播放链接）
-const DEFAULT_MUSIC = [
-    { id: 'default-1', title: "起风了", artist: "买辣椒也用券", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
-    { id: 'default-2', title: "Lemon", artist: "米津玄師", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
-    { id: 'default-3', title: "夜曲", artist: "周杰伦", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" },
-    { id: 'default-4', title: "平凡之路", artist: "朴树", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" }
-];
-let musicList = JSON.parse(localStorage.getItem('m_music_list') || '[]');
-if (musicList.length === 0) {
-    musicList = DEFAULT_MUSIC.map((m, index) => ({ ...m, id: m.id || Date.now() + index + '-' + Math.random().toString(36).substr(2, 4) }));
-    localStorage.setItem('m_music_list', JSON.stringify(musicList));
-}
-
-    // 日记数据
     let diaries = JSON.parse(localStorage.getItem('m_diaries') || '[]');
-    // 短信数据
     let smsMessages = JSON.parse(localStorage.getItem('m_sms') || '[]');
-    // 桌面图片
     let desktopPhotoId = localStorage.getItem('m_desktop_photo_id');
+
+    // 表情包库（完整17个）
+    const DEFAULT_EMOTICONS = [
+        { url: "https://i.imgs.ovh/2026/01/21/yRkuGr.gif", name: "潦草黄狗-跳舞" },
+        { url: "https://i.imgs.ovh/2026/01/21/yRkBjh.gif", name: "潦草黄狗-比心" },
+        { url: "https://i.imgs.ovh/2026/01/21/yRkX6e.gif", name: "潦草黄狗-笑哭" },
+        { url: "https://i.imgs.ovh/2026/01/21/yRkwla.gif", name: "潦草黄狗-摇尾巴" },
+        { url: "https://i.imgs.ovh/2026/01/21/yRk37t.gif", name: "潦草黄狗-草裙舞" },
+        { url: "https://i.imgs.ovh/2026/01/21/yRkNAq.gif", name: "潦草黄狗-佛光" },
+        { url: "https://i.imgs.ovh/2026/01/21/yRkiJC.gif", name: "潦草黄狗-生病" },
+        { url: "https://i.imgs.ovh/2026/01/21/yRq0w4.gif", name: "潦草黄狗-请" },
+        { url: "https://i.imgs.ovh/2026/01/21/yRqCLA.gif", name: "潦草黄狗-拿外卖" },
+        { url: "https://i.imgs.ovh/2026/01/21/yRqyMN.gif", name: "潦草黄狗-拖延症" },
+        { url: "https://i.imgs.ovh/2026/01/21/yRqOGH.gif", name: "潦草黄狗-被可爱暴击" },
+        { url: "https://i.imgs.ovh/2026/01/21/yRqacU.gif", name: "潦草黄狗-啃脑袋" },
+        { url: "https://i.imgs.ovh/2026/01/21/yRqj6X.gif", name: "潦草黄狗-被打鸡血" },
+        { url: "https://i.imgs.ovh/2026/01/21/yRqclQ.gif", name: "潦草黄狗-墨镜下无声痛苦" },
+        { url: "https://i.imgs.ovh/2026/01/21/yRqrCF.gif", name: "潦草黄狗-打嗝" },
+        { url: "https://i.imgs.ovh/2026/01/21/yRqvAm.gif", name: "潦草黄狗-叉腰" },
+        { url: "https://i.imgs.ovh/2026/01/21/yRqFJ9.gif", name: "潦草黄狗-盯（严肃）" }
+    ];
+    let emoticons = JSON.parse(localStorage.getItem('m_emoticons') || '[]');
+    if (emoticons.length === 0) {
+        emoticons = DEFAULT_EMOTICONS.map((e, index) => ({ ...e, id: Date.now() + index + '-' + Math.random().toString(36).substr(2, 4) }));
+        localStorage.setItem('m_emoticons', JSON.stringify(emoticons));
+    }
+
+    // 音乐库（已添加可播放链接）
+    const DEFAULT_MUSIC = [
+        { id: 'default-1', title: "起风了", artist: "买辣椒也用券", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
+        { id: 'default-2', title: "Lemon", artist: "米津玄師", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
+        { id: 'default-3', title: "夜曲", artist: "周杰伦", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" },
+        { id: 'default-4', title: "平凡之路", artist: "朴树", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" }
+    ];
+    let musicList = JSON.parse(localStorage.getItem('m_music_list') || '[]');
+    if (musicList.length === 0) {
+        musicList = DEFAULT_MUSIC.map((m, index) => ({ ...m, id: m.id || Date.now() + index + '-' + Math.random().toString(36).substr(2, 4) }));
+        localStorage.setItem('m_music_list', JSON.stringify(musicList));
+    }
 
     // -------------------- 工具函数 --------------------
     function applyTheme(color) {
@@ -1343,27 +1323,24 @@ if (musicList.length === 0) {
         if (id === 'p-profile') renderProfile();
         if (id === 'p-diary') renderDiaries();
         if (id === 'p-sms') renderSmsList();
-       if (id === 'p-forum') {
-    if (!currentSectionId) {
-        currentSectionId = forumSections[0].id; // 默认第一个分区
-    }
-    renderForumSections();
-    const name = forumSections.find(s => s.id === currentSectionId)?.name || forumSections[0].name;
-    document.getElementById('forum-section-header').innerText = name;
-    renderPosts(currentSectionId);
-}
+        if (id === 'p-forum') {
+            if (!currentSectionId) currentSectionId = forumSections[0].id;
+            renderForumSections();
+            const name = forumSections.find(s => s.id === currentSectionId)?.name || forumSections[0].name;
+            document.getElementById('forum-section-header').innerText = name;
+            renderPosts(currentSectionId);
+        }
     };
 
-    // 打开弹窗（整合论坛世界观 + 智谱）
+    // 打开弹窗
     window.openMod = function(id) {
-       if (id === 'm-forum-world') {
-    const modalHtml = `<div class="modal" id="m-forum-world" style="display:flex;"><div class="modal-body"><h3>🌍 ${FORUM_WORLD.name} · 岛规</h3><p style="margin-bottom:12px;"><strong>口号：</strong>“${FORUM_WORLD.slogan}”</p><p style="margin-bottom:12px;"><strong>文化符号：</strong>💬 闲聊 · 📷 摄影 · 🎮 游戏 · 📚 阅读</p><p style="margin-bottom:12px;"><strong>全岛守则：</strong></p><ul style="padding-left:20px; color:var(--note-text-gray);">${FORUM_WORLD.rules.map(r => `<li style="margin-bottom:4px;">${r}</li>`).join('')}</ul><button class="modal-cancel" onclick="closeMod('m-forum-world')">关闭</button></div></div>`;
-    const div = document.createElement('div');
-    div.innerHTML = modalHtml;
-    document.body.appendChild(div);
-    return;
-}
-        // 其他弹窗预处理
+        if (id === 'm-forum-world') {
+            const modalHtml = `<div class="modal" id="m-forum-world" style="display:flex;"><div class="modal-body"><h3>🌍 ${FORUM_WORLD.name} · 岛规</h3><p style="margin-bottom:12px;"><strong>口号：</strong>“${FORUM_WORLD.slogan}”</p><p style="margin-bottom:12px;"><strong>文化符号：</strong>💬 闲聊 · 📷 摄影 · 🎮 游戏 · 📚 阅读</p><p style="margin-bottom:12px;"><strong>全岛守则：</strong></p><ul style="padding-left:20px; color:var(--note-text-gray);">${FORUM_WORLD.rules.map(r => `<li style="margin-bottom:4px;">${r}</li>`).join('')}</ul><button class="modal-cancel" onclick="closeMod('m-forum-world')">关闭</button></div></div>`;
+            const div = document.createElement('div');
+            div.innerHTML = modalHtml;
+            document.body.appendChild(div);
+            return;
+        }
         if (id === 'm-api') {
             document.getElementById('api-toggle').checked = apiCfg.enabled;
             document.getElementById('api-url').value = apiCfg.url;
@@ -1377,814 +1354,771 @@ if (musicList.length === 0) {
         if (id === 'm-emoticon-library') renderEmoticons();
         if (id === 'm-music-player') renderMusicList();
         if (id === 'm-zhipu-config') {
-            // 确保配置弹窗按钮事件绑定（防止重复绑定）
             const btn = document.getElementById('save-zhipu-config-btn');
             if (btn) btn.onclick = saveZhipuConfig;
         }
         document.getElementById(id).style.display = 'flex';
     };
+
     window.closeMod = function(id) {
         const el = document.getElementById(id);
         if (el) el.style.display = 'none';
     };
 
-    // -------------------- 以下为原功能函数（表情、音乐、资料、日记、短信、相册、日历、聊天等）--------------------
-// ==================== 表情包库渲染 ====================
-function renderEmoticons() {
-    const grid = document.getElementById('emoticon-grid');
-    if (!grid) return;
-    grid.innerHTML = '';
-    emoticons.forEach(em => {
-        const item = document.createElement('div');
-        item.className = 'emoticon-item';
-        item.onclick = () => {
-            const chatInput = document.getElementById('chat-in');
-            if (chatInput) {
-                chatInput.value += ` ![${em.name}](${em.url}) `;
-                chatInput.focus();
-            }
-            closeMod('m-emoticon-library');
-        };
-        const img = document.createElement('img');
-        img.src = em.url;
-        img.onerror = () => { img.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="%23eee"/><text x="10" y="55" font-size="14" fill="%23999">加载失败</text></svg>'; };
-        const name = document.createElement('div');
-        name.className = 'emoticon-name';
-        name.textContent = em.name;
-        item.appendChild(img);
-        item.appendChild(name);
-        grid.appendChild(item);
-    });
-}
+    // ==================== 表情包库渲染 ====================
+    function renderEmoticons() {
+        const grid = document.getElementById('emoticon-grid');
+        if (!grid) return;
+        grid.innerHTML = '';
+        emoticons.forEach(em => {
+            const item = document.createElement('div');
+            item.className = 'emoticon-item';
+            item.onclick = () => {
+                const chatInput = document.getElementById('chat-in');
+                if (chatInput) {
+                    chatInput.value += ` ![${em.name}](${em.url}) `;
+                    chatInput.focus();
+                }
+                closeMod('m-emoticon-library');
+            };
+            const img = document.createElement('img');
+            img.src = em.url;
+            img.onerror = () => { img.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="%23eee"/><text x="10" y="55" font-size="14" fill="%23999">加载失败</text></svg>'; };
+            const name = document.createElement('div');
+            name.className = 'emoticon-name';
+            name.textContent = em.name;
+            item.appendChild(img);
+            item.appendChild(name);
+            grid.appendChild(item);
+        });
+    }
 
-function addEmoticon() {
-    const url = document.getElementById('emoticon-url').value.trim();
-    const name = document.getElementById('emoticon-name').value.trim();
-    if (!url || !name) { alert('请填写URL和名称'); return; }
-    const newEm = { id: Date.now() + '-' + Math.random().toString(36).substr(2, 6), url, name };
-    emoticons.push(newEm);
-    localStorage.setItem('m_emoticons', JSON.stringify(emoticons));
-    document.getElementById('emoticon-url').value = ''; document.getElementById('emoticon-name').value = '';
-    renderEmoticons();
-}
+    function addEmoticon() {
+        const url = document.getElementById('emoticon-url').value.trim();
+        const name = document.getElementById('emoticon-name').value.trim();
+        if (!url || !name) { alert('请填写URL和名称'); return; }
+        const newEm = { id: Date.now() + '-' + Math.random().toString(36).substr(2, 6), url, name };
+        emoticons.push(newEm);
+        localStorage.setItem('m_emoticons', JSON.stringify(emoticons));
+        document.getElementById('emoticon-url').value = ''; document.getElementById('emoticon-name').value = '';
+        renderEmoticons();
+    }
 
-// ==================== 音乐库渲染 ====================
-function renderMusicList() {
-    const list = document.getElementById('music-list');
-    if (!list) return;
-    list.innerHTML = '';
-    musicList.forEach(music => {
-        const li = document.createElement('li');
-        li.className = 'music-item';
-        li.onclick = (e) => {
-            if (e.target.classList.contains('music-delete-btn') || e.target.parentElement.classList.contains('music-delete-btn')) return;
-            const audio = document.getElementById('music-audio');
-            if (music.src && music.src.trim() !== '') {
-                audio.src = music.src;
-                audio.play().catch(err => alert('播放失败：' + (err.message || '可能是跨域或无效链接')));
-            } else alert('此歌曲无音频链接，仅作展示');
-        };
-        li.innerHTML = `<span class="play-icon">▶️</span><span class="title">${music.title}</span><span class="artist">${music.artist}</span><span class="music-delete-btn" data-id="${music.id}">🗑️</span>`;
-        list.appendChild(li);
-    });
-    document.querySelectorAll('.music-delete-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) { e.stopPropagation(); deleteMusic(this.dataset.id); });
-    });
-}
+    // ==================== 音乐库渲染 ====================
+    function renderMusicList() {
+        const list = document.getElementById('music-list');
+        if (!list) return;
+        list.innerHTML = '';
+        musicList.forEach(music => {
+            const li = document.createElement('li');
+            li.className = 'music-item';
+            li.onclick = (e) => {
+                if (e.target.classList.contains('music-delete-btn') || e.target.parentElement.classList.contains('music-delete-btn')) return;
+                const audio = document.getElementById('music-audio');
+                if (music.src && music.src.trim() !== '') {
+                    audio.src = music.src;
+                    audio.play().catch(err => alert('播放失败：' + (err.message || '可能是跨域或无效链接')));
+                } else alert('此歌曲无音频链接，仅作展示');
+            };
+            li.innerHTML = `<span class="play-icon">▶️</span><span class="title">${music.title}</span><span class="artist">${music.artist}</span><span class="music-delete-btn" data-id="${music.id}">🗑️</span>`;
+            list.appendChild(li);
+        });
+        document.querySelectorAll('.music-delete-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) { e.stopPropagation(); deleteMusic(this.dataset.id); });
+        });
+    }
 
-function addMusic() {
-    const title = document.getElementById('music-title').value.trim();
-    const artist = document.getElementById('music-artist').value.trim();
-    const url = document.getElementById('music-url').value.trim();
-    if (!title || !artist) { alert('请填写歌曲名和歌手'); return; }
-    const newMusic = { id: Date.now() + '-' + Math.random().toString(36).substr(2, 6), title, artist, src: url || '' };
-    musicList.push(newMusic);
-    localStorage.setItem('m_music_list', JSON.stringify(musicList));
-    document.getElementById('music-title').value = ''; document.getElementById('music-artist').value = ''; document.getElementById('music-url').value = '';
-    renderMusicList();
-}
-
-function deleteMusic(id) {
-    if (confirm('确定从列表中移除这首歌吗？')) {
-        musicList = musicList.filter(m => m.id !== id);
+    function addMusic() {
+        const title = document.getElementById('music-title').value.trim();
+        const artist = document.getElementById('music-artist').value.trim();
+        const url = document.getElementById('music-url').value.trim();
+        if (!title || !artist) { alert('请填写歌曲名和歌手'); return; }
+        const newMusic = { id: Date.now() + '-' + Math.random().toString(36).substr(2, 6), title, artist, src: url || '' };
+        musicList.push(newMusic);
         localStorage.setItem('m_music_list', JSON.stringify(musicList));
+        document.getElementById('music-title').value = ''; document.getElementById('music-artist').value = ''; document.getElementById('music-url').value = '';
         renderMusicList();
     }
-}
 
-// ==================== 个人资料渲染 ====================
-async function renderProfile() {
-    document.getElementById('profile-nickname').innerText = profile.nickname;
-    document.getElementById('profile-signature').innerText = profile.signature;
-    document.getElementById('profile-nickname-value').innerText = profile.nickname;
-    document.getElementById('profile-signature-value').innerText = profile.signature;
-    document.getElementById('profile-region-value').innerText = profile.region;
-    if (profile.birthday) {
-        const date = new Date(profile.birthday);
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const day = date.getDate().toString().padStart(2, '0');
-        document.getElementById('profile-birthday-value').innerText = `${month}-${day}`;
+    function deleteMusic(id) {
+        if (confirm('确定从列表中移除这首歌吗？')) {
+            musicList = musicList.filter(m => m.id !== id);
+            localStorage.setItem('m_music_list', JSON.stringify(musicList));
+            renderMusicList();
+        }
     }
-    const avatarDiv = document.getElementById('profile-avatar');
-    avatarDiv.innerHTML = '';
-    if (profile.avatarId) {
-        try {
-            const blob = await getImageFromDB(parseInt(profile.avatarId));
-            const url = URL.createObjectURL(blob);
-            const img = document.createElement('img'); img.src = url; avatarDiv.appendChild(img);
-        } catch(e) { avatarDiv.innerHTML = '👤'; }
-    } else { avatarDiv.innerHTML = '👤'; }
-}
 
-function saveProfileNickname() { const val = document.getElementById('profile-nickname-input').value.trim(); if (val) { profile.nickname = val; localStorage.setItem('m_profile', JSON.stringify(profile)); renderProfile(); closeMod('m-profile-nickname'); } }
-function saveProfileSignature() { const val = document.getElementById('profile-signature-input').value.trim(); if (val !== undefined) { profile.signature = val; localStorage.setItem('m_profile', JSON.stringify(profile)); renderProfile(); closeMod('m-profile-signature'); } }
-function saveProfileRegion() { const val = document.getElementById('profile-region-input').value.trim(); if (val) { profile.region = val; localStorage.setItem('m_profile', JSON.stringify(profile)); renderProfile(); closeMod('m-profile-region'); } }
-function saveProfileBirthday() { const val = document.getElementById('profile-birthday-input').value; if (val) { profile.birthday = val; localStorage.setItem('m_profile', JSON.stringify(profile)); renderProfile(); closeMod('m-profile-birthday'); } }
-async function uploadAvatar(file) { if (file.size > 2 * 1024 * 1024) { alert('头像图片不能超过2MB'); return; } const id = await saveImageToDB(file); profile.avatarId = id; localStorage.setItem('m_profile', JSON.stringify(profile)); renderProfile(); }
-
-// ==================== 日记功能 ====================
-function renderDiaries() {
-    const container = document.getElementById('diary-list');
-    if (!container) return;
-    container.innerHTML = '';
-    if (diaries.length === 0) {
-      container.innerHTML = `
-    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 20px; text-align:center;">
-        <span style="font-size:64px; margin-bottom:16px;">📔</span>
-        <p style="font-size:16px; font-weight:500; color:var(--note-text-dark); margin-bottom:8px;">还没有写日记</p>
-        <p style="font-size:14px; color:var(--note-text-gray); margin-bottom:20px;">记录今天的小情绪，以后回头看会很温暖</p>
-        <button onclick="openMod('m-diary-add')" style="background:var(--theme-primary); color:white; border:none; padding:10px 24px; border-radius:20px; font-size:14px; font-weight:500; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.1);">➕ 写第一篇日记</button>
-    </div>
-`;
-        return;
+    // ==================== 个人资料渲染 ====================
+    async function renderProfile() {
+        document.getElementById('profile-nickname').innerText = profile.nickname;
+        document.getElementById('profile-signature').innerText = profile.signature;
+        document.getElementById('profile-nickname-value').innerText = profile.nickname;
+        document.getElementById('profile-signature-value').innerText = profile.signature;
+        document.getElementById('profile-region-value').innerText = profile.region;
+        if (profile.birthday) {
+            const date = new Date(profile.birthday);
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
+            document.getElementById('profile-birthday-value').innerText = `${month}-${day}`;
+        }
+        const avatarDiv = document.getElementById('profile-avatar');
+        avatarDiv.innerHTML = '';
+        if (profile.avatarId) {
+            try {
+                const blob = await getImageFromDB(parseInt(profile.avatarId));
+                const url = URL.createObjectURL(blob);
+                const img = document.createElement('img'); img.src = url; avatarDiv.appendChild(img);
+            } catch(e) { avatarDiv.innerHTML = '👤'; }
+        } else { avatarDiv.innerHTML = '👤'; }
     }
-    diaries.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(d => {
-        const div = document.createElement('div');
-        div.className = 'diary-entry';
-        div.innerHTML = `<div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                            <span style="font-weight:600;">${d.date}</span>
-                            <span style="color:var(--note-text-gray); cursor:pointer;" onclick="deleteDiary('${d.id}')">🗑️</span>
-                        </div>
-                        <div style="white-space:pre-wrap;">${d.content}</div>`;
-        container.appendChild(div);
-    });
-}
 
-function addDiary() {
-    const content = document.getElementById('diary-content').value.trim();
-    if (!content) { alert('日记内容不能为空'); return; }
-    const now = new Date();
-    const dateStr = `${now.getFullYear()}-${(now.getMonth()+1).toString().padStart(2,'0')}-${now.getDate().toString().padStart(2,'0')}`;
-    const newDiary = { id: Date.now() + '-' + Math.random().toString(36).substr(2, 6), date: dateStr, content };
-    diaries.push(newDiary);
-    localStorage.setItem('m_diaries', JSON.stringify(diaries));
-    document.getElementById('diary-content').value = '';
-    closeMod('m-diary-add');
-    renderDiaries();
-}
+    function saveProfileNickname() { const val = document.getElementById('profile-nickname-input').value.trim(); if (val) { profile.nickname = val; localStorage.setItem('m_profile', JSON.stringify(profile)); renderProfile(); closeMod('m-profile-nickname'); } }
+    function saveProfileSignature() { const val = document.getElementById('profile-signature-input').value.trim(); if (val !== undefined) { profile.signature = val; localStorage.setItem('m_profile', JSON.stringify(profile)); renderProfile(); closeMod('m-profile-signature'); } }
+    function saveProfileRegion() { const val = document.getElementById('profile-region-input').value.trim(); if (val) { profile.region = val; localStorage.setItem('m_profile', JSON.stringify(profile)); renderProfile(); closeMod('m-profile-region'); } }
+    function saveProfileBirthday() { const val = document.getElementById('profile-birthday-input').value; if (val) { profile.birthday = val; localStorage.setItem('m_profile', JSON.stringify(profile)); renderProfile(); closeMod('m-profile-birthday'); } }
+    async function uploadAvatar(file) { if (file.size > 2 * 1024 * 1024) { alert('头像图片不能超过2MB'); return; } const id = await saveImageToDB(file); profile.avatarId = id; localStorage.setItem('m_profile', JSON.stringify(profile)); renderProfile(); }
 
-function deleteDiary(id) {
-    if (confirm('删除这篇日记？')) {
-        diaries = diaries.filter(d => d.id !== id);
+    // ==================== 日记功能 ====================
+    function renderDiaries() {
+        const container = document.getElementById('diary-list');
+        if (!container) return;
+        container.innerHTML = '';
+        if (diaries.length === 0) {
+            container.innerHTML = `
+                <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 20px; text-align:center;">
+                    <span style="font-size:64px; margin-bottom:16px;">📔</span>
+                    <p style="font-size:16px; font-weight:500; color:var(--note-text-dark); margin-bottom:8px;">还没有写日记</p>
+                    <p style="font-size:14px; color:var(--note-text-gray); margin-bottom:20px;">记录今天的小情绪，以后回头看会很温暖</p>
+                    <button onclick="openMod('m-diary-add')" style="background:var(--theme-primary); color:white; border:none; padding:10px 24px; border-radius:20px; font-size:14px; font-weight:500; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.1);">➕ 写第一篇日记</button>
+                </div>
+            `;
+            return;
+        }
+        diaries.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(d => {
+            const div = document.createElement('div');
+            div.className = 'diary-entry';
+            div.innerHTML = `<div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                                <span style="font-weight:600;">${d.date}</span>
+                                <span style="color:var(--note-text-gray); cursor:pointer;" onclick="deleteDiary('${d.id}')">🗑️</span>
+                            </div>
+                            <div style="white-space:pre-wrap;">${d.content}</div>`;
+            container.appendChild(div);
+        });
+    }
+
+    function addDiary() {
+        const content = document.getElementById('diary-content').value.trim();
+        if (!content) { alert('日记内容不能为空'); return; }
+        const now = new Date();
+        const dateStr = `${now.getFullYear()}-${(now.getMonth()+1).toString().padStart(2,'0')}-${now.getDate().toString().padStart(2,'0')}`;
+        const newDiary = { id: Date.now() + '-' + Math.random().toString(36).substr(2, 6), date: dateStr, content };
+        diaries.push(newDiary);
         localStorage.setItem('m_diaries', JSON.stringify(diaries));
+        document.getElementById('diary-content').value = '';
+        closeMod('m-diary-add');
         renderDiaries();
     }
-}
 
-// ==================== 短信功能 ====================
-function renderSmsList() {
-    const container = document.getElementById('sms-list');
-    if (!container) return;
-    container.innerHTML = '';
-    if (smsMessages.length === 0) {
-        container.innerHTML = `
-            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 20px; text-align:center;">
-                <span style="font-size:64px; margin-bottom:16px;">💌</span>
-                <p style="font-size:16px; font-weight:500; color:var(--note-text-dark); margin-bottom:8px;">还没有收到短信</p>
-                <p style="font-size:14px; color:var(--note-text-gray); margin-bottom:20px;">给朋友发一句问候吧，也许TA正在等你</p>
-                <button onclick="openMod('m-sms-compose')" style="background:var(--theme-primary); color:white; border:none; padding:10px 24px; border-radius:20px; font-size:14px; font-weight:500; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.1);">✏️ 发送短信</button>
-            </div>
-        `;
-        return;
+    function deleteDiary(id) {
+        if (confirm('删除这篇日记？')) {
+            diaries = diaries.filter(d => d.id !== id);
+            localStorage.setItem('m_diaries', JSON.stringify(diaries));
+            renderDiaries();
+        }
     }
-    smsMessages.sort((a,b) => new Date(b.time) - new Date(a.time)).forEach(s => {
-        const div = document.createElement('div');
-        div.className = 'sms-item';
-        div.innerHTML = `<div style="display:flex; flex-direction:column; width:100%;">
-                            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                                <span style="font-weight:600;">${s.contact || '陌生人'}</span>
-                                <span style="color:var(--note-text-gray); font-size:12px;">${s.time}</span>
-                            </div>
-                            <div style="color:var(--note-text-dark);">${s.content}</div>
-                            <div style="display:flex; justify-content:flex-end; margin-top:8px;">
-                                <span style="color:var(--note-text-gray); font-size:12px; cursor:pointer;" onclick="deleteSms('${s.id}')">删除</span>
-                            </div>
-                        </div>`;
-        container.appendChild(div);
-    });
-}
 
-function sendSms() {
-    const contact = document.getElementById('sms-contact').value.trim() || '未知号码';
-    const content = document.getElementById('sms-content').value.trim();
-    if (!content) { alert('短信内容不能为空'); return; }
-    const now = new Date();
-    const timeStr = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
-    const newSms = { id: Date.now() + '-' + Math.random().toString(36).substr(2, 6), contact, content, time: timeStr };
-    smsMessages.push(newSms);
-    localStorage.setItem('m_sms', JSON.stringify(smsMessages));
-    document.getElementById('sms-contact').value = '';
-    document.getElementById('sms-content').value = '';
-    closeMod('m-sms-compose');
-    renderSmsList();
-}
+    // ==================== 短信功能 ====================
+    function renderSmsList() {
+        const container = document.getElementById('sms-list');
+        if (!container) return;
+        container.innerHTML = '';
+        if (smsMessages.length === 0) {
+            container.innerHTML = `
+                <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 20px; text-align:center;">
+                    <span style="font-size:64px; margin-bottom:16px;">💌</span>
+                    <p style="font-size:16px; font-weight:500; color:var(--note-text-dark); margin-bottom:8px;">还没有收到短信</p>
+                    <p style="font-size:14px; color:var(--note-text-gray); margin-bottom:20px;">给朋友发一句问候吧，也许TA正在等你</p>
+                    <button onclick="openMod('m-sms-compose')" style="background:var(--theme-primary); color:white; border:none; padding:10px 24px; border-radius:20px; font-size:14px; font-weight:500; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.1);">✏️ 发送短信</button>
+                </div>
+            `;
+            return;
+        }
+        smsMessages.sort((a,b) => new Date(b.time) - new Date(a.time)).forEach(s => {
+            const div = document.createElement('div');
+            div.className = 'sms-item';
+            div.innerHTML = `<div style="display:flex; flex-direction:column; width:100%;">
+                                <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                                    <span style="font-weight:600;">${s.contact || '陌生人'}</span>
+                                    <span style="color:var(--note-text-gray); font-size:12px;">${s.time}</span>
+                                </div>
+                                <div style="color:var(--note-text-dark);">${s.content}</div>
+                                <div style="display:flex; justify-content:flex-end; margin-top:8px;">
+                                    <span style="color:var(--note-text-gray); font-size:12px; cursor:pointer;" onclick="deleteSms('${s.id}')">删除</span>
+                                </div>
+                            </div>`;
+            container.appendChild(div);
+        });
+    }
 
-function deleteSms(id) {
-    smsMessages = smsMessages.filter(s => s.id !== id);
-    localStorage.setItem('m_sms', JSON.stringify(smsMessages));
-    renderSmsList();
-}
+    function sendSms() {
+        const contact = document.getElementById('sms-contact').value.trim() || '未知号码';
+        const content = document.getElementById('sms-content').value.trim();
+        if (!content) { alert('短信内容不能为空'); return; }
+        const now = new Date();
+        const timeStr = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+        const newSms = { id: Date.now() + '-' + Math.random().toString(36).substr(2, 6), contact, content, time: timeStr };
+        smsMessages.push(newSms);
+        localStorage.setItem('m_sms', JSON.stringify(smsMessages));
+        document.getElementById('sms-contact').value = '';
+        document.getElementById('sms-content').value = '';
+        closeMod('m-sms-compose');
+        renderSmsList();
+    }
 
-// ==================== 桌面图片小组件 ====================
-function renderDesktopPhoto() {
-    const placeholder = document.getElementById('photo-widget-placeholder');
-    const imageDiv = document.getElementById('photo-widget-image');
-    if (!placeholder || !imageDiv) return;
-    if (desktopPhotoId) {
-        placeholder.style.display = 'none';
-        imageDiv.style.display = 'block';
-        getImageFromDB(parseInt(desktopPhotoId)).then(blob => {
-            const url = URL.createObjectURL(blob);
-            imageDiv.style.backgroundImage = `url(${url})`;
-        }).catch(() => {
+    function deleteSms(id) {
+        smsMessages = smsMessages.filter(s => s.id !== id);
+        localStorage.setItem('m_sms', JSON.stringify(smsMessages));
+        renderSmsList();
+    }
+
+    // ==================== 桌面图片小组件 ====================
+    function renderDesktopPhoto() {
+        const placeholder = document.getElementById('photo-widget-placeholder');
+        const imageDiv = document.getElementById('photo-widget-image');
+        if (!placeholder || !imageDiv) return;
+        if (desktopPhotoId) {
+            placeholder.style.display = 'none';
+            imageDiv.style.display = 'block';
+            getImageFromDB(parseInt(desktopPhotoId)).then(blob => {
+                const url = URL.createObjectURL(blob);
+                imageDiv.style.backgroundImage = `url(${url})`;
+            }).catch(() => {
+                placeholder.style.display = 'flex';
+                imageDiv.style.display = 'none';
+                localStorage.removeItem('m_desktop_photo_id');
+                desktopPhotoId = null;
+            });
+        } else {
             placeholder.style.display = 'flex';
             imageDiv.style.display = 'none';
-            localStorage.removeItem('m_desktop_photo_id');
-            desktopPhotoId = null;
-        });
-    } else {
-        placeholder.style.display = 'flex';
-        imageDiv.style.display = 'none';
+        }
     }
-}
 
-function setupDesktopPhotoWidget() {
-    const widget = document.getElementById('desktop-photo-widget');
-    if (!widget) return;
-    widget.addEventListener('click', async function(e) {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = 'image/*';
-        input.onchange = async (ev) => {
-            const file = ev.target.files[0];
-            if (!file) return;
+    function setupDesktopPhotoWidget() {
+        const widget = document.getElementById('desktop-photo-widget');
+        if (!widget) return;
+        widget.addEventListener('click', async function(e) {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = async (ev) => {
+                const file = ev.target.files[0];
+                if (!file) return;
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('图片不能超过5MB');
+                    return;
+                }
+                const id = await saveImageToDB(file);
+                desktopPhotoId = id;
+                localStorage.setItem('m_desktop_photo_id', id);
+                renderDesktopPhoto();
+            };
+            input.click();
+        });
+    }
+
+    // ==================== 相册逻辑 ====================
+    async function renderAll() {
+        const box = document.getElementById('album-box');
+        box.innerHTML = '';
+        if (photos.length === 0) {
+            box.innerHTML = `
+                <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 20px; text-align:center; grid-column:span 4;">
+                    <span style="font-size:64px; margin-bottom:16px;">🖼️</span>
+                    <p style="font-size:16px; font-weight:500; color:var(--note-text-dark); margin-bottom:8px;">相册还是空的</p>
+                    <p style="font-size:14px; color:var(--note-text-gray); margin-bottom:20px;">拍点照片记录生活吧～</p>
+                    <button onclick="document.getElementById('upload-trigger').click()" style="background:var(--theme-primary); color:white; border:none; padding:10px 24px; border-radius:20px; font-size:14px; font-weight:500; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.1);">📤 上传第一张照片</button>
+                </div>
+            `;
+        } else {
+            const fragment = document.createDocumentFragment();
+            for (const id of photos) {
+                const div = document.createElement('div');
+                div.dataset.imgId = id;
+                div.className = 'album-thumb';
+                try {
+                    const fileBlob = await getImageFromDB(id);
+                    const url = URL.createObjectURL(fileBlob);
+                    div.style.backgroundImage = `url(${url})`;
+                    div.dataset.blobUrl = url;
+                } catch (e) {
+                    div.style.background = '#ccc';
+                }
+                fragment.appendChild(div);
+            }
+            box.appendChild(fragment);
+        }
+
+        // 纪念日
+        const aList = document.getElementById('anni-list');
+        aList.innerHTML = '';
+        annis.sort((a, b) => new Date(a.d) - new Date(b.d));
+        annis.forEach(a => {
+            const item = document.createElement('div');
+            item.className = 'list-item';
+            item.dataset.anniId = a.id;
+            const leftSpan = document.createElement('span');
+            leftSpan.textContent = `📅 ${a.d} ${a.t}`;
+            const delSpan = document.createElement('span');
+            delSpan.className = 'del-text';
+            delSpan.textContent = '删除';
+            item.appendChild(leftSpan);
+            item.appendChild(delSpan);
+            aList.appendChild(item);
+        });
+
+        // 通讯录
+        const cList = document.getElementById('con-list');
+        cList.innerHTML = '';
+        cons.forEach(c => {
+            const item = document.createElement('div');
+            item.className = 'list-item';
+            item.dataset.conId = c.id;
+            const nameSpan = document.createElement('span');
+            nameSpan.textContent = `👤 ${c.name}`;
+            const delSpan = document.createElement('span');
+            delSpan.className = 'del-text';
+            delSpan.textContent = '删除';
+            item.appendChild(nameSpan);
+            item.appendChild(delSpan);
+            cList.appendChild(item);
+        });
+    }
+
+    // ==================== 相册上传、查看、壁纸 ====================
+    async function upImg(el) {
+        const files = Array.from(el.files);
+        for (const file of files) {
             if (file.size > 5 * 1024 * 1024) {
-                alert('图片不能超过5MB');
-                return;
+                alert(`图片 ${file.name} 超过 5MB，请压缩后上传`);
+                continue;
             }
             const id = await saveImageToDB(file);
-            desktopPhotoId = id;
-            localStorage.setItem('m_desktop_photo_id', id);
-            renderDesktopPhoto();
-        };
-        input.click();
-    });
-}
-
-// ==================== 相册逻辑 ====================
-async function renderAll() {
-   // 相册
-const box = document.getElementById('album-box');
-box.innerHTML = '';
-
-// 空状态判断
-if (photos.length === 0) {
-    box.innerHTML = `
-        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 20px; text-align:center; grid-column:span 4;">
-            <span style="font-size:64px; margin-bottom:16px;">🖼️</span>
-            <p style="font-size:16px; font-weight:500; color:var(--note-text-dark); margin-bottom:8px;">相册还是空的</p>
-            <p style="font-size:14px; color:var(--note-text-gray); margin-bottom:20px;">拍点照片记录生活吧～</p>
-            <button onclick="document.getElementById('upload-trigger').click()" style="background:var(--theme-primary); color:white; border:none; padding:10px 24px; border-radius:20px; font-size:14px; font-weight:500; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.1);">📤 上传第一张照片</button>
-        </div>
-    `;
-} else {
-    const fragment = document.createDocumentFragment();
-    for (const id of photos) {
-        const div = document.createElement('div');
-        div.dataset.imgId = id;
-        div.className = 'album-thumb';
-        try {
-            const fileBlob = await getImageFromDB(id);
-            const url = URL.createObjectURL(fileBlob);
-            div.style.backgroundImage = `url(${url})`;
-            div.dataset.blobUrl = url;
-        } catch (e) {
-            div.style.background = '#ccc';
+            photos.push(id);
         }
-        fragment.appendChild(div);
-    }
-    box.appendChild(fragment);
-}
-
-    // 纪念日
-    const aList = document.getElementById('anni-list');
-    aList.innerHTML = '';
-    annis.sort((a, b) => new Date(a.d) - new Date(b.d));
-    annis.forEach(a => {
-        const item = document.createElement('div');
-        item.className = 'list-item';
-        item.dataset.anniId = a.id;
-        const leftSpan = document.createElement('span');
-        leftSpan.textContent = `📅 ${a.d} ${a.t}`;
-        const delSpan = document.createElement('span');
-        delSpan.className = 'del-text';
-        delSpan.textContent = '删除';
-        item.appendChild(leftSpan);
-        item.appendChild(delSpan);
-        aList.appendChild(item);
-    });
-
-    // 通讯录
-    const cList = document.getElementById('con-list');
-    cList.innerHTML = '';
-    cons.forEach(c => {
-        const item = document.createElement('div');
-        item.className = 'list-item';
-        item.dataset.conId = c.id;
-        const nameSpan = document.createElement('span');
-        nameSpan.textContent = `👤 ${c.name}`;
-        const delSpan = document.createElement('span');
-        delSpan.className = 'del-text';
-        delSpan.textContent = '删除';
-        item.appendChild(nameSpan);
-        item.appendChild(delSpan);
-        cList.appendChild(item);
-    });
-}
-
-// ==================== 相册上传、查看、壁纸 ====================
-async function upImg(el) {
-    const files = Array.from(el.files);
-    for (const file of files) {
-        if (file.size > 5 * 1024 * 1024) {
-            alert(`图片 ${file.name} 超过 5MB，请压缩后上传`);
-            continue;
-        }
-        const id = await saveImageToDB(file);
-        photos.push(id);
-    }
-    localStorage.setItem('m_photos', JSON.stringify(photos));
-    renderAll();
-}
-
-let currentImgId = null;
-let currentImgBlobUrl = null;
-
-async function viewImg(imgId) {
-    try {
-        const fileBlob = await getImageFromDB(parseInt(imgId));
-        const url = URL.createObjectURL(fileBlob);
-        if (currentImgBlobUrl) URL.revokeObjectURL(currentImgBlobUrl);
-        currentImgBlobUrl = url;
-        currentImgId = imgId;
-        document.getElementById('v-img').src = url;
-        document.getElementById('viewer').style.display = 'flex';
-    } catch (e) {
-        alert('图片加载失败');
-    }
-}
-
-function closeViewer() { document.getElementById('viewer').style.display = 'none'; }
-
-async function setWallpaper() {
-    if (!currentImgId) return;
-    try {
-        await getImageFromDB(parseInt(currentImgId));
-        localStorage.setItem('m_wallpaper_id', currentImgId);
-        wallpaperId = currentImgId;
-        await applyWallpaper();
-        alert('壁纸设置成功！');
-        closeViewer();
-    } catch (e) {
-        alert('壁纸设置失败');
-    }
-}
-
-async function applyWallpaper() {
-    if (!wallpaperId) return;
-    try {
-        const fileBlob = await getImageFromDB(parseInt(wallpaperId));
-        const url = URL.createObjectURL(fileBlob);
-        document.getElementById('p-home').style.background = `url(${url})`;
-    } catch (e) {
-        console.warn('壁纸加载失败');
-        localStorage.removeItem('m_wallpaper_id');
-        wallpaperId = null;
-    }
-}
-
-// ==================== 通讯录 CRUD ====================
-function saveCon() {
-    const n = document.getElementById('cn').value;
-    if (n) {
-        cons.push({ id: Date.now() + '-' + Math.random().toString(36).substr(2, 6), name: n });
-        localStorage.setItem('m_cons', JSON.stringify(cons));
+        localStorage.setItem('m_photos', JSON.stringify(photos));
         renderAll();
-        closeMod('m-con');
-        document.getElementById('cn').value = '';
     }
-}
 
-function delCon(id) {
-    if (confirm("确定删除该联系人？")) {
-        const index = cons.findIndex(c => c.id === id);
-        if (index !== -1) {
-            cons.splice(index, 1);
+    let currentImgId = null;
+    let currentImgBlobUrl = null;
+
+    async function viewImg(imgId) {
+        try {
+            const fileBlob = await getImageFromDB(parseInt(imgId));
+            const url = URL.createObjectURL(fileBlob);
+            if (currentImgBlobUrl) URL.revokeObjectURL(currentImgBlobUrl);
+            currentImgBlobUrl = url;
+            currentImgId = imgId;
+            document.getElementById('v-img').src = url;
+            document.getElementById('viewer').style.display = 'flex';
+        } catch (e) {
+            alert('图片加载失败');
+        }
+    }
+
+    function closeViewer() { document.getElementById('viewer').style.display = 'none'; }
+
+    async function setWallpaper() {
+        if (!currentImgId) return;
+        try {
+            await getImageFromDB(parseInt(currentImgId));
+            localStorage.setItem('m_wallpaper_id', currentImgId);
+            wallpaperId = currentImgId;
+            await applyWallpaper();
+            alert('壁纸设置成功！');
+            closeViewer();
+        } catch (e) {
+            alert('壁纸设置失败');
+        }
+    }
+
+    async function applyWallpaper() {
+        if (!wallpaperId) return;
+        try {
+            const fileBlob = await getImageFromDB(parseInt(wallpaperId));
+            const url = URL.createObjectURL(fileBlob);
+            document.getElementById('p-home').style.background = `url(${url})`;
+        } catch (e) {
+            console.warn('壁纸加载失败');
+            localStorage.removeItem('m_wallpaper_id');
+            wallpaperId = null;
+        }
+    }
+
+    // ==================== 通讯录 CRUD ====================
+    function saveCon() {
+        const n = document.getElementById('cn').value;
+        if (n) {
+            cons.push({ id: Date.now() + '-' + Math.random().toString(36).substr(2, 6), name: n });
             localStorage.setItem('m_cons', JSON.stringify(cons));
-            delete messages[id];
-            localStorage.setItem('m_messages', JSON.stringify(messages));
             renderAll();
-            if (currentChatContactId === id) {
-                currentChatContactId = null;
-                document.getElementById('chat-title').textContent = '请选择联系人';
-                document.getElementById('chat-flow').innerHTML = '';
+            closeMod('m-con');
+            document.getElementById('cn').value = '';
+        }
+    }
+
+    function delCon(id) {
+        if (confirm("确定删除该联系人？")) {
+            const index = cons.findIndex(c => c.id === id);
+            if (index !== -1) {
+                cons.splice(index, 1);
+                localStorage.setItem('m_cons', JSON.stringify(cons));
+                delete messages[id];
+                localStorage.setItem('m_messages', JSON.stringify(messages));
+                renderAll();
+                if (currentChatContactId === id) {
+                    currentChatContactId = null;
+                    document.getElementById('chat-title').textContent = '请选择联系人';
+                    document.getElementById('chat-flow').innerHTML = '';
+                }
             }
         }
     }
-}
 
-// ==================== 纪念日 CRUD ====================
-function saveAnni() {
-    const t = document.getElementById('at').value,
-          d = document.getElementById('ad').value;
-    if (t && d) {
-        annis.push({ id: Date.now() + '-' + Math.random().toString(36).substr(2, 6), t, d });
-        localStorage.setItem('m_annis', JSON.stringify(annis));
-        renderAll();
-        renderCalendar();
-        closeMod('m-anni');
-        document.getElementById('at').value = '';
-        document.getElementById('ad').value = '';
-    }
-}
-
-function delAnni(id) {
-    const index = annis.findIndex(a => a.id === id);
-    if (index !== -1) {
-        annis.splice(index, 1);
-        localStorage.setItem('m_annis', JSON.stringify(annis));
-        renderAll();
-        renderCalendar();
-    }
-}
-
-// ==================== 日历生成 ====================
-function renderCalendar() {
-    const now = new Date();
-    const y = now.getFullYear();
-    const m = now.getMonth();
-    document.getElementById('cal-month').innerText = `${y}年${m + 1}月`;
-    const firstDay = new Date(y, m, 1).getDay();
-    const lastDate = new Date(y, m + 1, 0).getDate();
-    const body = document.getElementById('cal-body');
-    body.innerHTML = '';
-    const fragment = document.createDocumentFragment();
-    ['日', '一', '二', '三', '四', '五', '六'].forEach(w => {
-        const div = document.createElement('div');
-        div.className = 'cal-weekday';
-        div.textContent = w;
-        fragment.appendChild(div);
-    });
-    for (let i = 0; i < firstDay; i++) fragment.appendChild(document.createElement('div'));
-    for (let d = 1; d <= lastDate; d++) {
-        const dateStr = `${y}-${(m + 1).toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}`;
-        const isToday = (d === now.getDate()) ? 'today' : '';
-        const hasEvent = annis.some(a => a.d === dateStr) ? 'has-event' : '';
-        const div = document.createElement('div');
-        div.className = `cal-day ${isToday} ${hasEvent}`.trim();
-        div.textContent = d;
-        div.onclick = () => showEventsForDate(dateStr);
-        fragment.appendChild(div);
-    }
-    body.appendChild(fragment);
-}
-
-// ==================== 聊天与 AI ====================
-function saveApi() {
-    apiCfg = {
-        enabled: document.getElementById('api-toggle').checked,
-        url: document.getElementById('api-url').value,
-        key: document.getElementById('api-key').value
-    };
-    localStorage.setItem('m_api_cfg', JSON.stringify(apiCfg));
-    const customColor = document.getElementById('custom-color-picker').value;
-    themeColor = customColor;
-    localStorage.setItem('m_theme_color', themeColor);
-    applyTheme(themeColor);
-    closeMod('m-api');
-}
-
-function getCurrentTimeString() {
-    const now = new Date();
-    return now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-}
-
-function append(side, text, time = null) {
-    const flow = document.getElementById('chat-flow');
-    const row = document.createElement('div');
-    row.className = `msg-row ${side}`;
-    const bubble = document.createElement('div');
-    bubble.className = 'bubble';
-    const textSpan = document.createElement('span');
-    textSpan.textContent = text;
-    bubble.appendChild(textSpan);
-    const timeSpan = document.createElement('span');
-    timeSpan.className = 'msg-time';
-    timeSpan.textContent = time || getCurrentTimeString();
-    bubble.appendChild(timeSpan);
-    row.appendChild(bubble);
-    flow.appendChild(row);
-    flow.scrollTop = flow.scrollHeight;
-    return bubble;
-}
-
-// 本地智能回复
-function getLocalReply(message) {
-    const lowerMsg = message.toLowerCase().trim();
-    if (lowerMsg.includes('时间') || lowerMsg.includes('几点')) {
-        const now = new Date();
-        return `现在是 ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-    }
-    if (lowerMsg.includes('日期') || lowerMsg.includes('几号')) {
-        const now = new Date();
-        return `今天是 ${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日`;
-    }
-    if (lowerMsg.includes('星期')) {
-        const week = ['日', '一', '二', '三', '四', '五', '六'];
-        return `星期${week[new Date().getDay()]}`;
-    }
-    if (lowerMsg.includes('天气')) return '北京今天晴，18～26℃，空气质量优。';
-    if (lowerMsg.includes('你好') || lowerMsg.includes('在吗')) return '你好呀～今天过得开心吗？';
-    if (lowerMsg.includes('谢谢')) return '不客气～';
-    if (lowerMsg.includes('笑话')) {
-        const jokes = ['为什么数学书总是很忧郁？——因为它有太多问题。', '为什么手机要喝牛奶？——因为要“充电奶”！'];
-        return jokes[Math.floor(Math.random() * jokes.length)];
-    }
-    if (lowerMsg.includes('情话')) return '你知道你和星星的区别吗？星星在天上，你在我心里。';
-    if (lowerMsg.includes('夸我')) return '你今天的颜值已经超过地球99.99%的人类了！';
-    if (lowerMsg.includes('硬币')) return '🪙 投硬币结果：' + (Math.random() < 0.5 ? '正面' : '反面');
-    if (lowerMsg.includes('运势')) {
-        const fortunes = ['大吉🌟', '吉✨', '中吉🌿', '小吉🌸', '末吉🍂', '凶🌧️', '大凶⚡'];
-        return '今日运势：' + fortunes[Math.floor(Math.random() * fortunes.length)];
-    }
-    if (lowerMsg.includes('抽签')) {
-        const signs = ['上上签', '上签', '中签', '下签', '下下签'];
-        return '你抽到了：' + signs[Math.floor(Math.random() * signs.length)] + '！';
-    }
-    return null;
-}
-
-async function sendMsg() {
-    const input = document.getElementById('chat-in');
-    const val = input.value.trim();
-    if (!val) return;
-    if (!currentChatContactId) {
-        alert('请先从通讯录选择一个联系人');
-        return;
-    }
-    const timeStr = getCurrentTimeString();
-    append('mine', val, timeStr);
-    if (!messages[currentChatContactId]) messages[currentChatContactId] = [];
-    messages[currentChatContactId].push({ side: 'mine', text: val, time: timeStr });
-    localStorage.setItem('m_messages', JSON.stringify(messages));
-    input.value = '';
-
-    const localReply = getLocalReply(val);
-    if (localReply) {
-        const replyTime = getCurrentTimeString();
-        append('other', localReply, replyTime);
-        if (!messages[currentChatContactId]) messages[currentChatContactId] = [];
-        messages[currentChatContactId].push({ side: 'other', text: localReply, time: replyTime });
-        localStorage.setItem('m_messages', JSON.stringify(messages));
-        return;
-    }
-
-    if (!apiCfg.enabled) {
-        setTimeout(() => {
-            const reply = "已收到消息（当前为本地模式）";
-            const replyTime = getCurrentTimeString();
-            append('other', reply, replyTime);
-            if (!messages[currentChatContactId]) messages[currentChatContactId] = [];
-            messages[currentChatContactId].push({ side: 'other', text: reply, time: replyTime });
-            localStorage.setItem('m_messages', JSON.stringify(messages));
-        }, 600);
-        return;
-    }
-
-    const tempBubble = append('other', "...", timeStr);
-    try {
-        const res = await fetch(apiCfg.url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiCfg.key}` },
-            body: JSON.stringify({
-                model: 'deepseek-ai/DeepSeek-V3',
-                messages: [
-                    { role: "system", content: "你叫木木，温柔简练。" },
-                    { role: "user", content: val }
-                ]
-            })
-        });
-        const data = await res.json();
-        const replyText = data.choices[0].message.content;
-        const replyTime = getCurrentTimeString();
-        tempBubble.querySelector('span').textContent = replyText;
-        tempBubble.querySelector('.msg-time').textContent = replyTime;
-        if (!messages[currentChatContactId]) messages[currentChatContactId] = [];
-        messages[currentChatContactId].push({ side: 'other', text: replyText, time: replyTime });
-        localStorage.setItem('m_messages', JSON.stringify(messages));
-    } catch (e) {
-        tempBubble.querySelector('span').textContent = "连接超时，请检查配置。";
-        tempBubble.querySelector('.msg-time').textContent = getCurrentTimeString();
-    }
-}
-// ==================== 函数定义结束（bindEvents 不包含在内）====================。
-
-// ==================== 事件监听统一绑定（完整版）====================
-function bindEvents() {
-    // 桌面图标
-    document.querySelectorAll('.app-item[data-page]').forEach(el => {
-        el.addEventListener('click', function() { to(this.dataset.page); });
-    });
-    // 返回按钮
-    document.querySelectorAll('.nav-back[data-home]').forEach(el => {
-        el.addEventListener('click', function() { to(this.dataset.home); });
-    });
-    // 打开弹窗（原有）
-    document.querySelectorAll('.nav-setting[data-mod], .nav-add[data-mod]').forEach(el => {
-        el.addEventListener('click', function() { openMod(this.dataset.mod); });
-    });
-    // 相册上传
-    document.getElementById('upload-trigger')?.addEventListener('click', function() { document.getElementById('up').click(); });
-    document.getElementById('up')?.addEventListener('change', function(e) { upImg(e.target); });
-    // 聊天发送
-    document.getElementById('send-btn')?.addEventListener('click', sendMsg);
-    document.getElementById('chat-in')?.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMsg(); });
-    // 弹窗取消
-    document.querySelectorAll('.modal-cancel').forEach(el => {
-        el.addEventListener('click', function() { closeMod(this.dataset.mod); });
-    });
-    // 保存设置
-    document.getElementById('save-api-btn')?.addEventListener('click', saveApi);
-    document.getElementById('save-anni-btn')?.addEventListener('click', saveAnni);
-    document.getElementById('save-con-btn')?.addEventListener('click', saveCon);
-    document.getElementById('set-wallpaper-btn')?.addEventListener('click', setWallpaper);
-    document.getElementById('close-viewer-btn')?.addEventListener('click', closeViewer);
-    // 主题色
-    document.querySelectorAll('.theme-color-option').forEach(el => {
-        el.addEventListener('click', function() { const color = this.dataset.color; document.getElementById('custom-color-picker').value = color; applyTheme(color); });
-    });
-    document.getElementById('custom-color-picker')?.addEventListener('input', function(e) { applyTheme(e.target.value); });
-    // 纪念日删除
-    document.getElementById('anni-list')?.addEventListener('click', function(e) {
-        const delBtn = e.target.closest('.del-text'); if (!delBtn) return;
-        const item = delBtn.closest('.list-item'); if (!item) return;
-        const id = item.dataset.anniId; if (id) delAnni(id);
-    });
-    // 通讯录点击
-    document.getElementById('con-list')?.addEventListener('click', function(e) {
-        const item = e.target.closest('.list-item'); if (!item) return;
-        const id = item.dataset.conId; if (!id) return;
-        if (e.target.classList.contains('del-text')) { e.stopPropagation(); delCon(id); return; }
-        const contact = cons.find(c => c.id === id); const name = contact ? contact.name : '联系人';
-        currentChatContactId = id; document.getElementById('chat-title').textContent = name;
-        document.getElementById('chat-flow').innerHTML = '';
-        if (messages[id]) messages[id].forEach(msg => append(msg.side, msg.text, msg.time || ''));
-        to('p-chat');
-    });
-    // 相册点击查看
-    document.getElementById('album-box')?.addEventListener('click', function(e) {
-        const thumb = e.target.closest('[data-imgId]'); if (thumb) viewImg(thumb.dataset.imgId);
-    });
-    // 个人资料事件
-    document.getElementById('profile-avatar')?.addEventListener('click', function() {
-        const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/*';
-        input.onchange = async (e) => { if (e.target.files[0]) await uploadAvatar(e.target.files[0]); };
-        input.click();
-    });
-    document.getElementById('save-profile-nickname-btn')?.addEventListener('click', saveProfileNickname);
-    document.getElementById('save-profile-signature-btn')?.addEventListener('click', saveProfileSignature);
-    document.getElementById('save-profile-region-btn')?.addEventListener('click', saveProfileRegion);
-    document.getElementById('save-profile-birthday-btn')?.addEventListener('click', saveProfileBirthday);
-    document.getElementById('up-wallpaper')?.addEventListener('change', async function(e) {
-        if (e.target.files[0]) {
-            const file = e.target.files[0]; if (file.size > 5*1024*1024) { alert('图片超过5MB'); return; }
-            const id = await saveImageToDB(file); localStorage.setItem('m_wallpaper_id', id); wallpaperId = id;
-            await applyWallpaper(); alert('聊天背景已更换');
+    // ==================== 纪念日 CRUD ====================
+    function saveAnni() {
+        const t = document.getElementById('at').value,
+              d = document.getElementById('ad').value;
+        if (t && d) {
+            annis.push({ id: Date.now() + '-' + Math.random().toString(36).substr(2, 6), t, d });
+            localStorage.setItem('m_annis', JSON.stringify(annis));
+            renderAll();
+            renderCalendar();
+            closeMod('m-anni');
+            document.getElementById('at').value = '';
+            document.getElementById('ad').value = '';
         }
-    });
-    document.getElementById('font-size-slider')?.addEventListener('input', function(e) {
-        const size = e.target.value + 'px'; document.documentElement.style.setProperty('--note-text-size', size);
-        document.querySelectorAll('.bubble').forEach(el => el.style.fontSize = size);
-    });
-    document.getElementById('save-bubble-style-btn')?.addEventListener('click', function() {
-        alert('气泡样式已切换为：' + document.getElementById('bubble-style-select').value + '（演示功能）');
-        closeMod('m-bubble-style');
-    });
-    // 表情包 & Music
-    document.getElementById('emoticon-library-link')?.addEventListener('click', function() { openMod('m-emoticon-library'); });
-    document.getElementById('music-link')?.addEventListener('click', function() { openMod('m-music-player'); });
-    document.getElementById('add-emoticon-btn')?.addEventListener('click', addEmoticon);
-    document.getElementById('add-music-btn')?.addEventListener('click', addMusic);
-    // 日记本
-    document.getElementById('save-diary-btn')?.addEventListener('click', addDiary);
-    // 短信
-    document.getElementById('send-sms-btn')?.addEventListener('click', sendSms);
-    // 底部导航
-    document.getElementById('bottom-sms')?.addEventListener('click', function() { to('p-sms'); });
-    document.getElementById('bottom-settings')?.addEventListener('click', function() { openMod('m-api'); });
-    document.getElementById('bottom-memory')?.addEventListener('click', function() { openMod('m-music-player'); });
-
-    // ========== 🎲 新增互动工具按钮 ==========
-    // 骰子
-    document.getElementById('chat-dice-btn')?.addEventListener('click', function() {
-        const userRoll = Math.floor(Math.random() * 6) + 1;
-        append('mine', `🎲 掷出了 ${userRoll} 点`);
-        setTimeout(() => {
-            const aiRoll = Math.floor(Math.random() * 6) + 1;
-            append('other', `🎲 我掷出了 ${aiRoll} 点`);
-            if (userRoll > aiRoll) append('other', '你赢啦！🎉');
-            else if (userRoll < aiRoll) append('other', '哈哈，我赢咯～');
-            else append('other', '平局，再玩一次？');
-        }, 600);
-    });
-    // 红包（简易版）
-  document.getElementById('chat-hongbao-btn')?.addEventListener('click', function() {
-    // 随机生成红包金额（0.01~10.00）
-    const amount = (Math.random() * 9.99 + 0.01).toFixed(2);
-    append('mine', `🧧 我发了一个 ${amount} 元的红包，快抢！`);
-    
-    setTimeout(() => {
-        // 木木“抢”红包
-        const lucky = (Math.random() * amount).toFixed(2);
-        append('other', `💰 我抢到了 ${lucky} 元！谢谢老板～`);
-    }, 800);
-});
-    // 五子棋
-   document.getElementById('chat-gobang-btn')?.addEventListener('click', function() {
-    startGobangGame();
-});
-}
-
-    // -------------------- 时钟 --------------------
-   // ==================== 显示某天的纪念日 ====================
-function showEventsForDate(dateStr) {
-    // 1. 从 annis 数组中筛选出当天的纪念日
-    const events = annis.filter(a => a.d === dateStr);
-    
-    // 2. 如果没有纪念日，给出提示（虽然日历上有点，但以防万一）
-    if (events.length === 0) {
-        alert('这一天没有纪念日哦～');
-        return;
     }
-    
-    // 3. 格式化日期显示，把 "2026-02-12" 变成 "2026年2月12日"
-    const [year, month, day] = dateStr.split('-');
-    const displayDate = `${year}年${parseInt(month)}月${parseInt(day)}日`;
-    
-    // 4. 生成纪念日列表的 HTML
-    let listHtml = '';
-    events.forEach(event => {
-        listHtml += `<div style="padding: 12px; border-bottom: 1px solid var(--note-border); display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-size: 15px; color: var(--note-text-dark);">📌 ${event.t}</span>
-            <span style="color: var(--note-text-gray); font-size: 12px; background: var(--note-hover); padding: 4px 8px; border-radius: 12px;">纪念日</span>
-        </div>`;
-    });
-    
-    // 5. 动态创建弹窗（和论坛、世界观弹窗一样的风格）
-    const modalHtml = `
-        <div class="modal" id="m-event-detail" style="display:flex;">
-            <div class="modal-body" style="max-width: 320px;">
-                <h3 style="margin-bottom: 16px;">📅 ${displayDate}</h3>
-                <div style="max-height: 300px; overflow-y: auto; margin-bottom: 16px;">
-                    ${listHtml}
-                </div>
-                <button class="modal-btn" onclick="closeMod('m-event-detail')" style="margin-top: 0;">关闭</button>
-            </div>
-        </div>
-    `;
-    
-    // 6. 将弹窗添加到页面
-    const div = document.createElement('div');
-    div.innerHTML = modalHtml;
-    document.body.appendChild(div);
-}
 
-// 记得把 closeMod 挂到全局（如果还没有的话）
-window.closeMod = window.closeMod || function(id) {
-    const el = document.getElementById(id);
-    if (el) el.style.display = 'none';
-};
- function updateClock() {
+    function delAnni(id) {
+        const index = annis.findIndex(a => a.id === id);
+        if (index !== -1) {
+            annis.splice(index, 1);
+            localStorage.setItem('m_annis', JSON.stringify(annis));
+            renderAll();
+            renderCalendar();
+        }
+    }
+
+    // ==================== 日历生成 ====================
+    function renderCalendar() {
+        const now = new Date();
+        const y = now.getFullYear();
+        const m = now.getMonth();
+        document.getElementById('cal-month').innerText = `${y}年${m + 1}月`;
+        const firstDay = new Date(y, m, 1).getDay();
+        const lastDate = new Date(y, m + 1, 0).getDate();
+        const body = document.getElementById('cal-body');
+        body.innerHTML = '';
+        const fragment = document.createDocumentFragment();
+        ['日', '一', '二', '三', '四', '五', '六'].forEach(w => {
+            const div = document.createElement('div');
+            div.className = 'cal-weekday';
+            div.textContent = w;
+            fragment.appendChild(div);
+        });
+        for (let i = 0; i < firstDay; i++) fragment.appendChild(document.createElement('div'));
+        for (let d = 1; d <= lastDate; d++) {
+            const dateStr = `${y}-${(m + 1).toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}`;
+            const isToday = (d === now.getDate()) ? 'today' : '';
+            const hasEvent = annis.some(a => a.d === dateStr) ? 'has-event' : '';
+            const div = document.createElement('div');
+            div.className = `cal-day ${isToday} ${hasEvent}`.trim();
+            div.textContent = d;
+            div.onclick = () => showEventsForDate(dateStr);
+            fragment.appendChild(div);
+        }
+        body.appendChild(fragment);
+    }
+
+    // ==================== 纪念日弹窗 ====================
+    function showEventsForDate(dateStr) {
+        const events = annis.filter(a => a.d === dateStr);
+        if (events.length === 0) {
+            alert('这一天没有纪念日哦～');
+            return;
+        }
+        const [year, month, day] = dateStr.split('-');
+        const displayDate = `${year}年${parseInt(month)}月${parseInt(day)}日`;
+        let listHtml = '';
+        events.forEach(event => {
+            listHtml += `<div style="padding: 12px; border-bottom: 1px solid var(--note-border); display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 15px; color: var(--note-text-dark);">📌 ${event.t}</span>
+                <span style="color: var(--note-text-gray); font-size: 12px; background: var(--note-hover); padding: 4px 8px; border-radius: 12px;">纪念日</span>
+            </div>`;
+        });
+        const modalHtml = `
+            <div class="modal" id="m-event-detail" style="display:flex;">
+                <div class="modal-body" style="max-width: 320px;">
+                    <h3 style="margin-bottom: 16px;">📅 ${displayDate}</h3>
+                    <div style="max-height: 300px; overflow-y: auto; margin-bottom: 16px;">
+                        ${listHtml}
+                    </div>
+                    <button class="modal-btn" onclick="closeMod('m-event-detail')" style="margin-top: 0;">关闭</button>
+                </div>
+            </div>
+        `;
+        const div = document.createElement('div');
+        div.innerHTML = modalHtml;
+        document.body.appendChild(div);
+    }
+
+    // ==================== 聊天与 AI ====================
+    function saveApi() {
+        apiCfg = {
+            enabled: document.getElementById('api-toggle').checked,
+            url: document.getElementById('api-url').value,
+            key: document.getElementById('api-key').value
+        };
+        localStorage.setItem('m_api_cfg', JSON.stringify(apiCfg));
+        const customColor = document.getElementById('custom-color-picker').value;
+        themeColor = customColor;
+        localStorage.setItem('m_theme_color', themeColor);
+        applyTheme(themeColor);
+        closeMod('m-api');
+    }
+
+    function getCurrentTimeString() {
+        const now = new Date();
+        return now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+    }
+
+    function append(side, text, time = null) {
+        const flow = document.getElementById('chat-flow');
+        const row = document.createElement('div');
+        row.className = `msg-row ${side}`;
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        const textSpan = document.createElement('span');
+        textSpan.textContent = text;
+        bubble.appendChild(textSpan);
+        const timeSpan = document.createElement('span');
+        timeSpan.className = 'msg-time';
+        timeSpan.textContent = time || getCurrentTimeString();
+        bubble.appendChild(timeSpan);
+        row.appendChild(bubble);
+        flow.appendChild(row);
+        flow.scrollTop = flow.scrollHeight;
+        return bubble;
+    }
+
+    // 本地智能回复
+    function getLocalReply(message) {
+        const lowerMsg = message.toLowerCase().trim();
+        if (lowerMsg.includes('时间') || lowerMsg.includes('几点')) {
+            const now = new Date();
+            return `现在是 ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+        }
+        if (lowerMsg.includes('日期') || lowerMsg.includes('几号')) {
+            const now = new Date();
+            return `今天是 ${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日`;
+        }
+        if (lowerMsg.includes('星期')) {
+            const week = ['日', '一', '二', '三', '四', '五', '六'];
+            return `星期${week[new Date().getDay()]}`;
+        }
+        if (lowerMsg.includes('天气')) return '北京今天晴，18～26℃，空气质量优。';
+        if (lowerMsg.includes('你好') || lowerMsg.includes('在吗')) return '你好呀～今天过得开心吗？';
+        if (lowerMsg.includes('谢谢')) return '不客气～';
+        if (lowerMsg.includes('笑话')) {
+            const jokes = ['为什么数学书总是很忧郁？——因为它有太多问题。', '为什么手机要喝牛奶？——因为要“充电奶”！'];
+            return jokes[Math.floor(Math.random() * jokes.length)];
+        }
+        if (lowerMsg.includes('情话')) return '你知道你和星星的区别吗？星星在天上，你在我心里。';
+        if (lowerMsg.includes('夸我')) return '你今天的颜值已经超过地球99.99%的人类了！';
+        if (lowerMsg.includes('硬币')) return '🪙 投硬币结果：' + (Math.random() < 0.5 ? '正面' : '反面');
+        if (lowerMsg.includes('运势')) {
+            const fortunes = ['大吉🌟', '吉✨', '中吉🌿', '小吉🌸', '末吉🍂', '凶🌧️', '大凶⚡'];
+            return '今日运势：' + fortunes[Math.floor(Math.random() * fortunes.length)];
+        }
+        if (lowerMsg.includes('抽签')) {
+            const signs = ['上上签', '上签', '中签', '下签', '下下签'];
+            return '你抽到了：' + signs[Math.floor(Math.random() * signs.length)] + '！';
+        }
+        return null;
+    }
+
+    async function sendMsg() {
+        const input = document.getElementById('chat-in');
+        const val = input.value.trim();
+        if (!val) return;
+        if (!currentChatContactId) {
+            alert('请先从通讯录选择一个联系人');
+            return;
+        }
+        const timeStr = getCurrentTimeString();
+        append('mine', val, timeStr);
+        if (!messages[currentChatContactId]) messages[currentChatContactId] = [];
+        messages[currentChatContactId].push({ side: 'mine', text: val, time: timeStr });
+        localStorage.setItem('m_messages', JSON.stringify(messages));
+        input.value = '';
+
+        const localReply = getLocalReply(val);
+        if (localReply) {
+            const replyTime = getCurrentTimeString();
+            append('other', localReply, replyTime);
+            if (!messages[currentChatContactId]) messages[currentChatContactId] = [];
+            messages[currentChatContactId].push({ side: 'other', text: localReply, time: replyTime });
+            localStorage.setItem('m_messages', JSON.stringify(messages));
+            return;
+        }
+
+        if (!apiCfg.enabled) {
+            setTimeout(() => {
+                const reply = "已收到消息（当前为本地模式）";
+                const replyTime = getCurrentTimeString();
+                append('other', reply, replyTime);
+                if (!messages[currentChatContactId]) messages[currentChatContactId] = [];
+                messages[currentChatContactId].push({ side: 'other', text: reply, time: replyTime });
+                localStorage.setItem('m_messages', JSON.stringify(messages));
+            }, 600);
+            return;
+        }
+
+        const tempBubble = append('other', "...", timeStr);
+        try {
+            const res = await fetch(apiCfg.url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiCfg.key}` },
+                body: JSON.stringify({
+                    model: 'deepseek-ai/DeepSeek-V3',
+                    messages: [
+                        { role: "system", content: "你叫木木，温柔简练。" },
+                        { role: "user", content: val }
+                    ]
+                })
+            });
+            const data = await res.json();
+            const replyText = data.choices[0].message.content;
+            const replyTime = getCurrentTimeString();
+            tempBubble.querySelector('span').textContent = replyText;
+            tempBubble.querySelector('.msg-time').textContent = replyTime;
+            if (!messages[currentChatContactId]) messages[currentChatContactId] = [];
+            messages[currentChatContactId].push({ side: 'other', text: replyText, time: replyTime });
+            localStorage.setItem('m_messages', JSON.stringify(messages));
+        } catch (e) {
+            tempBubble.querySelector('span').textContent = "连接超时，请检查配置。";
+            tempBubble.querySelector('.msg-time').textContent = getCurrentTimeString();
+        }
+    }
+
+    // ==================== 事件监听统一绑定 ====================
+    function bindEvents() {
+        document.querySelectorAll('.app-item[data-page]').forEach(el => {
+            el.addEventListener('click', function() { to(this.dataset.page); });
+        });
+        document.querySelectorAll('.nav-back[data-home]').forEach(el => {
+            el.addEventListener('click', function() { to(this.dataset.home); });
+        });
+        document.querySelectorAll('.nav-setting[data-mod], .nav-add[data-mod]').forEach(el => {
+            el.addEventListener('click', function() { openMod(this.dataset.mod); });
+        });
+        document.getElementById('upload-trigger')?.addEventListener('click', function() { document.getElementById('up').click(); });
+        document.getElementById('up')?.addEventListener('change', function(e) { upImg(e.target); });
+        document.getElementById('send-btn')?.addEventListener('click', sendMsg);
+        document.getElementById('chat-in')?.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMsg(); });
+        document.querySelectorAll('.modal-cancel').forEach(el => {
+            el.addEventListener('click', function() { closeMod(this.dataset.mod); });
+        });
+        document.getElementById('save-api-btn')?.addEventListener('click', saveApi);
+        document.getElementById('save-anni-btn')?.addEventListener('click', saveAnni);
+        document.getElementById('save-con-btn')?.addEventListener('click', saveCon);
+        document.getElementById('set-wallpaper-btn')?.addEventListener('click', setWallpaper);
+        document.getElementById('close-viewer-btn')?.addEventListener('click', closeViewer);
+        document.querySelectorAll('.theme-color-option').forEach(el => {
+            el.addEventListener('click', function() { const color = this.dataset.color; document.getElementById('custom-color-picker').value = color; applyTheme(color); });
+        });
+        document.getElementById('custom-color-picker')?.addEventListener('input', function(e) { applyTheme(e.target.value); });
+        document.getElementById('anni-list')?.addEventListener('click', function(e) {
+            const delBtn = e.target.closest('.del-text'); if (!delBtn) return;
+            const item = delBtn.closest('.list-item'); if (!item) return;
+            const id = item.dataset.anniId; if (id) delAnni(id);
+        });
+        document.getElementById('con-list')?.addEventListener('click', function(e) {
+            const item = e.target.closest('.list-item'); if (!item) return;
+            const id = item.dataset.conId; if (!id) return;
+            if (e.target.classList.contains('del-text')) { e.stopPropagation(); delCon(id); return; }
+            const contact = cons.find(c => c.id === id); const name = contact ? contact.name : '联系人';
+            currentChatContactId = id; document.getElementById('chat-title').textContent = name;
+            document.getElementById('chat-flow').innerHTML = '';
+            if (messages[id]) messages[id].forEach(msg => append(msg.side, msg.text, msg.time || ''));
+            to('p-chat');
+        });
+        document.getElementById('album-box')?.addEventListener('click', function(e) {
+            const thumb = e.target.closest('[data-imgId]'); if (thumb) viewImg(thumb.dataset.imgId);
+        });
+        document.getElementById('profile-avatar')?.addEventListener('click', function() {
+            const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/*';
+            input.onchange = async (e) => { if (e.target.files[0]) await uploadAvatar(e.target.files[0]); };
+            input.click();
+        });
+        document.getElementById('save-profile-nickname-btn')?.addEventListener('click', saveProfileNickname);
+        document.getElementById('save-profile-signature-btn')?.addEventListener('click', saveProfileSignature);
+        document.getElementById('save-profile-region-btn')?.addEventListener('click', saveProfileRegion);
+        document.getElementById('save-profile-birthday-btn')?.addEventListener('click', saveProfileBirthday);
+        document.getElementById('up-wallpaper')?.addEventListener('change', async function(e) {
+            if (e.target.files[0]) {
+                const file = e.target.files[0]; if (file.size > 5*1024*1024) { alert('图片超过5MB'); return; }
+                const id = await saveImageToDB(file); localStorage.setItem('m_wallpaper_id', id); wallpaperId = id;
+                await applyWallpaper(); alert('聊天背景已更换');
+            }
+        });
+        document.getElementById('font-size-slider')?.addEventListener('input', function(e) {
+            const size = e.target.value + 'px'; document.documentElement.style.setProperty('--note-text-size', size);
+            document.querySelectorAll('.bubble').forEach(el => el.style.fontSize = size);
+        });
+        document.getElementById('save-bubble-style-btn')?.addEventListener('click', function() {
+            alert('气泡样式已切换为：' + document.getElementById('bubble-style-select').value + '（演示功能）');
+            closeMod('m-bubble-style');
+        });
+        document.getElementById('emoticon-library-link')?.addEventListener('click', function() { openMod('m-emoticon-library'); });
+        document.getElementById('music-link')?.addEventListener('click', function() { openMod('m-music-player'); });
+        document.getElementById('add-emoticon-btn')?.addEventListener('click', addEmoticon);
+        document.getElementById('add-music-btn')?.addEventListener('click', addMusic);
+        document.getElementById('save-diary-btn')?.addEventListener('click', addDiary);
+        document.getElementById('send-sms-btn')?.addEventListener('click', sendSms);
+        document.getElementById('bottom-sms')?.addEventListener('click', function() { to('p-sms'); });
+        document.getElementById('bottom-settings')?.addEventListener('click', function() { openMod('m-api'); });
+        document.getElementById('bottom-memory')?.addEventListener('click', function() { openMod('m-music-player'); });
+
+        // 互动工具
+        document.getElementById('chat-dice-btn')?.addEventListener('click', function() {
+            const userRoll = Math.floor(Math.random() * 6) + 1;
+            append('mine', `🎲 掷出了 ${userRoll} 点`);
+            setTimeout(() => {
+                const aiRoll = Math.floor(Math.random() * 6) + 1;
+                append('other', `🎲 我掷出了 ${aiRoll} 点`);
+                if (userRoll > aiRoll) append('other', '你赢啦！🎉');
+                else if (userRoll < aiRoll) append('other', '哈哈，我赢咯～');
+                else append('other', '平局，再玩一次？');
+            }, 600);
+        });
+        document.getElementById('chat-hongbao-btn')?.addEventListener('click', function() {
+            const amount = (Math.random() * 9.99 + 0.01).toFixed(2);
+            append('mine', `🧧 我发了一个 ${amount} 元的红包，快抢！`);
+            setTimeout(() => {
+                const lucky = (Math.random() * amount).toFixed(2);
+                append('other', `💰 我抢到了 ${lucky} 元！谢谢老板～`);
+            }, 800);
+        });
+        document.getElementById('chat-gobang-btn')?.addEventListener('click', function() {
+            startGobangGame();
+        });
+    }
+
+    // ==================== 时钟 ====================
+    function updateClock() {
         const now = new Date();
         const timeStr = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
         const stTime = document.getElementById('st-time'); if (stTime) stTime.innerText = timeStr;
@@ -2200,14 +2134,14 @@ window.closeMod = window.closeMod || function(id) {
         document.getElementById('status-bar')?.style.setProperty('color', isNight ? '#fff' : '#000');
     }
 
-    // -------------------- 启动 --------------------
+    // ==================== 启动 ====================
     (async function init() {
         await openDB();
         photos = JSON.parse(localStorage.getItem('m_photos') || '[]');
         wallpaperId = localStorage.getItem('m_wallpaper_id');
         await applyWallpaper();
         applyTheme(themeColor);
-        bindEvents();   // 确保 bindEvents 函数已定义
+        bindEvents();
         setInterval(updateClock, 1000);
         updateClock();
         await renderAll();
@@ -2215,275 +2149,227 @@ window.closeMod = window.closeMod || function(id) {
         setupDesktopPhotoWidget();
         renderCalendar();
         await renderProfile();
-        // 论坛无需自动渲染，由 to('p-forum') 触发
     })();
-// ==================== 导出数据功能（独立版，自动绑定）====================
-(function() {
-    // 定义导出函数
-    function exportAllData() {
-        try {
-            // 1. 收集 localStorage 所有数据
-            const backup = {};
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                backup[key] = localStorage.getItem(key);
-            }
 
-            // 2. 添加元信息
-            backup._export_meta = {
-                time: new Date().toLocaleString(),
-                version: 'SmartOS v1.0',
-                description: '全量备份（不含照片）'
-            };
+    // ==================== 五子棋游戏 ====================
+    let gobangBoard = [];
+    let gobangGameActive = false;
+    let gobangPlayerTurn = true;
 
-            // 3. 转换为 JSON 并下载
-            const jsonStr = JSON.stringify(backup, null, 2);
-            const blob = new Blob([jsonStr], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `smartos-backup-${new Date().toISOString().slice(0, 10)}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
-            alert('✅ 数据导出成功！文件已下载。');
-        } catch (e) {
-            alert('❌ 导出失败：' + e.message);
-        }
+    function initGobangBoard() {
+        gobangBoard = Array(9).fill().map(() => Array(9).fill(0));
+        gobangGameActive = true;
+        gobangPlayerTurn = true;
+        updateGobangStatus();
+        const stones = document.getElementById('gobang-stones');
+        if (stones) stones.innerHTML = '';
     }
 
-    // 将导出函数挂载到全局，方便调试
-    window.exportAllData = exportAllData;
-
-    // 给导出按钮绑定点击事件（按钮可能还没渲染，需要等待）
-    function bindExportButton() {
-        const btn = document.getElementById('export-data-btn');
-        if (btn) {
-            btn.addEventListener('click', exportAllData);
-            console.log('导出按钮已绑定');
+    function updateGobangStatus() {
+        const turnText = document.getElementById('gobang-turn-text');
+        const indicator = document.getElementById('gobang-turn-indicator');
+        if (!turnText || !indicator) return;
+        if (gobangPlayerTurn) {
+            turnText.innerText = '轮到黑棋（你）';
+            indicator.className = 'stone-indicator black';
         } else {
-            // 按钮还没出现，1秒后重试
-            setTimeout(bindExportButton, 500);
+            turnText.innerText = '轮到白棋（木木）';
+            indicator.className = 'stone-indicator white';
         }
     }
-    // 页面加载完成后开始绑定
-    if (document.readyState === 'complete') {
-        bindExportButton();
-    } else {
-        window.addEventListener('load', bindExportButton);
-    }
-})();
-// ==================== 导出功能结束 ====================
-// ==================== 五子棋游戏（与木木对战）====================
-let gobangBoard = [];          // 9x9棋盘，0空，1黑（用户），2白（木木）
-let gobangGameActive = false; // 游戏是否进行中
-let gobangPlayerTurn = true;  // true=黑棋（用户），false=白棋（木木）
 
-
-// 初始化空棋盘
-function initGobangBoard() {
-    gobangBoard = Array(9).fill().map(() => Array(9).fill(0));
-    gobangGameActive = true;
-    gobangPlayerTurn = true;
-    updateGobangStatus();
-    // 清空所有棋子
-    if (gobangStonesContainer) gobangStonesContainer.innerHTML = '';
-}
-
-// 更新状态栏显示
-function updateGobangStatus() {
-    if (!gobangTurnText || !gobangTurnIndicator) return;
-    if (gobangPlayerTurn) {
-        gobangTurnText.innerText = '轮到黑棋（你）';
-        gobangTurnIndicator.className = 'stone-indicator black';
-    } else {
-        gobangTurnText.innerText = '轮到白棋（木木）';
-        gobangTurnIndicator.className = 'stone-indicator white';
-    }
-}
-
-// 将行列索引转换为 top/left 的百分比样式（中心点）
-function getStonePosition(row, col) {
-    const cellSize = 24; // 因为 --cell-size = 216/9 = 24px
-    const top = (row + 0.5) * cellSize;
-    const left = (col + 0.5) * cellSize;
-    return { top: top + 'px', left: left + 'px' };
-}
-
-// 在棋盘上放置一颗棋子
-function placeStone(row, col, player) {
-    if (!gobangGameActive) return;
-    if (row < 0 || row > 8 || col < 0 || col > 8) return;
-    if (gobangBoard[row][col] !== 0) return;
-
-    // 更新棋盘数组
-    gobangBoard[row][col] = player; // 1:黑(用户), 2:白(木木)
-    
-    // 添加棋子元素
-    const stone = document.createElement('div');
-    stone.className = `stone ${player === 1 ? 'black' : 'white'}`;
-    const pos = getStonePosition(row, col);
-    stone.style.top = pos.top;
-    stone.style.left = pos.left;
-    gobangStonesContainer.appendChild(stone);
-
-    // 检查胜利
-    if (checkWin(row, col, player)) {
-        const winner = player === 1 ? '你' : '木木';
-        append('other', `🎉 恭喜！${winner} 五子连珠，赢了！`);
-        gobangGameActive = false;
-        gobangTurnText.innerText = '游戏结束';
-        return;
+    function getStonePosition(row, col) {
+        const cellSize = 24;
+        const top = (row + 0.5) * cellSize;
+        const left = (col + 0.5) * cellSize;
+        return { top: top + 'px', left: left + 'px' };
     }
 
-    // 切换玩家
-    gobangPlayerTurn = !gobangPlayerTurn;
-    updateGobangStatus();
-
-    // 如果轮到木木（白棋），自动下棋
-    if (!gobangPlayerTurn && gobangGameActive) {
-        setTimeout(() => aiMove(), 600);
-    }
-}
-
-// 木木AI：随机选择一个空白位置下棋
-function aiMove() {
-    if (!gobangGameActive) return;
-    if (gobangPlayerTurn) return; // 不该AI下
-
-    // 收集所有空白位置
-    let empty = [];
-    for (let i = 0; i < 9; i++) {
-        for (let j = 0; j < 9; j++) {
-            if (gobangBoard[i][j] === 0) empty.push([i, j]);
-        }
-    }
-    if (empty.length === 0) {
-        append('other', '棋盘满了，平局～');
-        gobangGameActive = false;
-        gobangTurnText.innerText = '平局';
-        return;
-    }
-
-    // 随机选一个
-    const [row, col] = empty[Math.floor(Math.random() * empty.length)];
-    placeStone(row, col, 2); // 白棋
-
-    // 木木下棋后发一条消息告知坐标（增强沉浸感）
-    const colLetter = String.fromCharCode(65 + col); // A-I
-    const rowNumber = row + 1;
-    append('other', `🤖 我下在 ${colLetter}${rowNumber}`);
-}
-
-// 五子棋胜利判断（8方向）
-function checkWin(row, col, player) {
-    const dirs = [[1,0], [0,1], [1,1], [1,-1]];
-    for (let [dx, dy] of dirs) {
-        let count = 1;
-        // 正方向
-        for (let step = 1; step < 5; step++) {
-            let nr = row + dx * step, nc = col + dy * step;
-            if (nr < 0 || nr >= 9 || nc < 0 || nc >= 9) break;
-            if (gobangBoard[nr][nc] === player) count++; else break;
-        }
-        // 反方向
-        for (let step = 1; step < 5; step++) {
-            let nr = row - dx * step, nc = col - dy * step;
-            if (nr < 0 || nr >= 9 || nc < 0 || nc >= 9) break;
-            if (gobangBoard[nr][nc] === player) count++; else break;
-        }
-        if (count >= 5) return true;
-    }
-    return false;
-}
-
-// 点击棋盘格子事件（使用事件委托）
-function bindGobangBoardClick() {
-    const board = document.getElementById('gobang-board');
-    if (!board) return;
-    board.addEventListener('click', function(e) {
-        if (!gobangGameActive) {
-            alert('游戏未开始，请点击♟️开始新一局');
-            return;
-        }
-        if (!gobangPlayerTurn) {
-            alert('现在是木木的回合，请稍等～');
-            return;
-        }
-
-        // 计算点击位置对应的行列
-        const rect = board.getBoundingClientRect();
-        const cellSize = 24; // 棋盘格子像素大小（216/9=24）
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        if (x < 0 || x > 216 || y < 0 || y > 216) return;
-
-        const col = Math.floor(x / cellSize);
-        const row = Math.floor(y / cellSize);
+    function placeStone(row, col, player) {
+        if (!gobangGameActive) return;
         if (row < 0 || row > 8 || col < 0 || col > 8) return;
-        
-        // 用户下棋（黑子）
-        placeStone(row, col, 1);
-        
-        // 可选：在聊天流显示用户下的位置
+        if (gobangBoard[row][col] !== 0) return;
+
+        gobangBoard[row][col] = player;
+        const stones = document.getElementById('gobang-stones');
+        if (!stones) return;
+        const stone = document.createElement('div');
+        stone.className = `stone ${player === 1 ? 'black' : 'white'}`;
+        const pos = getStonePosition(row, col);
+        stone.style.top = pos.top;
+        stone.style.left = pos.left;
+        stones.appendChild(stone);
+
+        if (checkWin(row, col, player)) {
+            const winner = player === 1 ? '你' : '木木';
+            append('other', `🎉 恭喜！${winner} 五子连珠，赢了！`);
+            gobangGameActive = false;
+            const turnText = document.getElementById('gobang-turn-text');
+            if (turnText) turnText.innerText = '游戏结束';
+            return;
+        }
+
+        gobangPlayerTurn = !gobangPlayerTurn;
+        updateGobangStatus();
+
+        if (!gobangPlayerTurn && gobangGameActive) {
+            setTimeout(() => aiMove(), 600);
+        }
+    }
+
+    function aiMove() {
+        if (!gobangGameActive) return;
+        if (gobangPlayerTurn) return;
+        let empty = [];
+        for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 9; j++) {
+                if (gobangBoard[i][j] === 0) empty.push([i, j]);
+            }
+        }
+        if (empty.length === 0) {
+            append('other', '棋盘满了，平局～');
+            gobangGameActive = false;
+            const turnText = document.getElementById('gobang-turn-text');
+            if (turnText) turnText.innerText = '平局';
+            return;
+        }
+        const [row, col] = empty[Math.floor(Math.random() * empty.length)];
+        placeStone(row, col, 2);
         const colLetter = String.fromCharCode(65 + col);
         const rowNumber = row + 1;
-        append('mine', `♟️ 我下在 ${colLetter}${rowNumber}`);
-    });
-}
-
-// 开始新游戏（点击♟️按钮时调用）
-function startGobangGame() {
-    const container = document.getElementById('gobang-container');
-    if (container) container.style.display = 'flex';
-    
-    // 👇 在这里获取元素
-    gobangStonesContainer = document.getElementById('gobang-stones');
-    gobangTurnText = document.getElementById('gobang-turn-text');
-    gobangTurnIndicator = document.getElementById('gobang-turn-indicator');
-    
-    initGobangBoard();
-    if (!window.gobangBound) {
-        bindGobangBoardClick();
-        window.gobangBound = true;
+        append('other', `🤖 我下在 ${colLetter}${rowNumber}`);
     }
-}
-// ========== 聊天工具栏折叠/展开（独立版，自动绑定）==========
-(function() {
-    function bindToggleButton() {
-        const toggleBtn = document.getElementById('chat-toggle-btn');
-        if (!toggleBtn) {
-            setTimeout(bindToggleButton, 300); // 按钮还没出现，等一会儿再试
-            return;
+
+    function checkWin(row, col, player) {
+        const dirs = [[1,0], [0,1], [1,1], [1,-1]];
+        for (let [dx, dy] of dirs) {
+            let count = 1;
+            for (let step = 1; step < 5; step++) {
+                let nr = row + dx * step, nc = col + dy * step;
+                if (nr < 0 || nr >= 9 || nc < 0 || nc >= 9) break;
+                if (gobangBoard[nr][nc] === player) count++; else break;
+            }
+            for (let step = 1; step < 5; step++) {
+                let nr = row - dx * step, nc = col - dy * step;
+                if (nr < 0 || nr >= 9 || nc < 0 || nc >= 9) break;
+                if (gobangBoard[nr][nc] === player) count++; else break;
+            }
+            if (count >= 5) return true;
         }
-        // 移除之前可能绑定的旧事件，防止重复
-        toggleBtn.removeEventListener('click', toggleHandler);
-        toggleBtn.addEventListener('click', toggleHandler);
-        console.log('加号按钮已绑定');
+        return false;
     }
 
-    function toggleHandler() {
-        const toolbar = document.getElementById('chat-toolbar');
-        const board = document.getElementById('gobang-container');
-        if (!toolbar) return;
+    function bindGobangBoardClick() {
+        const board = document.getElementById('gobang-board');
+        if (!board) return;
+        board.addEventListener('click', function(e) {
+            if (!gobangGameActive) {
+                alert('游戏未开始，请点击♟️开始新一局');
+                return;
+            }
+            if (!gobangPlayerTurn) {
+                alert('现在是木木的回合，请稍等～');
+                return;
+            }
+            const rect = board.getBoundingClientRect();
+            const cellSize = 24;
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            if (x < 0 || x > 216 || y < 0 || y > 216) return;
+            const col = Math.floor(x / cellSize);
+            const row = Math.floor(y / cellSize);
+            if (row < 0 || row > 8 || col < 0 || col > 8) return;
+            placeStone(row, col, 1);
+            const colLetter = String.fromCharCode(65 + col);
+            const rowNumber = row + 1;
+            append('mine', `♟️ 我下在 ${colLetter}${rowNumber}`);
+        });
+    }
 
-        // 如果工具栏当前是显示的，就隐藏它，并同时隐藏棋盘
-        if (toolbar.style.display !== 'none' && toolbar.style.display !== '') {
-            toolbar.style.display = 'none';
-            if (board) board.style.display = 'none';
-            // 可选项：把加号改成「➖」表示收起，这里先保持加号
+    function startGobangGame() {
+        const container = document.getElementById('gobang-container');
+        if (container) container.style.display = 'flex';
+        initGobangBoard();
+        if (!window.gobangBound) {
+            bindGobangBoardClick();
+            window.gobangBound = true;
+        }
+    }
+
+    // ==================== 聊天工具栏折叠/展开 ====================
+    (function() {
+        function bindToggleButton() {
+            const toggleBtn = document.getElementById('chat-toggle-btn');
+            if (!toggleBtn) {
+                setTimeout(bindToggleButton, 300);
+                return;
+            }
+            toggleBtn.removeEventListener('click', toggleHandler);
+            toggleBtn.addEventListener('click', toggleHandler);
+            console.log('加号按钮已绑定');
+        }
+        function toggleHandler() {
+            const toolbar = document.getElementById('chat-toolbar');
+            const board = document.getElementById('gobang-container');
+            if (!toolbar) return;
+            if (toolbar.style.display !== 'none' && toolbar.style.display !== '') {
+                toolbar.style.display = 'none';
+                if (board) board.style.display = 'none';
+            } else {
+                toolbar.style.display = 'flex';
+                if (board) board.style.display = 'none';
+            }
+        }
+        if (document.readyState === 'complete') {
+            bindToggleButton();
         } else {
-            toolbar.style.display = 'flex';
-            if (board) board.style.display = 'none'; // 棋盘仍然保持隐藏
+            window.addEventListener('load', bindToggleButton);
         }
-    }
+    })();
 
-    // 页面加载完成后开始绑定
-    if (document.readyState === 'complete') {
-        bindToggleButton();
-    } else {
-        window.addEventListener('load', bindToggleButton);
-    }
-})();
+    // ==================== 导出数据功能 ====================
+    (function() {
+        function exportAllData() {
+            try {
+                const backup = {};
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    backup[key] = localStorage.getItem(key);
+                }
+                backup._export_meta = {
+                    time: new Date().toLocaleString(),
+                    version: 'SmartOS v1.0',
+                    description: '全量备份（不含照片）'
+                };
+                const jsonStr = JSON.stringify(backup, null, 2);
+                const blob = new Blob([jsonStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `smartos-backup-${new Date().toISOString().slice(0, 10)}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                alert('✅ 数据导出成功！文件已下载。');
+            } catch (e) {
+                alert('❌ 导出失败：' + e.message);
+            }
+        }
+        window.exportAllData = exportAllData;
+        function bindExportButton() {
+            const btn = document.getElementById('export-data-btn');
+            if (btn) {
+                btn.addEventListener('click', exportAllData);
+                console.log('导出按钮已绑定');
+            } else {
+                setTimeout(bindExportButton, 500);
+            }
+        }
+        if (document.readyState === 'complete') {
+            bindExportButton();
+        } else {
+            window.addEventListener('load', bindExportButton);
+        }
+    })();
 </script>
 </body>
 </html>
