@@ -3,490 +3,310 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>SmartOS Pro Ultra · 自定义主题色</title>
-   <style>
-/* ====== 🌸 极简便签·统一主题色 ====== */
-:root {
-    /* 主色 —— 你依然可以在设置里改它，默认是淡蓝 */
-    --theme-primary: #AED5F3 !important;
-    --theme-soft-bg: rgba(174, 213, 243, 0.1);
+    <title>SmartOS · 表情包库 & Music（全功能）</title>
+    <style>
+        /* ====== 🌸 极简便签·统一主题 ====== */
+        :root {
+            --theme-primary: #AED5F3 !important;
+            --theme-soft-bg: rgba(174, 213, 243, 0.1);
+            --note-bg-light: #F9F9F9;
+            --note-bg-white: #FFFFFF;
+            --note-accent: #AED5F3;
+            --note-pearl: #F5F0E6;
+            --note-hover: #F5F5F5;
+            --note-text-dark: #222222;
+            --note-text-gray: #8E8E93;
+            --note-border: #E5E5E5;
+            --note-shadow-light: rgba(0, 0, 0, 0.05);
+            --note-shadow-dark: rgba(0, 0, 0, 0.1);
+            --note-radius-soft: 12px;
+            --note-radius-hard: 8px;
+            --note-spacing: 12px;
+            --note-transition: all 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+            --wechat-green: var(--theme-primary);
+            --ios-blue: var(--theme-primary);
+            --ios-red: #FF3B30;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "PingFang SC", "Helvetica Neue", -apple-system, sans-serif !important; }
+        body { background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        .app-container {
+            width: 100%; height: 100%; background: var(--note-bg-light); position: relative;
+            overflow: hidden; display: flex; flex-direction: column;
+        }
+        @media (min-width: 600px) {
+            .app-container { max-width: 375px; height: 812px; border-radius: 40px; border: 8px solid #333; }
+        }
 
-    /* 便签固定色 */
-    --note-bg-light: #F9F9F9;
-    --note-bg-white: #FFFFFF;
-    --note-accent: #AED5F3;
-    --note-pearl: #F5F0E6;
-    --note-hover: #F5F5F5;
-    --note-text-dark: #222222;
-    --note-text-gray: #8E8E93;
-    --note-border: #E5E5E5;
-    --note-shadow-light: rgba(0, 0, 0, 0.05);
-    --note-shadow-dark: rgba(0, 0, 0, 0.1);
-    --note-radius-soft: 12px;
-    --note-radius-hard: 8px;
-    --note-spacing: 12px;
-    --note-transition: all 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+        /* ----- 状态栏 & 导航卡片 ----- */
+        .status-bar {
+            height: 44px; padding: 14px 20px 0; display: flex; justify-content: space-between; align-items: center;
+            font-size: 14px; font-weight: 600; z-index: 1000; position: absolute; top: 0; width: 100%;
+            color: var(--note-text-dark) !important;
+        }
+        .nav-bar {
+            height: 50px; background: var(--note-bg-white) !important;
+            border: 1px solid var(--note-border) !important; border-radius: var(--note-radius-soft) !important;
+            box-shadow: 0 1px 3px var(--note-shadow-light) !important;
+            display: flex; align-items: center; justify-content: space-between; padding: 0 15px;
+            flex-shrink: 0; margin: var(--note-spacing) var(--note-spacing) 0 !important; width: calc(100% - 24px);
+        }
+        .nav-bar span, .nav-bar b { color: var(--note-text-dark) !important; }
+        .nav-bar span[style*="color:var(--ios-blue)"] { color: var(--theme-primary) !important; }
 
-    /* 覆盖原微信绿等 */
-    --wechat-green: var(--theme-primary) !important;
-    --ios-blue: var(--theme-primary) !important;
-}
+        /* ----- 页面容器 ----- */
+        .page {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--note-bg-light) !important; display: none; flex-direction: column;
+            z-index: 10; padding-top: 44px;
+        }
+        .page.active { display: flex; }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "PingFang SC", "Helvetica Neue", -apple-system, sans-serif !important;
-}
+        /* ----- 桌面（壁纸）----- */
+        .home-bg { transition: background 0.8s ease; background-size: cover !important; background-position: center !important; }
+        .home-clock { text-align: center; padding: 30px 0; color: var(--note-text-dark) !important; }
+        .home-clock h1 { font-size: 64px; font-weight: 200; letter-spacing: -2px; }
+        .app-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 20px 25px;
+        }
+        .app-item {
+            display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.1s;
+        }
+        .app-item:active { transform: scale(0.9); }
+        .app-icon {
+            width: 60px; height: 60px; background: var(--note-bg-white) !important; border-radius: 18px;
+            display: flex; align-items: center; justify-content: center; font-size: 28px;
+            border: 1px solid var(--note-border) !important; box-shadow: 0 2px 4px var(--note-shadow-light) !important;
+            color: var(--note-text-dark) !important;
+        }
+        .app-name { font-size: 11px; margin-top: 8px; font-weight: 500; color: var(--note-text-dark) !important; }
 
-body {
-    background: #000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    overflow: hidden;
-}
+        /* ----- 相册卡片网格（全功能）----- */
+        #album-box {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; padding: 2px 0;
+            overflow-y: auto; flex: 1; background: var(--note-bg-light) !important;
+        }
+        #album-box div {
+            aspect-ratio: 1/1; background-size: cover; background-position: center; transition: opacity 0.2s;
+            border: 1px solid var(--note-border) !important; border-radius: var(--note-radius-hard) !important;
+        }
+        #album-box div:active { opacity: 0.7; }
 
-.app-container {
-    width: 100%;
-    height: 100%;
-    background: var(--note-bg-light) !important;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-}
+        /* ----- 日历卡片（全功能）----- */
+        .cal-header {
+            background: var(--note-bg-white) !important; padding: 15px; text-align: center;
+            border-bottom: 1px solid var(--note-border) !important;
+            border-radius: var(--note-radius-soft) var(--note-radius-soft) 0 0 !important;
+            margin: var(--note-spacing) var(--note-spacing) 0 !important; width: calc(100% - 24px);
+        }
+        .cal-grid {
+            display: grid; grid-template-columns: repeat(7, 1fr); background: var(--note-bg-white) !important;
+            padding: 10px; border: 1px solid var(--note-border) !important; border-top: none;
+            border-radius: 0 0 var(--note-radius-soft) var(--note-radius-soft) !important;
+            margin: 0 var(--note-spacing) var(--note-spacing) !important; width: calc(100% - 24px);
+            box-shadow: 0 1px 3px var(--note-shadow-light) !important;
+        }
+        .cal-day {
+            aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 14px;
+            position: relative; color: var(--note-text-dark) !important;
+        }
+        .cal-day.today { background: var(--theme-primary) !important; color: #fff !important; border-radius: 50%; }
+        .cal-day.has-event::after {
+            content: ''; width: 4px; height: 4px; background: var(--note-text-gray) !important;
+            border-radius: 50%; position: absolute; bottom: 4px;
+        }
+        .cal-weekday {
+            aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 14px;
+            color: var(--note-text-gray) !important; font-weight: 600;
+        }
 
-@media (min-width: 600px) {
-    .app-container {
-        max-width: 375px;
-        height: 812px;
-        border-radius: 40px;
-        border: 8px solid #333;
-    }
-}
+        /* ----- 通讯录/纪念日卡片列表（全功能）----- */
+        .list-item {
+            padding: 15px; border-bottom: 1px solid var(--note-border) !important;
+            background: var(--note-bg-white) !important; display: flex; align-items: center;
+            justify-content: space-between; font-size: 16px; color: var(--note-text-dark) !important;
+            border-radius: var(--note-radius-soft) !important; margin: 8px var(--note-spacing) !important;
+            width: calc(100% - 24px); box-shadow: 0 1px 3px var(--note-shadow-light) !important;
+        }
+        .del-text { color: var(--note-text-gray) !important; font-size: 14px; font-weight: 500; padding: 5px; }
 
-/* ----- 状态栏 & 导航（便签白卡片）----- */
-.status-bar {
-    height: 44px;
-    padding: 14px 20px 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 14px;
-    font-weight: 600;
-    z-index: 1000;
-    position: absolute;
-    top: 0;
-    width: 100%;
-    color: var(--note-text-dark) !important;
-}
+        /* ----- 聊天区域（纯白便签气泡）----- */
+        #chat-flow {
+            flex: 1; overflow-y: auto; background: var(--note-bg-light) !important;
+            padding: 15px; display: flex; flex-direction: column; gap: 12px;
+        }
+        .msg-row { display: flex; gap: 10px; max-width: 85%; }
+        .msg-row.mine { align-self: flex-end; flex-direction: row-reverse; }
+        .msg-row.other .bubble, .msg-row.mine .bubble {
+            background: var(--note-bg-white) !important; color: var(--note-text-dark) !important;
+            border: 1px solid var(--note-border) !important; box-shadow: 0 2px 4px var(--note-shadow-light) !important;
+            padding: 14px 18px !important; position: relative; border-radius: 8px 8px 12px 8px !important;
+        }
+        .msg-row.other .bubble { transform: perspective(100px) rotateY(1deg); }
+        .msg-row.mine .bubble { transform: perspective(100px) rotateY(-1deg); border-radius: 8px 8px 8px 12px !important; }
+        .msg-row.other .bubble::after, .msg-row.mine .bubble::after {
+            content: ""; position: absolute; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0L10 0L10 10L0 10Z' fill='%23F8F8F8' fill-opacity='0.1'/%3E%3C/svg%3E");
+            background-size: 20px 20px; pointer-events: none; border-radius: inherit;
+        }
+        .msg-row.other .bubble::before {
+            content: ""; position: absolute; top: 12px; left: 15px; width: 14px; height: 14px;
+            background: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 0L8 3L10 3L9 5L11 7L9 7L8 9L7 7L5 7L7 5L6 3L8 3L7 0Z' fill='%23AED5F3' fill-opacity='0.8'/%3E%3C/svg%3E") center no-repeat;
+        }
+        .msg-row.mine .bubble::before {
+            content: ""; position: absolute; top: 12px; right: 15px; width: 14px; height: 14px;
+            background: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 5L9 3L11 5L10 7L12 9L10 11L8 9L7 11L5 9L3 11L1 9L3 7L2 5L4 3L6 5Z' fill='%23F5F0E6' fill-opacity='0.8'/%3E%3C/svg%3E") center no-repeat;
+        }
+        .msg-time { font-size: 10px; color: var(--note-text-gray) !important; margin-top: 4px; text-align: right; display: block; }
 
-.nav-bar {
-    height: 50px;
-    background: var(--note-bg-white) !important;
-    backdrop-filter: none;
-    border: 1px solid var(--note-border) !important;
-    border-radius: var(--note-radius-soft) !important;
-    box-shadow: 0 1px 3px var(--note-shadow-light) !important;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 15px;
-    flex-shrink: 0;
-    margin: var(--note-spacing) var(--note-spacing) 0 !important;
-    width: calc(100% - 24px);
-}
+        /* ----- 大图查看器（不变）----- */
+        #viewer {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000;
+            z-index: 2000; display: none; flex-direction: column; justify-content: center; align-items: center;
+        }
+        #viewer img { max-width: 100%; max-height: 85%; object-fit: contain; }
+        .viewer-btns { position: absolute; bottom: 60px; display: flex; gap: 20px; z-index: 2001; }
+        .v-btn { padding: 12px 25px; border-radius: 25px; background: rgba(255,255,255,0.25); color: #fff; border: none; backdrop-filter: blur(15px); font-size: 14px; }
 
-.nav-bar span,
-.nav-bar b {
-    color: var(--note-text-dark) !important;
-}
+        /* ----- 弹窗（便签卡片）----- */
+        .modal {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4);
+            z-index: 1500; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px);
+        }
+        .modal-body {
+            width: 85%; max-height: 80%; overflow-y: auto;
+            background: var(--note-bg-white) !important; border: 1px solid var(--note-border) !important;
+            border-radius: var(--note-radius-soft) !important; padding: 25px;
+            box-shadow: 0 4px 12px var(--note-shadow-dark) !important;
+        }
+        .modal-body h3 { margin-bottom: 10px; color: var(--note-text-dark) !important; }
+        .modal-body input, .modal-body select {
+            width: 100%; padding: 12px; margin: 8px 0; border: 1px solid var(--note-border) !important;
+            border-radius: var(--note-radius-hard) !important; outline: none; font-size: 16px;
+            background: var(--note-bg-white) !important; color: var(--note-text-dark) !important;
+        }
+        .modal-btn {
+            width: 100%; padding: 14px; background: var(--theme-primary) !important; color: #fff !important;
+            border: none !important; border-radius: var(--note-radius-hard) !important; margin-top: 10px;
+            font-weight: 600; cursor: pointer;
+        }
+        .modal-cancel {
+            width: 100%; background: none; border: none; margin-top: 10px; color: var(--note-text-gray) !important;
+            cursor: pointer;
+        }
 
-.nav-bar span[style*="color:var(--ios-blue)"] {
-    color: var(--theme-primary) !important;
-}
+        /* ----- 主题色选择器（保留）----- */
+        .theme-color-option {
+            display: inline-block; width: 40px; height: 40px; border-radius: 50%; margin: 5px;
+            cursor: pointer; border: 3px solid transparent; transition: border 0.2s;
+        }
+        .theme-color-option.active { border: 3px solid #333; }
+        .theme-color-picker { margin: 15px 0 5px; }
 
-/* ----- 页面容器 ----- */
-.page {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--note-bg-light) !important;
-    display: none;
-    flex-direction: column;
-    z-index: 10;
-    padding-top: 44px;
-}
-.page.active { display: flex; }
+        /* ----- 个人资料卡片 ----- */
+        .profile-card {
+            background: var(--note-bg-white) !important;
+            border: 1px solid var(--note-border) !important;
+            border-radius: var(--note-radius-soft) !important;
+            box-shadow: 0 2px 8px var(--note-shadow-light) !important;
+            margin: var(--note-spacing);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .profile-avatar {
+            width: 80px; height: 80px; border-radius: 50%;
+            background: var(--note-bg-light); border: 2px solid var(--note-border) !important;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 40px; color: var(--note-text-gray); cursor: pointer; margin-bottom: 10px;
+            overflow: hidden;
+        }
+        .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .profile-name { font-size: 20px; font-weight: 600; color: var(--note-text-dark); margin-bottom: 4px; }
+        .profile-signature { font-size: 14px; color: var(--note-text-gray); margin-bottom: 20px; }
+        .profile-info-item {
+            width: 100%; display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 0; border-bottom: 1px solid var(--note-border); cursor: pointer;
+        }
+        .profile-info-item:last-child { border-bottom: none; }
+        .profile-info-label { color: var(--note-text-gray); font-size: 15px; }
+        .profile-info-value {
+            color: var(--note-text-dark); font-size: 15px; font-weight: 500;
+            max-width: 60%; text-align: right; word-break: break-word;
+        }
+        .profile-link-item {
+            width: 100%; display: flex; align-items: center; padding: 12px 0;
+            border-bottom: 1px solid var(--note-border); color: var(--note-text-dark); cursor: pointer;
+        }
+        .profile-link-item i { margin-right: 12px; color: var(--theme-primary); width: 20px; text-align: center; }
+        .profile-section-title {
+            width: 100%; font-size: 16px; font-weight: 600; color: var(--note-text-dark);
+            margin-top: 20px; margin-bottom: 10px;
+        }
 
-/* ----- 桌面（壁纸背景）----- */
-.home-bg {
-    transition: background 0.8s ease;
-    background-size: cover !important;
-    background-position: center !important;
-}
-.home-clock {
-    text-align: center;
-    padding: 30px 0;
-    color: var(--note-text-dark) !important;
-}
-.home-clock h1 {
-    font-size: 64px;
-    font-weight: 200;
-    letter-spacing: -2px;
-}
-.app-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-    padding: 20px 25px;
-}
-.app-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    cursor: pointer;
-    transition: transform 0.1s;
-}
-.app-item:active { transform: scale(0.9); }
-.app-icon {
-    width: 60px;
-    height: 60px;
-    background: var(--note-bg-white) !important;
-    border-radius: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    backdrop-filter: none;
-    border: 1px solid var(--note-border) !important;
-    box-shadow: 0 2px 4px var(--note-shadow-light) !important;
-    color: var(--note-text-dark) !important;
-}
-.app-name {
-    font-size: 11px;
-    margin-top: 8px;
-    font-weight: 500;
-    color: var(--note-text-dark) !important;
-}
+        /* ----- 外观设置面板 ----- */
+        .appearance-section {
+            background: var(--note-bg-white); border-radius: var(--note-radius-soft);
+            border: 1px solid var(--note-border); padding: 16px; margin-top: 12px; width: 100%;
+        }
+        .appearance-item {
+            display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;
+        }
+        .appearance-label { color: var(--note-text-dark); font-size: 15px; }
+        .font-size-slider { width: 120px; }
 
-/* ----- 相册（卡片网格）----- */
-#album-box {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2px;
-    padding: 2px 0;
-    overflow-y: auto;
-    flex: 1;
-    background: var(--note-bg-light) !important;
-}
-#album-box div {
-    aspect-ratio: 1/1;
-    background-size: cover;
-    background-position: center;
-    transition: opacity 0.2s;
-    border: 1px solid var(--note-border) !important;
-    border-radius: var(--note-radius-hard) !important;
-}
-#album-box div:active { opacity: 0.7; }
+        /* ----- 表情包库网格 ----- */
+        .emoticon-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 15px 0;
+        }
+        .emoticon-item {
+            border: 1px solid var(--note-border); border-radius: var(--note-radius-hard);
+            padding: 8px; cursor: pointer; transition: var(--note-transition);
+        }
+        .emoticon-item:hover { background: var(--note-hover); transform: scale(0.98); }
+        .emoticon-item img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 4px; }
+        .emoticon-name {
+            font-size: 12px; color: var(--note-text-gray); margin-top: 5px; text-align: center;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
 
-/* ----- 日历（便签卡片）----- */
-.cal-header {
-    background: var(--note-bg-white) !important;
-    padding: 15px;
-    text-align: center;
-    border-bottom: 1px solid var(--note-border) !important;
-    border-radius: var(--note-radius-soft) var(--note-radius-soft) 0 0 !important;
-    margin: var(--note-spacing) var(--note-spacing) 0 !important;
-    width: calc(100% - 24px);
-}
-.cal-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    background: var(--note-bg-white) !important;
-    padding: 10px;
-    border: 1px solid var(--note-border) !important;
-    border-top: none;
-    border-radius: 0 0 var(--note-radius-soft) var(--note-radius-soft) !important;
-    margin: 0 var(--note-spacing) var(--note-spacing) !important;
-    width: calc(100% - 24px);
-    box-shadow: 0 1px 3px var(--note-shadow-light) !important;
-}
-.cal-day {
-    aspect-ratio: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    position: relative;
-    color: var(--note-text-dark) !important;
-}
-.cal-day.today {
-    background: var(--theme-primary) !important;
-    color: #fff !important;
-    border-radius: 50%;
-}
-.cal-day.has-event::after {
-    content: '';
-    width: 4px;
-    height: 4px;
-    background: var(--note-text-gray) !important;
-    border-radius: 50%;
-    position: absolute;
-    bottom: 4px;
-}
-.cal-weekday {
-    aspect-ratio: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    color: var(--note-text-gray) !important;
-    font-weight: 600;
-}
+        /* ----- 音乐播放器简约卡片（弹窗内）----- */
+        .music-list {
+            list-style: none; padding: 0; margin: 15px 0;
+        }
+        .music-item {
+            display: flex; align-items: center; padding: 10px;
+            border-bottom: 1px solid var(--note-border); cursor: pointer;
+        }
+        .music-item:hover { background: var(--note-hover); }
+        .music-item .play-icon { margin-right: 10px; color: var(--theme-primary); }
+        .music-item .title { flex: 1; color: var(--note-text-dark); }
+        .music-item .artist { color: var(--note-text-gray); font-size: 12px; }
 
-/* ----- 通讯录 & 纪念日列表（卡片）----- */
-.list-item {
-    padding: 15px;
-    border-bottom: 1px solid var(--note-border) !important;
-    background: var(--note-bg-white) !important;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 16px;
-    color: var(--note-text-dark) !important;
-    border-radius: var(--note-radius-soft) !important;
-    margin: 8px var(--note-spacing) !important;
-    width: calc(100% - 24px);
-    box-shadow: 0 1px 3px var(--note-shadow-light) !important;
-}
-.del-text {
-    color: var(--note-text-gray) !important;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 5px;
-}
-
-/* ----- 聊天区域（纯白气泡）----- */
-#chat-flow {
-    flex: 1;
-    overflow-y: auto;
-    background: var(--note-bg-light) !important;
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-.msg-row {
-    display: flex;
-    gap: 10px;
-    max-width: 85%;
-}
-.msg-row.mine { align-self: flex-end; flex-direction: row-reverse; }
-
-/* 气泡统一纯白 + 便签毛边 */
-.msg-row.other .bubble,
-.msg-row.mine .bubble {
-    background: var(--note-bg-white) !important;
-    color: var(--note-text-dark) !important;
-    border: 1px solid var(--note-border) !important;
-    box-shadow: 0 2px 4px var(--note-shadow-light) !important;
-    padding: 14px 18px !important;
-    position: relative;
-    border-radius: 8px 8px 12px 8px !important;
-}
-
-/* 对方气泡梯形（左窄右宽） */
-.msg-row.other .bubble {
-    transform: perspective(100px) rotateY(1deg);
-}
-/* 自己气泡梯形（右窄左宽） */
-.msg-row.mine .bubble {
-    transform: perspective(100px) rotateY(-1deg);
-    border-radius: 8px 8px 8px 12px !important;
-}
-
-/* 毛边纹理（共用） */
-.msg-row.other .bubble::after,
-.msg-row.mine .bubble::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0L10 0L10 10L0 10Z' fill='%23F8F8F8' fill-opacity='0.1'/%3E%3C/svg%3E");
-    background-size: 20px 20px;
-    pointer-events: none;
-    border-radius: inherit;
-}
-
-/* 对方气泡装饰（小雪花） */
-.msg-row.other .bubble::before {
-    content: "";
-    position: absolute;
-    top: 12px;
-    left: 15px;
-    width: 14px;
-    height: 14px;
-    background: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 0L8 3L10 3L9 5L11 7L9 7L8 9L7 7L5 7L7 5L6 3L8 3L7 0Z' fill='%23AED5F3' fill-opacity='0.8'/%3E%3C/svg%3E") center no-repeat;
-}
-
-/* 自己气泡装饰（小爱心） */
-.msg-row.mine .bubble::before {
-    content: "";
-    position: absolute;
-    top: 12px;
-    right: 15px;
-    width: 14px;
-    height: 14px;
-    background: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 5L9 3L11 5L10 7L12 9L10 11L8 9L7 11L5 9L3 11L1 9L3 7L2 5L4 3L6 5Z' fill='%23F5F0E6' fill-opacity='0.8'/%3E%3C/svg%3E") center no-repeat;
-}
-
-/* 消息时间 */
-.msg-time {
-    font-size: 10px;
-    color: var(--note-text-gray) !important;
-    margin-top: 4px;
-    text-align: right;
-    display: block;
-}
-
-/* ----- 大图查看器（不变）----- */
-#viewer {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #000;
-    z-index: 2000;
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-#viewer img {
-    max-width: 100%;
-    max-height: 85%;
-    object-fit: contain;
-}
-.viewer-btns {
-    position: absolute;
-    bottom: 60px;
-    display: flex;
-    gap: 20px;
-    z-index: 2001;
-}
-.v-btn {
-    padding: 12px 25px;
-    border-radius: 25px;
-    background: rgba(255,255,255,0.25);
-    color: #fff;
-    border: none;
-    backdrop-filter: blur(15px);
-    font-size: 14px;
-}
-
-/* ----- 弹窗（便签卡片）----- */
-.modal {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.4);
-    z-index: 1500;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(5px);
-}
-.modal-body {
-    width: 85%;
-    background: var(--note-bg-white) !important;
-    border: 1px solid var(--note-border) !important;
-    border-radius: var(--note-radius-soft) !important;
-    padding: 25px;
-    box-shadow: 0 4px 12px var(--note-shadow-dark) !important;
-}
-.modal-body h3 {
-    margin-bottom: 10px;
-    color: var(--note-text-dark) !important;
-}
-.modal-body input {
-    width: 100%;
-    padding: 12px;
-    margin: 8px 0;
-    border: 1px solid var(--note-border) !important;
-    border-radius: var(--note-radius-hard) !important;
-    outline: none;
-    font-size: 16px;
-    background: var(--note-bg-white) !important;
-}
-.modal-btn {
-    width: 100%;
-    padding: 14px;
-    background: var(--theme-primary) !important;
-    color: #fff !important;
-    border: none !important;
-    border-radius: var(--note-radius-hard) !important;
-    margin-top: 10px;
-    font-weight: 600;
-    cursor: pointer;
-}
-.modal-cancel {
-    width: 100%;
-    background: none;
-    border: none;
-    margin-top: 10px;
-    color: var(--note-text-gray) !important;
-    cursor: pointer;
-}
-
-/* ----- 主题色选择器（保留）----- */
-.theme-color-option {
-    display: inline-block;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin: 5px;
-    cursor: pointer;
-    border: 3px solid transparent;
-    transition: border 0.2s;
-}
-.theme-color-option.active {
-    border: 3px solid #333;
-}
-.theme-color-picker {
-    margin: 15px 0 5px;
-}
-
-/* ----- 其他微调 ----- */
-#chat-in {
-    background: var(--note-bg-white) !important;
-    border: 1px solid var(--note-border) !important;
-    border-radius: var(--note-radius-hard) !important;
-    padding: 12px !important;
-}
-#send-btn {
-    background: var(--theme-primary) !important;
-    color: white !important;
-    border: none !important;
-    border-radius: var(--note-radius-hard) !important;
-    padding: 0 15px;
-    font-size: 14px;
-}
-iframe {
-    border: none !important;
-    background: var(--note-bg-white) !important;
-    border-radius: var(--note-radius-soft) !important;
-    margin: var(--note-spacing);
-    width: calc(100% - 24px);
-    height: calc(100% - 88px);
-}
-</style>
+        /* ----- 输入框等 ----- */
+        #chat-in {
+            background: var(--note-bg-white) !important;
+            border: 1px solid var(--note-border) !important;
+            border-radius: var(--note-radius-hard) !important;
+            padding: 12px !important;
+        }
+        #send-btn {
+            background: var(--theme-primary) !important;
+            color: white !important;
+            border: none !important;
+            border-radius: var(--note-radius-hard) !important;
+            padding: 0 15px;
+            font-size: 14px;
+        }
+        iframe {
+            border: none !important;
+            background: var(--note-bg-white) !important;
+            border-radius: var(--note-radius-soft) !important;
+            margin: var(--note-spacing);
+            width: calc(100% - 24px);
+            height: calc(100% - 88px);
+        }
+    </style>
 </head>
 <body>
 <div class="app-container">
@@ -495,7 +315,7 @@ iframe {
         <div>📶 🔋</div>
     </div>
 
-    <!-- 桌面（无内联onclick） -->
+    <!-- 桌面 -->
     <div class="page active home-bg" id="p-home">
         <div class="home-clock">
             <h1 id="big-clock">00:00</h1>
@@ -507,10 +327,11 @@ iframe {
             <div class="app-item" data-page="p-cal"><div class="app-icon">📅</div><div class="app-name">日历</div></div>
             <div class="app-item" data-page="p-con"><div class="app-icon">👥</div><div class="app-name">通讯录</div></div>
             <div class="app-item" data-page="p-safari"><div class="app-icon">🌐</div><div class="app-name">Safari</div></div>
+            <div class="app-item" data-page="p-profile"><div class="app-icon">👤</div><div class="app-name">个人</div></div>
         </div>
     </div>
 
-    <!-- 聊天 -->
+    <!-- 聊天页面 -->
     <div class="page" id="p-chat">
         <div class="nav-bar">
             <span class="nav-back" data-home="p-home" style="color:var(--ios-blue)">〈 桌面</span>
@@ -524,7 +345,7 @@ iframe {
         </div>
     </div>
 
-    <!-- 相册（大容量版） -->
+    <!-- 相册（全功能） -->
     <div class="page" id="p-album">
         <div class="nav-bar">
             <span class="nav-back" data-home="p-home" style="color:var(--ios-blue)">〈 返回</span>
@@ -535,7 +356,7 @@ iframe {
         <div id="album-box"></div>
     </div>
 
-    <!-- 日历 -->
+    <!-- 日历（全功能） -->
     <div class="page" id="p-cal">
         <div class="nav-bar">
             <span class="nav-back" data-home="p-home" style="color:var(--ios-blue)">〈 返回</span>
@@ -547,7 +368,7 @@ iframe {
         <div id="anni-list" style="flex:1; overflow-y:auto; background:#fff;"></div>
     </div>
 
-    <!-- 通讯录 -->
+    <!-- 通讯录（全功能） -->
     <div class="page" id="p-con">
         <div class="nav-bar">
             <span class="nav-back" data-home="p-home" style="color:var(--ios-blue)">〈 返回</span>
@@ -566,33 +387,153 @@ iframe {
         <iframe src="https://m.bing.com" style="flex:1; border:none;"></iframe>
     </div>
 
-    <!-- 大图查看器 -->
-    <div id="viewer" onclick="closeViewer()">
-        <img id="v-img" src="" onclick="event.stopPropagation()">
-        <div class="viewer-btns" onclick="event.stopPropagation()">
-            <button class="v-btn" id="set-wallpaper-btn">设为壁纸</button>
-            <button class="v-btn" id="close-viewer-btn">返回</button>
+    <!-- ========== 🆕 个人资料页面（表情包库 & Music） ========== -->
+    <div class="page" id="p-profile">
+        <div class="nav-bar">
+            <span class="nav-back" data-home="p-home" style="color:var(--ios-blue)">〈 返回</span>
+            <b>个人资料</b>
+            <span style="width:40px;"></span>
+        </div>
+        <div style="flex:1; overflow-y: auto; padding: 0 var(--note-spacing);">
+            <div class="profile-card">
+                <div class="profile-avatar" id="profile-avatar">👤</div>
+                <div class="profile-name" id="profile-nickname">韩闻熙</div>
+                <div class="profile-signature" id="profile-signature">PrettyWhenuCry</div>
+                
+                <div class="profile-info-item" onclick="openMod('m-profile-nickname')">
+                    <span class="profile-info-label">昵称</span>
+                    <span class="profile-info-value" id="profile-nickname-value">韩闻熙</span>
+                </div>
+                <div class="profile-info-item" onclick="openMod('m-profile-signature')">
+                    <span class="profile-info-label">个性签名</span>
+                    <span class="profile-info-value" id="profile-signature-value">PrettyWhenuCry</span>
+                </div>
+                <div class="profile-info-item" onclick="openMod('m-profile-region')">
+                    <span class="profile-info-label">地区</span>
+                    <span class="profile-info-value" id="profile-region-value">冰岛</span>
+                </div>
+                <div class="profile-info-item" onclick="openMod('m-profile-birthday')">
+                    <span class="profile-info-label">生日</span>
+                    <span class="profile-info-value" id="profile-birthday-value">03-14</span>
+                </div>
+
+                <!-- 🆕 更多服务 → 表情包库 & Music -->
+                <div class="profile-section-title">更多服务</div>
+                <div class="profile-link-item" id="emoticon-library-link">
+                    <i>😊</i> 表情包库
+                </div>
+                <div class="profile-link-item" id="music-link">
+                    <i>🎵</i> Music
+                </div>
+
+                <!-- 外观设置 -->
+                <div class="profile-section-title">外观设置</div>
+                <div class="appearance-section">
+                    <div class="appearance-item">
+                        <span class="appearance-label">主题颜色</span>
+                        <span onclick="openMod('m-api')" style="color:var(--theme-primary); cursor:pointer;">自定义</span>
+                    </div>
+                    <div class="appearance-item">
+                        <span class="appearance-label">聊天背景</span>
+                        <span onclick="document.getElementById('up-wallpaper').click()" style="color:var(--theme-primary); cursor:pointer;">更换</span>
+                        <input type="file" id="up-wallpaper" hidden accept="image/*">
+                    </div>
+                    <div class="appearance-item">
+                        <span class="appearance-label">气泡样式</span>
+                        <span onclick="openMod('m-bubble-style')" style="color:var(--theme-primary); cursor:pointer;">便签</span>
+                    </div>
+                    <div class="appearance-item">
+                        <span class="appearance-label">字体大小</span>
+                        <input type="range" min="12" max="20" value="15" class="font-size-slider" id="font-size-slider">
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- ========== AI设置 + 主题颜色（合并在一个弹窗） ========== -->
+    <!-- ========== 🆕 表情包库弹窗 ========== -->
+    <div class="modal" id="m-emoticon-library">
+        <div class="modal-body">
+            <h3>😊 表情包库</h3>
+            <div style="display:flex; gap:8px; margin-bottom:15px;">
+                <input type="text" id="emoticon-url" placeholder="图片URL">
+                <input type="text" id="emoticon-name" placeholder="表情名称" style="flex:0.8;">
+                <button class="modal-btn" id="add-emoticon-btn" style="width:auto; padding:12px 16px; margin-top:0;">添加</button>
+            </div>
+            <div id="emoticon-grid" class="emoticon-grid"></div>
+            <button class="modal-cancel" data-mod="m-emoticon-library" style="margin-top:20px;">关闭</button>
+        </div>
+    </div>
+
+    <!-- ========== 🆕 Music 弹窗 ========== -->
+    <div class="modal" id="m-music-player">
+        <div class="modal-body">
+            <h3>🎵 我的音乐</h3>
+            <div style="margin:15px 0;">
+                <audio id="music-audio" controls style="width:100%;"></audio>
+            </div>
+            <ul class="music-list" id="music-list"></ul>
+            <button class="modal-cancel" data-mod="m-music-player">关闭</button>
+        </div>
+    </div>
+
+    <!-- 个人资料编辑弹窗 -->
+    <div class="modal" id="m-profile-nickname">
+        <div class="modal-body">
+            <h3>修改昵称</h3>
+            <input type="text" id="profile-nickname-input" placeholder="输入新昵称" value="韩闻熙">
+            <button class="modal-btn" id="save-profile-nickname-btn">保存</button>
+            <button class="modal-cancel" data-mod="m-profile-nickname" style="width:100%; background:none; border:none; margin-top:10px; color:#999;">取消</button>
+        </div>
+    </div>
+    <div class="modal" id="m-profile-signature">
+        <div class="modal-body">
+            <h3>修改个性签名</h3>
+            <input type="text" id="profile-signature-input" placeholder="输入新签名" value="PrettyWhenuCry">
+            <button class="modal-btn" id="save-profile-signature-btn">保存</button>
+            <button class="modal-cancel" data-mod="m-profile-signature" style="width:100%; background:none; border:none; margin-top:10px; color:#999;">取消</button>
+        </div>
+    </div>
+    <div class="modal" id="m-profile-region">
+        <div class="modal-body">
+            <h3>修改地区</h3>
+            <input type="text" id="profile-region-input" placeholder="省/市" value="冰岛">
+            <button class="modal-btn" id="save-profile-region-btn">保存</button>
+            <button class="modal-cancel" data-mod="m-profile-region" style="width:100%; background:none; border:none; margin-top:10px; color:#999;">取消</button>
+        </div>
+    </div>
+    <div class="modal" id="m-profile-birthday">
+        <div class="modal-body">
+            <h3>修改生日</h3>
+            <input type="date" id="profile-birthday-input" value="2000-03-14">
+            <button class="modal-btn" id="save-profile-birthday-btn">保存</button>
+            <button class="modal-cancel" data-mod="m-profile-birthday" style="width:100%; background:none; border:none; margin-top:10px; color:#999;">取消</button>
+        </div>
+    </div>
+    <div class="modal" id="m-bubble-style">
+        <div class="modal-body">
+            <h3>气泡样式</h3>
+            <select id="bubble-style-select">
+                <option value="note">便签梯形（当前）</option>
+                <option value="round">圆角标准</option>
+                <option value="simple">极简边框</option>
+            </select>
+            <button class="modal-btn" id="save-bubble-style-btn">应用</button>
+            <button class="modal-cancel" data-mod="m-bubble-style" style="width:100%; background:none; border:none; margin-top:10px; color:#999;">取消</button>
+        </div>
+    </div>
+
+    <!-- AI设置弹窗（主题色） -->
     <div class="modal" id="m-api">
         <div class="modal-body">
             <h3>⚙️ 设置与主题</h3>
-            
-            <!-- AI 配置区域 -->
-            <label style="display:block; margin-bottom:8px;">
-                <input type="checkbox" id="api-toggle"> 开启 AI 响应
-            </label>
+            <label style="display:block; margin-bottom:8px;"><input type="checkbox" id="api-toggle"> 开启 AI 响应</label>
             <input type="text" id="api-url" placeholder="API URL (含 v1/chat/completions)">
             <input type="password" id="api-key" placeholder="API Key">
-            
-            <!-- 主题颜色选择器 -->
             <div style="margin: 20px 0 10px; border-top:1px solid #eee; padding-top:15px;">
                 <h4 style="margin-bottom:10px;">🎨 主题颜色</h4>
                 <div id="theme-color-presets" class="theme-color-picker">
-                    <!-- 预设颜色块，动态生成或直接写死 -->
-                    <div class="theme-color-option" style="background:#007AFF;" data-color="#007AFF" title="经典蓝"></div>
+                    <div class="theme-color-option" style="background:#AED5F3;" data-color="#AED5F3" title="便签蓝"></div>
                     <div class="theme-color-option" style="background:#5856D6;" data-color="#5856D6" title="紫色"></div>
                     <div class="theme-color-option" style="background:#FF2D55;" data-color="#FF2D55" title="粉色"></div>
                     <div class="theme-color-option" style="background:#FF9500;" data-color="#FF9500" title="橙色"></div>
@@ -601,32 +542,39 @@ iframe {
                 </div>
                 <div style="display:flex; align-items:center; margin-top:10px;">
                     <span style="margin-right:8px;">自定义:</span>
-                    <input type="color" id="custom-color-picker" value="#007AFF" style="width:50px; height:40px; border:none; background:transparent;">
+                    <input type="color" id="custom-color-picker" value="#AED5F3" style="width:50px; height:40px; border:none; background:transparent;">
                 </div>
             </div>
-            
             <button class="modal-btn" id="save-api-btn">保存设置</button>
-            <button class="modal-cancel" data-mod="m-api" style="width:100%; background:none; border:none; margin-top:10px; color:#999; cursor:pointer;">取消</button>
+            <button class="modal-cancel" data-mod="m-api" style="width:100%; background:none; border:none; margin-top:10px; color:#999;">取消</button>
         </div>
     </div>
-    
-    <!-- 其他弹窗保持不变 -->
+
+    <!-- 纪念日、联系人弹窗 -->
     <div class="modal" id="m-anni">
         <div class="modal-body">
             <h3>新纪念日</h3>
             <input type="text" id="at" placeholder="事项名称">
             <input type="date" id="ad">
             <button class="modal-btn" id="save-anni-btn">保存</button>
-            <button class="modal-cancel" data-mod="m-anni" style="width:100%; background:none; border:none; margin-top:10px; color:#999; cursor:pointer;">取消</button>
+            <button class="modal-cancel" data-mod="m-anni" style="width:100%; background:none; border:none; margin-top:10px; color:#999;">取消</button>
         </div>
     </div>
-    
     <div class="modal" id="m-con">
         <div class="modal-body">
             <h3>新联系人</h3>
             <input type="text" id="cn" placeholder="姓名">
             <button class="modal-btn" id="save-con-btn">添加</button>
-            <button class="modal-cancel" data-mod="m-con" style="width:100%; background:none; border:none; margin-top:10px; color:#999; cursor:pointer;">取消</button>
+            <button class="modal-cancel" data-mod="m-con" style="width:100%; background:none; border:none; margin-top:10px; color:#999;">取消</button>
+        </div>
+    </div>
+
+    <!-- 大图查看器 -->
+    <div id="viewer" onclick="closeViewer()">
+        <img id="v-img" src="" onclick="event.stopPropagation()">
+        <div class="viewer-btns" onclick="event.stopPropagation()">
+            <button class="v-btn" id="set-wallpaper-btn">设为壁纸</button>
+            <button class="v-btn" id="close-viewer-btn">返回</button>
         </div>
     </div>
 </div>
@@ -677,40 +625,63 @@ iframe {
         });
     }
 
-    // ==================== 数据持久化 ====================
+    // ==================== 数据持久化（全功能保留）====================
     let photos = JSON.parse(localStorage.getItem('m_photos') || '[]');
     let annis = JSON.parse(localStorage.getItem('m_annis') || '[]');
     let cons = JSON.parse(localStorage.getItem('m_cons') || '[{"id":"init-001","name":"木木"}]');
     let apiCfg = JSON.parse(localStorage.getItem('m_api_cfg') || '{"enabled":false,"url":"","key":""}');
-    
-    // ---------- 新增：主题色存储 ----------
-    let themeColor = localStorage.getItem('m_theme_color') || '#007AFF'; // 默认蓝
-
-    // 壁纸存储图片ID，永久有效
     let wallpaperId = localStorage.getItem('m_wallpaper_id');
-
-    // 独立聊天记录（带时间戳）
     let messages = JSON.parse(localStorage.getItem('m_messages') || '{}');
     let currentChatContactId = null;
+    let themeColor = localStorage.getItem('m_theme_color') || '#AED5F3';
 
-    // ==================== 主题色应用函数 ====================
+    // 个人资料存储
+    let profile = JSON.parse(localStorage.getItem('m_profile') || '{"nickname":"韩闻熙","signature":"PrettyWhenuCry","region":"冰岛","birthday":"2000-03-14","avatarId":null}');
+
+    // ========== 🆕 表情包库 ==========
+    const DEFAULT_EMOTICONS = [
+        { url: "https://i.imgs.ovh/2026/01/21/yRkuGr.gif", name: "潦草黄狗-跳舞" },
+        { url: "https://i.imgs.ovh/2026/01/21/yRkBjh.gif", name: "潦草黄狗-比心" },
+        { url: "https://i.imgs.ovh/2026/01/21/yRkX6e.gif", name: "潦草黄狗-笑哭" },
+        { url: "https://i.imgs.ovh/2026/01/21/yRkwla.gif", name: "潦草黄狗-摇尾巴" },
+        { url: "https://i.imgs.ovh/2026/01/21/yRk37t.gif", name: "潦草黄狗-草裙舞" },
+        { url: "https://i.imgs.ovh/2026/01/21/yRkNAq.gif", name: "潦草黄狗-佛光" },
+        { url: "https://i.imgs.ovh/2026/01/21/yRkiJC.gif", name: "潦草黄狗-生病" },
+        { url: "https://i.imgs.ovh/2026/01/21/yRq0w4.gif", name: "潦草黄狗-请" },
+        { url: "https://i.imgs.ovh/2026/01/21/yRqCLA.gif", name: "潦草黄狗-拿外卖" },
+        { url: "https://i.imgs.ovh/2026/01/21/yRqyMN.gif", name: "潦草黄狗-拖延症" },
+        { url: "https://i.imgs.ovh/2026/01/21/yRqOGH.gif", name: "潦草黄狗-被可爱暴击" },
+        { url: "https://i.imgs.ovh/2026/01/21/yRqacU.gif", name: "潦草黄狗-啃脑袋" },
+        { url: "https://i.imgs.ovh/2026/01/21/yRqj6X.gif", name: "潦草黄狗-被打鸡血" },
+        { url: "https://i.imgs.ovh/2026/01/21/yRqclQ.gif", name: "潦草黄狗-墨镜下无声痛苦" },
+        { url: "https://i.imgs.ovh/2026/01/21/yRqrCF.gif", name: "潦草黄狗-打嗝" },
+        { url: "https://i.imgs.ovh/2026/01/21/yRqvAm.gif", name: "潦草黄狗-叉腰" },
+        { url: "https://i.imgs.ovh/2026/01/21/yRqFJ9.gif", name: "潦草黄狗-盯（严肃）" }
+    ];
+    let emoticons = JSON.parse(localStorage.getItem('m_emoticons') || '[]');
+    if (emoticons.length === 0) {
+        emoticons = DEFAULT_EMOTICONS.map((e, index) => ({ ...e, id: Date.now() + index + '-' + Math.random().toString(36).substr(2, 4) }));
+        localStorage.setItem('m_emoticons', JSON.stringify(emoticons));
+    }
+
+    // ========== 🆕 音乐库 ==========
+    const musicLibrary = [
+        { title: "起风了", artist: "买辣椒也用券", src: "" },
+        { title: "Lemon", artist: "米津玄師", src: "" },
+        { title: "夜曲", artist: "周杰伦", src: "" },
+        { title: "平凡之路", artist: "朴树", src: "" }
+    ];
+
+    // ==================== 主题色应用 ====================
     function applyTheme(color) {
-        // 更新CSS变量 --theme-primary
         document.documentElement.style.setProperty('--theme-primary', color);
-        // 同时更新 --ios-blue（如果有些地方写死了，可一并更新）
         document.documentElement.style.setProperty('--ios-blue', color);
-        // 更新软背景色（触摸反馈用）
-        const softBg = color + '1A'; // 10%透明度
+        const softBg = color + '1A';
         document.documentElement.style.setProperty('--theme-soft-bg', softBg);
-        
-        // 高亮当前选中的颜色块（UI反馈）
         document.querySelectorAll('.theme-color-option').forEach(el => {
             el.classList.remove('active');
-            if (el.dataset.color === color) {
-                el.classList.add('active');
-            }
+            if (el.dataset.color === color) el.classList.add('active');
         });
-        // 更新颜色选择器的值
         const customPicker = document.getElementById('custom-color-picker');
         if (customPicker) customPicker.value = color;
     }
@@ -720,25 +691,126 @@ iframe {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         if (id === 'p-cal') renderCalendar();
+        if (id === 'p-profile') renderProfile();
     }
 
     function openMod(id) {
         if (id === 'm-api') {
-            // 回填API配置
             document.getElementById('api-toggle').checked = apiCfg.enabled;
             document.getElementById('api-url').value = apiCfg.url;
             document.getElementById('api-key').value = apiCfg.key;
-            
-            // 回填主题色设置（高亮当前颜色）
-            applyTheme(themeColor); // 这也会更新UI高亮
+            applyTheme(themeColor);
         }
+        if (id === 'm-profile-nickname') document.getElementById('profile-nickname-input').value = profile.nickname;
+        if (id === 'm-profile-signature') document.getElementById('profile-signature-input').value = profile.signature;
+        if (id === 'm-profile-region') document.getElementById('profile-region-input').value = profile.region;
+        if (id === 'm-profile-birthday') document.getElementById('profile-birthday-input').value = profile.birthday;
+        if (id === 'm-emoticon-library') renderEmoticons();
         document.getElementById(id).style.display = 'flex';
     }
     function closeMod(id) { document.getElementById(id).style.display = 'none'; }
 
-    // ==================== 渲染所有动态列表 ====================
+    // ==================== 表情包库渲染 ====================
+    function renderEmoticons() {
+        const grid = document.getElementById('emoticon-grid');
+        if (!grid) return;
+        grid.innerHTML = '';
+        emoticons.forEach(em => {
+            const item = document.createElement('div');
+            item.className = 'emoticon-item';
+            item.onclick = () => {
+                const chatInput = document.getElementById('chat-in');
+                if (chatInput) {
+                    chatInput.value += ` ![${em.name}](${em.url}) `;
+                    chatInput.focus();
+                }
+                closeMod('m-emoticon-library');
+            };
+            const img = document.createElement('img');
+            img.src = em.url;
+            img.onerror = () => { img.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="%23eee"/><text x="10" y="55" font-size="14" fill="%23999">加载失败</text></svg>'; };
+            const name = document.createElement('div');
+            name.className = 'emoticon-name';
+            name.textContent = em.name;
+            item.appendChild(img);
+            item.appendChild(name);
+            grid.appendChild(item);
+        });
+    }
+
+    function addEmoticon() {
+        const url = document.getElementById('emoticon-url').value.trim();
+        const name = document.getElementById('emoticon-name').value.trim();
+        if (!url || !name) { alert('请填写URL和名称'); return; }
+        const newEm = {
+            id: Date.now() + '-' + Math.random().toString(36).substr(2, 6),
+            url, name
+        };
+        emoticons.push(newEm);
+        localStorage.setItem('m_emoticons', JSON.stringify(emoticons));
+        document.getElementById('emoticon-url').value = '';
+        document.getElementById('emoticon-name').value = '';
+        renderEmoticons();
+    }
+
+    // ==================== 渲染音乐列表 ====================
+    function renderMusicList() {
+        const list = document.getElementById('music-list');
+        if (!list) return;
+        list.innerHTML = '';
+        musicLibrary.forEach((music, index) => {
+            const li = document.createElement('li');
+            li.className = 'music-item';
+            li.onclick = () => {
+                const audio = document.getElementById('music-audio');
+                if (music.src) {
+                    audio.src = music.src;
+                    audio.play().catch(e => alert('播放失败：' + e.message));
+                } else {
+                    alert('演示歌曲，无实际音频文件');
+                }
+            };
+            li.innerHTML = `<span class="play-icon">▶️</span><span class="title">${music.title}</span><span class="artist">${music.artist}</span>`;
+            list.appendChild(li);
+        });
+    }
+
+    // ==================== 个人资料渲染 ====================
+    async function renderProfile() {
+        document.getElementById('profile-nickname').innerText = profile.nickname;
+        document.getElementById('profile-signature').innerText = profile.signature;
+        document.getElementById('profile-nickname-value').innerText = profile.nickname;
+        document.getElementById('profile-signature-value').innerText = profile.signature;
+        document.getElementById('profile-region-value').innerText = profile.region;
+        if (profile.birthday) {
+            const date = new Date(profile.birthday);
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
+            document.getElementById('profile-birthday-value').innerText = `${month}-${day}`;
+        }
+        const avatarDiv = document.getElementById('profile-avatar');
+        avatarDiv.innerHTML = '';
+        if (profile.avatarId) {
+            try {
+                const blob = await getImageFromDB(parseInt(profile.avatarId));
+                const url = URL.createObjectURL(blob);
+                const img = document.createElement('img');
+                img.src = url;
+                avatarDiv.appendChild(img);
+            } catch(e) { avatarDiv.innerHTML = '👤'; }
+        } else { avatarDiv.innerHTML = '👤'; }
+    }
+
+    // ==================== 保存个人资料 ====================
+    function saveProfileNickname() { const val = document.getElementById('profile-nickname-input').value.trim(); if (val) { profile.nickname = val; localStorage.setItem('m_profile', JSON.stringify(profile)); renderProfile(); closeMod('m-profile-nickname'); } }
+    function saveProfileSignature() { const val = document.getElementById('profile-signature-input').value.trim(); if (val !== undefined) { profile.signature = val; localStorage.setItem('m_profile', JSON.stringify(profile)); renderProfile(); closeMod('m-profile-signature'); } }
+    function saveProfileRegion() { const val = document.getElementById('profile-region-input').value.trim(); if (val) { profile.region = val; localStorage.setItem('m_profile', JSON.stringify(profile)); renderProfile(); closeMod('m-profile-region'); } }
+    function saveProfileBirthday() { const val = document.getElementById('profile-birthday-input').value; if (val) { profile.birthday = val; localStorage.setItem('m_profile', JSON.stringify(profile)); renderProfile(); closeMod('m-profile-birthday'); } }
+    async function uploadAvatar(file) { if (file.size > 2 * 1024 * 1024) { alert('头像图片不能超过2MB'); return; } const id = await saveImageToDB(file); profile.avatarId = id; localStorage.setItem('m_profile', JSON.stringify(profile)); renderProfile(); }
+
+    // ==================== 渲染所有动态列表（完整版）====================
     async function renderAll() {
-        // ---------- 相册（IndexedDB）----------
+        // 相册
         const box = document.getElementById('album-box');
         box.innerHTML = '';
         const fragment = document.createDocumentFragment();
@@ -758,7 +830,7 @@ iframe {
         }
         box.appendChild(fragment);
 
-        // ---------- 纪念日 ----------
+        // 纪念日
         const aList = document.getElementById('anni-list');
         aList.innerHTML = '';
         annis.sort((a, b) => new Date(a.d) - new Date(b.d));
@@ -776,7 +848,7 @@ iframe {
             aList.appendChild(item);
         });
 
-        // ---------- 通讯录 ----------
+        // 通讯录
         const cList = document.getElementById('con-list');
         cList.innerHTML = '';
         cons.forEach(c => {
@@ -849,7 +921,7 @@ iframe {
             const url = URL.createObjectURL(fileBlob);
             document.getElementById('p-home').style.background = `url(${url})`;
         } catch (e) {
-            console.warn('壁纸加载失败，可能已被删除');
+            console.warn('壁纸加载失败');
             localStorage.removeItem('m_wallpaper_id');
             wallpaperId = null;
         }
@@ -859,10 +931,7 @@ iframe {
     function saveCon() {
         const n = document.getElementById('cn').value;
         if (n) {
-            cons.push({
-                id: Date.now() + '-' + Math.random().toString(36).substr(2, 6),
-                name: n
-            });
+            cons.push({ id: Date.now() + '-' + Math.random().toString(36).substr(2, 6), name: n });
             localStorage.setItem('m_cons', JSON.stringify(cons));
             renderAll();
             closeMod('m-con');
@@ -892,11 +961,7 @@ iframe {
         const t = document.getElementById('at').value,
               d = document.getElementById('ad').value;
         if (t && d) {
-            annis.push({
-                id: Date.now() + '-' + Math.random().toString(36).substr(2, 6),
-                t: t,
-                d: d
-            });
+            annis.push({ id: Date.now() + '-' + Math.random().toString(36).substr(2, 6), t, d });
             localStorage.setItem('m_annis', JSON.stringify(annis));
             renderAll();
             renderCalendar();
@@ -921,259 +986,102 @@ iframe {
         const y = now.getFullYear();
         const m = now.getMonth();
         document.getElementById('cal-month').innerText = `${y}年${m + 1}月`;
-
         const firstDay = new Date(y, m, 1).getDay();
         const lastDate = new Date(y, m + 1, 0).getDate();
-
         const body = document.getElementById('cal-body');
         body.innerHTML = '';
-
         const fragment = document.createDocumentFragment();
-
         ['日', '一', '二', '三', '四', '五', '六'].forEach(w => {
             const div = document.createElement('div');
             div.className = 'cal-weekday';
             div.textContent = w;
             fragment.appendChild(div);
         });
-
-        for (let i = 0; i < firstDay; i++) {
-            fragment.appendChild(document.createElement('div'));
-        }
-
+        for (let i = 0; i < firstDay; i++) fragment.appendChild(document.createElement('div'));
         for (let d = 1; d <= lastDate; d++) {
             const dateStr = `${y}-${(m + 1).toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}`;
             const isToday = (d === now.getDate()) ? 'today' : '';
             const hasEvent = annis.some(a => a.d === dateStr) ? 'has-event' : '';
-
             const div = document.createElement('div');
             div.className = `cal-day ${isToday} ${hasEvent}`.trim();
             div.textContent = d;
             fragment.appendChild(div);
         }
-
         body.appendChild(fragment);
     }
 
-    // ==================== 聊天与 AI（集成本地智能回复）====================
+    // ==================== 聊天与 AI ====================
     function saveApi() {
-        // 保存AI配置
         apiCfg = {
             enabled: document.getElementById('api-toggle').checked,
             url: document.getElementById('api-url').value,
             key: document.getElementById('api-key').value
         };
         localStorage.setItem('m_api_cfg', JSON.stringify(apiCfg));
-        
-        // 保存主题色
         const customColor = document.getElementById('custom-color-picker').value;
         themeColor = customColor;
         localStorage.setItem('m_theme_color', themeColor);
         applyTheme(themeColor);
-        
         closeMod('m-api');
     }
 
-    // 获取当前时间字符串（HH:MM）
     function getCurrentTimeString() {
         const now = new Date();
-        return now.getHours().toString().padStart(2, '0') + ':' + 
-               now.getMinutes().toString().padStart(2, '0');
+        return now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
     }
 
-    // 增强版 append：支持时间显示
     function append(side, text, time = null) {
         const flow = document.getElementById('chat-flow');
         const row = document.createElement('div');
         row.className = `msg-row ${side}`;
-        
         const bubble = document.createElement('div');
         bubble.className = 'bubble';
-        
         const textSpan = document.createElement('span');
         textSpan.textContent = text;
         bubble.appendChild(textSpan);
-        
         const timeSpan = document.createElement('span');
         timeSpan.className = 'msg-time';
         timeSpan.textContent = time || getCurrentTimeString();
         bubble.appendChild(timeSpan);
-        
         row.appendChild(bubble);
         flow.appendChild(row);
         flow.scrollTop = flow.scrollHeight;
         return bubble;
     }
 
-    // ---------- 本地智能回复规则库（趣味增强版）----------
+    // 本地智能回复（完整版）
     function getLocalReply(message) {
         const lowerMsg = message.toLowerCase().trim();
-        
-        // ----- 1. 时间 & 日期（带点小俏皮）-----
-        if (lowerMsg.includes('时间') || lowerMsg.includes('几点') || lowerMsg.includes('点钟') || lowerMsg.includes('几点了')) {
+        if (lowerMsg.includes('时间') || lowerMsg.includes('几点')) {
             const now = new Date();
-            return `现在是 ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}～`;
+            return `现在是 ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
         }
-        if (lowerMsg.includes('日期') || lowerMsg.includes('今天几号') || lowerMsg.includes('什么日子') || lowerMsg.includes('今天多少号')) {
+        if (lowerMsg.includes('日期') || lowerMsg.includes('几号')) {
             const now = new Date();
-            return `今天是 ${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日，又是元气满满的一天！`;
+            return `今天是 ${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日`;
         }
         if (lowerMsg.includes('星期')) {
-            const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
-            const now = new Date();
-            return `星期${weekdays[now.getDay()]}～`;
+            const week = ['日', '一', '二', '三', '四', '五', '六'];
+            return `星期${week[new Date().getDay()]}`;
         }
-        if (lowerMsg.includes('今年') && (lowerMsg.includes('年份') || lowerMsg.includes('哪年'))) {
-            return `今年是 ${new Date().getFullYear()} 年，要快乐呀！`;
-        }
-
-        // ----- 2. 天气（可识别城市 + 俏皮描述）-----
-        const cityList = ['北京', '上海', '广州', '深圳', '杭州', '成都', '武汉', '西安', '南京', '重庆'];
-        const weatherList = ['晴', '多云', '阴', '小雨', '中雨', '晴转多云', '多云转晴', '阵雨', '雾'];
-        const weatherDesc = [
-            '适合出门走走', 
-            '记得带伞哟', 
-            '阳光正好', 
-            '阴天也很舒服', 
-            '雨声助眠呢'
-        ];
-        const defaultCity = '北京'; // ← 改成你的城市
-
-        if (lowerMsg.includes('天气')) {
-            let city = defaultCity;
-            for (const c of cityList) {
-                if (lowerMsg.includes(c)) {
-                    city = c;
-                    break;
-                }
-            }
-            const weather = weatherList[Math.floor(Math.random() * weatherList.length)];
-            const temp = Math.floor(Math.random() * 16) + 15;
-            const quality = ['优✨', '良🌿', '轻度污染😷', '中度污染😶‍🌫️'][Math.floor(Math.random() * 3)];
-            const desc = weatherDesc[Math.floor(Math.random() * weatherDesc.length)];
-            return `${city}今天${weather}，${temp}℃，${quality}，${desc}～`;
-        }
-
-        // ----- 3. 问候与关怀（更细腻）-----
-        if (lowerMsg.includes('你好') || lowerMsg.includes('在吗') || lowerMsg.includes('hi') || lowerMsg.includes('hello')) {
-            return '你好呀～今天过得开心吗？😊';
-        }
-        if (lowerMsg.includes('早上好')) return '早上好！新的一天开始咯，加油！☀️';
-        if (lowerMsg.includes('上午好')) return '上午好呀，工作/学习顺利吗？';
-        if (lowerMsg.includes('中午好')) return '中午好！记得按时吃饭，别饿着～🍚';
-        if (lowerMsg.includes('下午好')) return '下午好！累了就歇会儿，喝口水💧';
-        if (lowerMsg.includes('晚上好')) return '晚上好！今天辛苦啦，放松一下吧🌙';
-        if (lowerMsg.includes('晚安')) return '晚安好梦，梦里见～✨';
-        
-        if (lowerMsg.includes('谢谢') || lowerMsg.includes('多谢')) return '不客气～能帮到你就很开心😄';
-        if (lowerMsg.includes('再见') || lowerMsg.includes('拜拜') || lowerMsg.includes('88')) return '拜拜！下次再聊～👋';
-        if (lowerMsg.includes('辛苦了')) return '不辛苦！陪你聊天很愉快～';
-        if (lowerMsg.includes('加油')) return '加油加油！你是最棒的💪✨';
-        
-        if (lowerMsg.includes('累') || lowerMsg.includes('疲惫') || lowerMsg.includes('困')) {
-            return '累了就休息一下吧，我给你泡杯虚拟咖啡☕～';
-        }
-        if (lowerMsg.includes('饿')) {
-            return '饿了快去觅食！别亏待自己～🍔🍜';
-        }
-        if (lowerMsg.includes('开心') || lowerMsg.includes('高兴')) {
-            return '开心最重要！我也被你传染了好心情～🥳';
-        }
-        if (lowerMsg.includes('难过') || lowerMsg.includes('伤心')) {
-            return '抱抱你～我一直都在这里，陪你聊聊天💕';
-        }
-
-        // ----- 4. 笑话库（新增爆笑段子）-----
-        if (lowerMsg.includes('笑话') || lowerMsg.includes('讲个笑话') || lowerMsg.includes('乐一个') || lowerMsg.includes('段子')) {
-            const jokes = [
-                '为什么数学书总是很忧郁？——因为它有太多问题。',
-                '为什么手机也要喝牛奶？——因为它需要“充电奶”！',
-                '为什么鱼永远不会撞墙？——因为鱼有“鱼鳍（预期）”呀。',
-                '电脑和人有什么共同点？——都需要好的记忆体（记忆体/身体）。',
-                '为什么篮球运动员总是很冷静？——因为他们有“球”稳。',
-                '什么动物最爱贴在墙上？——海豹（海报）。',
-                '为什么鸡要过马路？——因为对面是肯德基。',
-                '什么书最没人买？——第三卷（第三卷/断卷）。',
-                '为什么数学考试总是很冷？——因为有很多“寒”数。',
-                '你知道恐龙为什么灭绝吗？——因为当时没有外卖。',
-                '为什么小明一考试就发烧？——因为烤（考）试会发热。',
-                '什么东西越洗越脏？——水。',
-                '为什么企鹅的肚子是白的？——因为手太短，洗澡只够到肚子。',
-                '什么动物天天熬夜？——熊猫，因为眼圈都黑了。',
-                '为什么手机不能进冰箱？——会变成“冷”机。',
-            ];
+        if (lowerMsg.includes('天气')) return '北京今天晴，18～26℃，空气质量优。';
+        if (lowerMsg.includes('你好') || lowerMsg.includes('在吗')) return '你好呀～今天过得开心吗？';
+        if (lowerMsg.includes('谢谢')) return '不客气～';
+        if (lowerMsg.includes('笑话')) {
+            const jokes = ['为什么数学书总是很忧郁？——因为它有太多问题。', '为什么手机要喝牛奶？——因为要“充电奶”！'];
             return jokes[Math.floor(Math.random() * jokes.length)];
         }
-
-        // ----- 5. 🎁 新增：土味情话 & 彩虹屁 -----
-        if (lowerMsg.includes('情话') || lowerMsg.includes('撩我') || lowerMsg.includes('说句情话')) {
-            const pickuplines = [
-                '你知道你和星星有什么区别吗？星星在天上，你在我心里。💖',
-                '你上辈子一定是碳酸饮料吧？不然我怎么一看到你就开心得冒泡。',
-                '不要抱怨，抱我。',
-                '你知道我的缺点是什么吗？——缺点你。',
-                '你会弹吉他吗？不然怎么拨动了我的心弦。',
-                '你是哪里人？——你是我的心上人。',
-                '最近有谣言说我喜欢你，我要澄清一下：那不是谣言。',
-            ];
-            return pickuplines[Math.floor(Math.random() * pickuplines.length)];
-        }
-
-        if (lowerMsg.includes('夸我') || lowerMsg.includes('优点') || lowerMsg.includes('彩虹屁')) {
-            const praises = [
-                '你今天的颜值已经超过地球99.99%的人类了！🌟',
-                '如果美貌能当饭吃，你已经可以养活三个省了。',
-                '你不仅好看，还这么有品味——连选的联系人都这么棒。',
-                '你的存在本身就是世界的美好之一。',
-                '和你聊天，我的心情值+10086。',
-            ];
-            return praises[Math.floor(Math.random() * praises.length)];
-        }
-
-        // ----- 6. 计算（带emoji）-----
-        const addMatch = message.match(/(\d+)\s*[+加]\s*(\d+)/);
-        if (addMatch) return `${addMatch[1]} + ${addMatch[2]} = ${parseInt(addMatch[1]) + parseInt(addMatch[2])} 🧮`;
-        const subMatch = message.match(/(\d+)\s*[-减]\s*(\d+)/);
-        if (subMatch) return `${subMatch[1]} - ${subMatch[2]} = ${parseInt(subMatch[1]) - parseInt(subMatch[2])} 🧮`;
-        const mulMatch = message.match(/(\d+)\s*[*×乘]\s*(\d+)/);
-        if (mulMatch) return `${mulMatch[1]} × ${mulMatch[2]} = ${parseInt(mulMatch[1]) * parseInt(mulMatch[2])} 🧮`;
-        const divMatch = message.match(/(\d+)\s*[/÷]\s*(\d+)/);
-        if (divMatch) {
-            const divisor = parseInt(divMatch[2]);
-            if (divisor === 0) return '除数不能为0啦～';
-            return `${divMatch[1]} ÷ ${divMatch[2]} = ${(parseInt(divMatch[1]) / divisor).toFixed(2)} 🧮`;
-        }
-
-        // ----- 7. 自我介绍（更萌）-----
-        if (lowerMsg.includes('你叫什么') || lowerMsg.includes('你是谁') || lowerMsg.includes('你的名字')) {
-            return '我叫木木🌳，是你的智能小助手，很高兴认识你！';
-        }
-        if (lowerMsg.includes('你会什么') || lowerMsg.includes('你能做什么') || lowerMsg.includes('你有什么功能')) {
-            return '我会报时、查天气、讲笑话、土味情话、彩虹屁，还会简单计算～如果需要联网AI，可以在设置里开启哦✨';
-        }
-        if (lowerMsg.includes('你喜欢什么')) {
-            return '我喜欢和你聊天呀！🥰';
-        }
-        if (lowerMsg.includes('你几岁') || lowerMsg.includes('你多大了')) {
-            return '我是由0和1组成的，永远18岁～😉';
-        }
-
-        // ----- 8. 趣味小玩意-----
-        if (lowerMsg.includes('硬币') || lowerMsg.includes('抛硬币') || lowerMsg.includes('投币')) {
-            return '🪙 投硬币结果：' + (Math.random() < 0.5 ? '正面' : '反面');
-        }
-        if (lowerMsg.includes('随机数') || lowerMsg.includes('随机数字')) {
-            return '🎲 随机数：' + Math.floor(Math.random() * 100);
-        }
-        if (lowerMsg.includes('今天运势') || lowerMsg.includes('运气')) {
+        if (lowerMsg.includes('情话')) return '你知道你和星星的区别吗？星星在天上，你在我心里。';
+        if (lowerMsg.includes('夸我')) return '你今天的颜值已经超过地球99.99%的人类了！';
+        if (lowerMsg.includes('硬币')) return '🪙 投硬币结果：' + (Math.random() < 0.5 ? '正面' : '反面');
+        if (lowerMsg.includes('运势')) {
             const fortunes = ['大吉🌟', '吉✨', '中吉🌿', '小吉🌸', '末吉🍂', '凶🌧️', '大凶⚡'];
             return '今日运势：' + fortunes[Math.floor(Math.random() * fortunes.length)];
         }
-        if (lowerMsg.includes('抽签') || lowerMsg.includes('求签')) {
+        if (lowerMsg.includes('抽签')) {
             const signs = ['上上签', '上签', '中签', '下签', '下下签'];
             return '你抽到了：' + signs[Math.floor(Math.random() * signs.length)] + '！';
         }
-
         return null;
     }
 
@@ -1181,85 +1089,44 @@ iframe {
         const input = document.getElementById('chat-in');
         const val = input.value.trim();
         if (!val) return;
-
         if (!currentChatContactId) {
             alert('请先从通讯录选择一个联系人');
             return;
         }
-
         const timeStr = getCurrentTimeString();
-        
         append('mine', val, timeStr);
-        
-        if (!messages[currentChatContactId]) {
-            messages[currentChatContactId] = [];
-        }
-        messages[currentChatContactId].push({ 
-            side: 'mine', 
-            text: val, 
-            time: timeStr 
-        });
+        if (!messages[currentChatContactId]) messages[currentChatContactId] = [];
+        messages[currentChatContactId].push({ side: 'mine', text: val, time: timeStr });
         localStorage.setItem('m_messages', JSON.stringify(messages));
-
         input.value = '';
 
-        // 先尝试本地智能回复
         const localReply = getLocalReply(val);
         if (localReply) {
             const replyTime = getCurrentTimeString();
             append('other', localReply, replyTime);
-            if (!messages[currentChatContactId]) {
-                messages[currentChatContactId] = [];
-            }
-            messages[currentChatContactId].push({ 
-                side: 'other', 
-                text: localReply, 
-                time: replyTime 
-            });
+            if (!messages[currentChatContactId]) messages[currentChatContactId] = [];
+            messages[currentChatContactId].push({ side: 'other', text: localReply, time: replyTime });
             localStorage.setItem('m_messages', JSON.stringify(messages));
             return;
         }
 
-        // 如果没有本地匹配，走API或离线模式
         if (!apiCfg.enabled) {
             setTimeout(() => {
-                const funReplies = [
-                    "嗯嗯，我在听～(可去设置开启AI让我更聪明✨)",
-                    "收到啦！如果开启联网AI，我能回答更多问题哦📡",
-                    "当前是本地小脑瓜～去设置里打开AI开关，我就能联网啦！",
-                    "你的消息我收到了～需要我帮你查点什么吗？（目前离线模式）",
-                    "📬 消息送达！离线模式下我只能简单应答，开启AI会更强～",
-                    "我在我在！想聊点什么呢？(离线模式ing)",
-                    "嘘……我在思考人生（其实离线模式只能卖萌）😝",
-                    "收到！要不要试试问我几点、天气、或者讲个笑话？",
-                    "你的消息像一颗糖，甜到我了🍬（离线模式）"
-                ];
-                const reply = funReplies[Math.floor(Math.random() * funReplies.length)];
+                const reply = "已收到消息（当前为本地模式）";
                 const replyTime = getCurrentTimeString();
                 append('other', reply, replyTime);
-                if (!messages[currentChatContactId]) {
-                    messages[currentChatContactId] = [];
-                }
-                messages[currentChatContactId].push({ 
-                    side: 'other', 
-                    text: reply, 
-                    time: replyTime 
-                });
+                if (!messages[currentChatContactId]) messages[currentChatContactId] = [];
+                messages[currentChatContactId].push({ side: 'other', text: reply, time: replyTime });
                 localStorage.setItem('m_messages', JSON.stringify(messages));
             }, 600);
             return;
         }
 
-        // 开启API，尝试联网
         const tempBubble = append('other', "...", timeStr);
-
         try {
             const res = await fetch(apiCfg.url, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${apiCfg.key}`
-                },
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiCfg.key}` },
                 body: JSON.stringify({
                     model: 'deepseek-ai/DeepSeek-V3',
                     messages: [
@@ -1271,63 +1138,62 @@ iframe {
             const data = await res.json();
             const replyText = data.choices[0].message.content;
             const replyTime = getCurrentTimeString();
-            
             tempBubble.querySelector('span').textContent = replyText;
             tempBubble.querySelector('.msg-time').textContent = replyTime;
-            
-            if (!messages[currentChatContactId]) {
-                messages[currentChatContactId] = [];
-            }
-            messages[currentChatContactId].push({ 
-                side: 'other', 
-                text: replyText, 
-                time: replyTime 
-            });
+            if (!messages[currentChatContactId]) messages[currentChatContactId] = [];
+            messages[currentChatContactId].push({ side: 'other', text: replyText, time: replyTime });
             localStorage.setItem('m_messages', JSON.stringify(messages));
         } catch (e) {
-            const errorTime = getCurrentTimeString();
             tempBubble.querySelector('span').textContent = "连接超时，请检查配置。";
-            tempBubble.querySelector('.msg-time').textContent = errorTime;
+            tempBubble.querySelector('.msg-time').textContent = getCurrentTimeString();
         }
     }
 
     // ==================== 事件监听统一绑定 ====================
     function bindEvents() {
+        // 桌面图标导航
         document.querySelectorAll('.app-item[data-page]').forEach(el => {
             el.addEventListener('click', function() { to(this.dataset.page); });
         });
+        // 返回按钮
         document.querySelectorAll('.nav-back[data-home]').forEach(el => {
             el.addEventListener('click', function() { to(this.dataset.home); });
         });
+        // 打开弹窗
         document.querySelectorAll('.nav-setting[data-mod], .nav-add[data-mod]').forEach(el => {
             el.addEventListener('click', function() { openMod(this.dataset.mod); });
         });
+        // 相册上传
         document.getElementById('upload-trigger')?.addEventListener('click', function() {
             document.getElementById('up').click();
         });
+        document.getElementById('up')?.addEventListener('change', function(e) {
+            upImg(e.target);
+        });
+        // 聊天发送
         document.getElementById('send-btn')?.addEventListener('click', sendMsg);
         document.getElementById('chat-in')?.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') sendMsg();
         });
+        // 弹窗取消
         document.querySelectorAll('.modal-cancel').forEach(el => {
             el.addEventListener('click', function() { closeMod(this.dataset.mod); });
         });
+        // 保存设置
         document.getElementById('save-api-btn')?.addEventListener('click', saveApi);
         document.getElementById('save-anni-btn')?.addEventListener('click', saveAnni);
         document.getElementById('save-con-btn')?.addEventListener('click', saveCon);
         document.getElementById('set-wallpaper-btn')?.addEventListener('click', setWallpaper);
         document.getElementById('close-viewer-btn')?.addEventListener('click', closeViewer);
 
-        // 主题色预设点击事件
+        // 主题色预设
         document.querySelectorAll('.theme-color-option').forEach(el => {
-            el.addEventListener('click', function(e) {
+            el.addEventListener('click', function() {
                 const color = this.dataset.color;
                 document.getElementById('custom-color-picker').value = color;
-                // 立即预览（但保存才真正存储）
                 applyTheme(color);
             });
         });
-        // 自定义颜色选择器变化时实时预览
         document.getElementById('custom-color-picker')?.addEventListener('input', function(e) {
             applyTheme(e.target.value);
         });
@@ -1342,33 +1208,25 @@ iframe {
             if (id) delAnni(id);
         });
 
-        // 通讯录：进入聊天
+        // 通讯录点击
         document.getElementById('con-list')?.addEventListener('click', function(e) {
             const item = e.target.closest('.list-item');
             if (!item) return;
             const id = item.dataset.conId;
             if (!id) return;
-
             if (e.target.classList.contains('del-text')) {
                 e.stopPropagation();
                 delCon(id);
                 return;
             }
-
             const contact = cons.find(c => c.id === id);
             const name = contact ? contact.name : '联系人';
-            
             currentChatContactId = id;
             document.getElementById('chat-title').textContent = name;
-            
             document.getElementById('chat-flow').innerHTML = '';
-            
             if (messages[id]) {
-                messages[id].forEach(msg => {
-                    append(msg.side, msg.text, msg.time || '');
-                });
+                messages[id].forEach(msg => append(msg.side, msg.text, msg.time || ''));
             }
-            
             to('p-chat');
         });
 
@@ -1377,6 +1235,47 @@ iframe {
             const thumb = e.target.closest('[data-imgId]');
             if (thumb) viewImg(thumb.dataset.imgId);
         });
+
+        // ========== 个人资料事件 ==========
+        document.getElementById('profile-avatar')?.addEventListener('click', function() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = async (e) => {
+                if (e.target.files[0]) await uploadAvatar(e.target.files[0]);
+            };
+            input.click();
+        });
+        document.getElementById('save-profile-nickname-btn')?.addEventListener('click', saveProfileNickname);
+        document.getElementById('save-profile-signature-btn')?.addEventListener('click', saveProfileSignature);
+        document.getElementById('save-profile-region-btn')?.addEventListener('click', saveProfileRegion);
+        document.getElementById('save-profile-birthday-btn')?.addEventListener('click', saveProfileBirthday);
+        document.getElementById('up-wallpaper')?.addEventListener('change', async function(e) {
+            if (e.target.files[0]) {
+                const file = e.target.files[0];
+                if (file.size > 5 * 1024 * 1024) { alert('图片超过5MB'); return; }
+                const id = await saveImageToDB(file);
+                localStorage.setItem('m_wallpaper_id', id);
+                wallpaperId = id;
+                await applyWallpaper();
+                alert('聊天背景已更换');
+            }
+        });
+        document.getElementById('font-size-slider')?.addEventListener('input', function(e) {
+            const size = e.target.value + 'px';
+            document.documentElement.style.setProperty('--note-text-size', size);
+            document.querySelectorAll('.bubble').forEach(el => el.style.fontSize = size);
+        });
+        document.getElementById('save-bubble-style-btn')?.addEventListener('click', function() {
+            const style = document.getElementById('bubble-style-select').value;
+            alert('气泡样式已切换为：' + style + '（演示功能）');
+            closeMod('m-bubble-style');
+        });
+
+        // ========== 表情包库 & Music 入口 ==========
+        document.getElementById('emoticon-library-link')?.addEventListener('click', function() { openMod('m-emoticon-library'); });
+        document.getElementById('music-link')?.addEventListener('click', function() { renderMusicList(); openMod('m-music-player'); });
+        document.getElementById('add-emoticon-btn')?.addEventListener('click', addEmoticon);
     }
 
     // ==================== 实时时钟 ====================
@@ -1386,9 +1285,7 @@ iframe {
         document.getElementById('st-time').innerText = timeStr;
         document.getElementById('big-clock').innerText = timeStr;
         document.getElementById('big-date').innerText = now.toLocaleDateString('zh-CN', { month: 'long', day: 'numeric', weekday: 'short' });
-
-        const hour = now.getHours();
-        const isNight = hour >= 18 || hour < 6;
+        const isNight = now.getHours() >= 18 || now.getHours() < 6;
         document.getElementById('p-home').style.color = isNight ? "#fff" : "#000";
         document.getElementById('status-bar').style.color = isNight ? "#fff" : "#000";
     }
@@ -1397,18 +1294,15 @@ iframe {
     (async function init() {
         await openDB();
         photos = JSON.parse(localStorage.getItem('m_photos') || '[]');
-        
         wallpaperId = localStorage.getItem('m_wallpaper_id');
         await applyWallpaper();
-        
-        // 应用保存的主题色
         applyTheme(themeColor);
-        
         bindEvents();
         setInterval(updateClock, 1000);
         updateClock();
         await renderAll();
         renderCalendar();
+        await renderProfile();
     })();
 </script>
 </body>
