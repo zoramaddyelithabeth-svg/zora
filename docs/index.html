@@ -210,12 +210,56 @@ annis.forEach((a, index) => {
     aList.appendChild(item);
 });
 
-        // 通讯录
-        const cList = document.getElementById('con-list'); cList.innerHTML = '';
-        cons.forEach((c, i) => {
-            cList.innerHTML += `<div class="list-item" onclick="to('p-chat'); document.getElementById('chat-title').innerText='${c.name}'"><span>👤 ${c.name}</span><span class="del-text" onclick="event.stopPropagation(); delCon(${i})">删除</span></div>`;
-        });
+       // 通讯录 - 安全渲染
+const cList = document.getElementById('con-list');
+cList.innerHTML = ''; // 清空
+
+cons.forEach((c, index) => {
+    // 创建整个条目
+    const item = document.createElement('div');
+    item.className = 'list-item';
+    // 存储当前联系人在数组中的位置（以后可以升级为唯一ID）
+    item.dataset.conIndex = index;
+
+    // 左边的名字（用 textContent，安全！）
+    const nameSpan = document.createElement('span');
+    nameSpan.textContent = `👤 ${c.name}`;
+
+    // 右边的删除按钮
+    const delSpan = document.createElement('span');
+    delSpan.className = 'del-text';
+    delSpan.textContent = '删除';
+
+    // 组装
+    item.appendChild(nameSpan);
+    item.appendChild(delSpan);
+
+    // 添加到列表容器
+    cList.appendChild(item);
+});
+        // 通讯录点击监听
+document.getElementById('con-list').addEventListener('click', function(e) {
+    // 找到被点击的整个条目
+    const item = e.target.closest('.list-item');
+    if (!item) return;
+
+    // 取出存在 dataset 里的索引
+    const index = parseInt(item.dataset.conIndex, 10);
+    if (isNaN(index)) return;
+
+    // 如果点的是“删除”文字
+    if (e.target.classList.contains('del-text')) {
+        e.stopPropagation(); // 防止触发父级点击
+        delCon(index);       // 调用原来的删除函数
+        return;
     }
+
+    // 否则就是点击条目本身 -> 进入聊天
+    const name = cons[index]?.name || '联系人';
+    to('p-chat');
+    // 使用 textContent 设置聊天标题，安全！
+    document.getElementById('chat-title').textContent = name;
+});
 
     // --- 相册逻辑 ---
     function upImg(el) {
