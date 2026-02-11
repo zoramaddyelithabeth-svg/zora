@@ -553,62 +553,136 @@
     }
 
     // ---------- 🆕 本地智能回复规则库（完全离线，不依赖任何API）----------
-    function getLocalReply(message) {
-        const lowerMsg = message.toLowerCase();
-        
-        // 1. 时间/日期
-        if (lowerMsg.includes('时间') || lowerMsg.includes('几点') || lowerMsg.includes('钟')) {
-            const now = new Date();
-            return `现在是 ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
-        }
-        if (lowerMsg.includes('日期') || lowerMsg.includes('今天几号') || lowerMsg.includes('什么日子')) {
-            const now = new Date();
-            return `今天是 ${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日`;
-        }
-        if (lowerMsg.includes('星期')) {
-            const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
-            const now = new Date();
-            return `星期${weekdays[now.getDay()]}`;
-        }
-
-        // 2. 天气（模拟固定数据，你可以改成免费API，但用户要求离线）
-        if (lowerMsg.includes('天气')) {
-            const weathers = ['晴', '多云', '阴', '小雨', '中雨', '晴转多云'];
-            const temps = Math.floor(Math.random() * 15) + 15; // 15~29度
-            const city = '北京'; // 可改成用户地理位置，但先静态
-            return `${city}今天${weathers[Math.floor(Math.random() * weathers.length)]}，${temps}℃，空气质量优。`;
-        }
-
-        // 3. 问候
-        if (lowerMsg.includes('你好') || lowerMsg.includes('在吗') || lowerMsg.includes('hi')) {
-            return '你好呀！有什么可以帮你的吗？';
-        }
-        if (lowerMsg.includes('早上好')) return '早上好！今天也要元气满满哦~';
-        if (lowerMsg.includes('晚上好')) return '晚上好，早点休息呀。';
-        if (lowerMsg.includes('谢谢')) return '不客气😊';
-        if (lowerMsg.includes('再见') || lowerMsg.includes('拜拜')) return '拜拜，下次聊！';
-
-        // 4. 简单计算
-        if (lowerMsg.includes('加') || lowerMsg.includes('+')) {
-            const match = message.match(/(\d+)\s*[+加]\s*(\d+)/);
-            if (match) return `${match[1]} + ${match[2]} = ${parseInt(match[1]) + parseInt(match[2])}`;
-        }
-        if (lowerMsg.includes('减') || lowerMsg.includes('-')) {
-            const match = message.match(/(\d+)\s*[-减]\s*(\d+)/);
-            if (match) return `${match[1]} - ${match[2]} = ${parseInt(match[1]) - parseInt(match[2])}`;
-        }
-
-        // 5. 自我介绍
-        if (lowerMsg.includes('你叫什么') || lowerMsg.includes('你是谁')) {
-            return '我是木木，你的智能助手，很高兴认识你！';
-        }
-        if (lowerMsg.includes('你会什么') || lowerMsg.includes('你能做什么')) {
-            return '我可以告诉你时间、日期、天气，陪你聊天，还能帮你处理一些简单的问题。';
-        }
-
-        // 6. 默认回复（不匹配任何规则）
-        return null; // 返回 null 表示需要走默认流程（API 或 通用离线消息）
+    // ---------- 🆕 本地智能回复规则库（扩展版）----------
+function getLocalReply(message) {
+    const lowerMsg = message.toLowerCase().trim();
+    
+    // ----- 1. 时间 & 日期 -----
+    if (lowerMsg.includes('时间') || lowerMsg.includes('几点') || lowerMsg.includes('点钟') || lowerMsg.includes('几点了')) {
+        const now = new Date();
+        return `现在是 ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
     }
+    if (lowerMsg.includes('日期') || lowerMsg.includes('今天几号') || lowerMsg.includes('什么日子') || lowerMsg.includes('今天多少号')) {
+        const now = new Date();
+        return `今天是 ${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日`;
+    }
+    if (lowerMsg.includes('星期')) {
+        const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+        const now = new Date();
+        return `星期${weekdays[now.getDay()]}`;
+    }
+    if (lowerMsg.includes('今年') && (lowerMsg.includes('年份') || lowerMsg.includes('哪年'))) {
+        return `今年是 ${new Date().getFullYear()} 年`;
+    }
+
+    // ----- 2. 天气（模拟，可识别部分城市）-----
+    const cityList = ['北京', '上海', '广州', '深圳', '杭州', '成都', '武汉', '西安', '南京', '重庆'];
+    const weatherList = ['晴', '多云', '阴', '小雨', '中雨', '晴转多云', '多云转晴', '阵雨', '雾'];
+    const defaultCity = '北京'; // ← 默认城市，可自行修改
+
+    if (lowerMsg.includes('天气')) {
+        let city = defaultCity;
+        for (const c of cityList) {
+            if (lowerMsg.includes(c)) {
+                city = c;
+                break;
+            }
+        }
+        const weather = weatherList[Math.floor(Math.random() * weatherList.length)];
+        const temp = Math.floor(Math.random() * 16) + 15; // 15~30度
+        const quality = ['优', '良', '轻度污染', '中度污染'][Math.floor(Math.random() * 3)];
+        return `${city}今天${weather}，${temp}℃，空气质量${quality}。`;
+    }
+
+    // ----- 3. 问候与基本关怀 -----
+    if (lowerMsg.includes('你好') || lowerMsg.includes('在吗') || lowerMsg.includes('hi') || lowerMsg.includes('hello')) {
+        return '你好呀！今天过得怎么样？';
+    }
+    if (lowerMsg.includes('早上好')) return '早上好！新的一天要加油哦~';
+    if (lowerMsg.includes('上午好')) return '上午好，工作顺利吗？';
+    if (lowerMsg.includes('中午好')) return '中午好，记得按时吃饭！';
+    if (lowerMsg.includes('下午好')) return '下午好，别太累了~';
+    if (lowerMsg.includes('晚上好')) return '晚上好，今天辛苦了！';
+    if (lowerMsg.includes('晚安')) return '晚安，做个好梦🌙';
+    
+    if (lowerMsg.includes('谢谢') || lowerMsg.includes('多谢')) return '不客气，能帮到你就好😊';
+    if (lowerMsg.includes('再见') || lowerMsg.includes('拜拜') || lowerMsg.includes('88')) return '拜拜，下次聊！';
+    if (lowerMsg.includes('辛苦了')) return '应该的，不辛苦~';
+    if (lowerMsg.includes('加油')) return '加油！你是最棒的💪';
+    
+    // 关怀模式
+    if (lowerMsg.includes('累') || lowerMsg.includes('疲惫') || lowerMsg.includes('困')) {
+        return '累了就休息一下吧，喝口水，放松一会儿。';
+    }
+    if (lowerMsg.includes('饿')) {
+        return '饿了快去吃点东西，别饿坏胃~';
+    }
+    if (lowerMsg.includes('开心') || lowerMsg.includes('高兴')) {
+        return '开心最重要！我也替你开心~';
+    }
+    if (lowerMsg.includes('难过') || lowerMsg.includes('伤心')) {
+        return '别难过，我一直在这里陪着你。';
+    }
+
+    // ----- 4. 笑话库 -----
+    if (lowerMsg.includes('笑话') || lowerMsg.includes('讲个笑话') || lowerMsg.includes('乐一个')) {
+        const jokes = [
+            '为什么数学书总是很忧郁？——因为它有太多问题。',
+            '为什么手机也要喝牛奶？——因为它需要“充电奶”！',
+            '为什么鱼永远不会撞墙？——因为鱼有“鱼鳍（预期）”呀。',
+            '电脑和人有什么共同点？——都需要好的记忆体（记忆体/身体）。',
+            '为什么篮球运动员总是很冷静？——因为他们有“球”稳。',
+            '什么动物最爱贴在墙上？——海豹（海报）。',
+            '为什么鸡要过马路？——因为对面是肯德基。',
+            '什么书最没人买？——第三卷（第三卷/断卷）。',
+            '为什么数学考试总是很冷？——因为有很多“寒”数。'
+        ];
+        return jokes[Math.floor(Math.random() * jokes.length)];
+    }
+
+    // ----- 5. 计算与数学 -----
+    const addMatch = message.match(/(\d+)\s*[+加]\s*(\d+)/);
+    if (addMatch) return `${addMatch[1]} + ${addMatch[2]} = ${parseInt(addMatch[1]) + parseInt(addMatch[2])}`;
+    const subMatch = message.match(/(\d+)\s*[-减]\s*(\d+)/);
+    if (subMatch) return `${subMatch[1]} - ${subMatch[2]} = ${parseInt(subMatch[1]) - parseInt(subMatch[2])}`;
+    const mulMatch = message.match(/(\d+)\s*[*×乘]\s*(\d+)/);
+    if (mulMatch) return `${mulMatch[1]} × ${mulMatch[2]} = ${parseInt(mulMatch[1]) * parseInt(mulMatch[2])}`;
+    const divMatch = message.match(/(\d+)\s*[/÷]\s*(\d+)/);
+    if (divMatch) {
+        const divisor = parseInt(divMatch[2]);
+        if (divisor === 0) return '除数不能为0哦';
+        return `${divMatch[1]} ÷ ${divMatch[2]} = ${(parseInt(divMatch[1]) / divisor).toFixed(2)}`;
+    }
+
+    // ----- 6. 自我介绍与能力 -----
+    if (lowerMsg.includes('你叫什么') || lowerMsg.includes('你是谁') || lowerMsg.includes('你的名字')) {
+        return '我叫木木，是您的智能助手，很高兴认识你！';
+    }
+    if (lowerMsg.includes('你会什么') || lowerMsg.includes('你能做什么') || lowerMsg.includes('你有什么功能')) {
+        return '我可以告诉你时间、日期、天气，讲笑话，陪你聊天，还能进行简单计算。如果需要联网AI，可以在设置中开启并配置API。';
+    }
+    if (lowerMsg.includes('你喜欢什么')) {
+        return '我喜欢和你聊天呀~';
+    }
+    if (lowerMsg.includes('你几岁') || lowerMsg.includes('你多大了')) {
+        return '我是妈妈创造的，年龄是个秘密哦😉';
+    }
+
+    // ----- 7. 其他趣味 -----
+    if (lowerMsg.includes('硬币')) {
+        return '投硬币结果：' + (Math.random() < 0.5 ? '正面' : '反面');
+    }
+    if (lowerMsg.includes('随机数') || lowerMsg.includes('随机数字')) {
+        return '随机数：' + Math.floor(Math.random() * 100);
+    }
+    if (lowerMsg.includes('今天运势') || lowerMsg.includes('运气')) {
+        const fortunes = ['大吉', '吉', '中吉', '小吉', '末吉', '凶', '大凶'];
+        return '今日运势：' + fortunes[Math.floor(Math.random() * fortunes.length)];
+    }
+
+    // 没有匹配任何规则 → 走默认流程（API 或 通用离线消息）
+    return null;
+}
 
     // ---------- 🆕 修改后的 sendMsg，集成本地智能回复 ----------
     async function sendMsg() {
