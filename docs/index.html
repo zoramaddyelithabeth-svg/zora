@@ -552,7 +552,6 @@
         return bubble;
     }
 
-    // ---------- 🆕 本地智能回复规则库（完全离线，不依赖任何API）----------
    // ---------- 🎉 本地智能回复规则库 · 趣味增强版 ----------
 function getLocalReply(message) {
     const lowerMsg = message.toLowerCase().trim();
@@ -585,7 +584,7 @@ function getLocalReply(message) {
         '阴天也很舒服', 
         '雨声助眠呢'
     ];
-    const defaultCity = '北京'; // ← 改成你的城市
+    const defaultCity = '深圳'; // ← 改成你的城市
 
     if (lowerMsg.includes('天气')) {
         let city = defaultCity;
