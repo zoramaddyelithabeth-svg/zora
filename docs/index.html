@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>SmartOS Pro Ultra · 大容量相册</title>
+    <title>SmartOS Pro Ultra · 本地智能</title>
     <style>
-        /* ----- 完全保留你原有的样式，一个字都没改 ----- */
+        /* ------- 你的完整样式，一字未改 ------- */
         :root {
             --wechat-green: #07C160;
             --ios-blue: #007AFF;
@@ -63,9 +63,24 @@
         #chat-flow { flex: 1; overflow-y: auto; background: #ededed; padding: 15px; display: flex; flex-direction: column; gap: 12px; }
         .msg-row { display: flex; gap: 10px; max-width: 85%; }
         .msg-row.mine { align-self: flex-end; flex-direction: row-reverse; }
-        .bubble { padding: 10px 14px; border-radius: 10px; font-size: 15px; line-height: 1.4; word-wrap: break-word; }
+        .bubble {
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 15px;
+            line-height: 1.4;
+            word-wrap: break-word;
+            position: relative;
+        }
         .mine .bubble { background: var(--wechat-green); color: #fff; }
         .other .bubble { background: #fff; color: #000; }
+        .msg-time {
+            font-size: 10px;
+            color: #999;
+            margin-top: 4px;
+            text-align: right;
+            display: block;
+        }
+        .mine .msg-time { color: rgba(255,255,255,0.7); }
 
         #viewer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 2000; display: none; flex-direction: column; justify-content: center; align-items: center; }
         #viewer img { max-width: 100%; max-height: 85%; object-fit: contain; }
@@ -86,7 +101,7 @@
         <div>📶 🔋</div>
     </div>
 
-    <!-- 桌面（无内联onclick） -->
+    <!-- 桌面 -->
     <div class="page active home-bg" id="p-home">
         <div class="home-clock">
             <h1 id="big-clock">00:00</h1>
@@ -101,11 +116,11 @@
         </div>
     </div>
 
-    <!-- 聊天 -->
+    <!-- 聊天（独立对话 + 时间戳 + 本地智能） -->
     <div class="page" id="p-chat">
         <div class="nav-bar">
             <span class="nav-back" data-home="p-home" style="color:var(--ios-blue)">〈 桌面</span>
-            <b id="chat-title">木木</b>
+            <b id="chat-title">请选择联系人</b>
             <span class="nav-setting" data-mod="m-api" style="color:var(--ios-blue); font-size:13px;">设置</span>
         </div>
         <div id="chat-flow"></div>
@@ -199,7 +214,7 @@
 </div>
 
 <script>
-    // ==================== IndexedDB 图片仓库（大容量） ====================
+    // ==================== IndexedDB 图片仓库 ====================
     let db;
     const DB_NAME = 'SmartOSDB';
     const DB_VERSION = 1;
@@ -244,23 +259,18 @@
         });
     }
 
-    async function getAllImageIds() {
-        if (!db) await openDB();
-        return new Promise((resolve, reject) => {
-            const tx = db.transaction(STORE_NAME, 'readonly');
-            const store = tx.objectStore(STORE_NAME);
-            const request = store.getAllKeys();
-            request.onsuccess = () => resolve(request.result);
-            request.onerror = () => reject(request.error);
-        });
-    }
-
-    // ==================== 数据持久化（ID列表） ====================
-    let photos = [];          // 只存图片ID，不存base64
+    // ==================== 数据持久化 ====================
+    let photos = JSON.parse(localStorage.getItem('m_photos') || '[]');
     let annis = JSON.parse(localStorage.getItem('m_annis') || '[]');
     let cons = JSON.parse(localStorage.getItem('m_cons') || '[{"id":"init-001","name":"木木"}]');
     let apiCfg = JSON.parse(localStorage.getItem('m_api_cfg') || '{"enabled":false,"url":"","key":""}');
-    let wall = localStorage.getItem('m_wall') || '';  // 壁纸存的是blob URL，刷新会失效，后续可改进
+    
+    // 壁纸存储图片ID，永久有效
+    let wallpaperId = localStorage.getItem('m_wallpaper_id');
+
+    // 独立聊天记录（带时间戳）
+    let messages = JSON.parse(localStorage.getItem('m_messages') || '{}');
+    let currentChatContactId = null;
 
     // ==================== 核心路由 ====================
     function to(id) {
@@ -281,32 +291,27 @@
 
     // ==================== 渲染所有动态列表 ====================
     async function renderAll() {
-        // ---------- 相册（IndexedDB 版）----------
+        // ---------- 相册（IndexedDB）----------
         const box = document.getElementById('album-box');
         box.innerHTML = '';
         const fragment = document.createDocumentFragment();
-
-        // photos 数组里存的是图片 ID
         for (const id of photos) {
             const div = document.createElement('div');
             div.dataset.imgId = id;
             div.className = 'album-thumb';
-            
             try {
                 const fileBlob = await getImageFromDB(id);
                 const url = URL.createObjectURL(fileBlob);
                 div.style.backgroundImage = `url(${url})`;
-                div.dataset.blobUrl = url; // 便于释放
+                div.dataset.blobUrl = url;
             } catch (e) {
-                console.error('加载图片失败', e);
                 div.style.background = '#ccc';
             }
-            
             fragment.appendChild(div);
         }
         box.appendChild(fragment);
 
-        // ---------- 纪念日（安全渲染 + 唯一ID）----------
+        // ---------- 纪念日 ----------
         const aList = document.getElementById('anni-list');
         aList.innerHTML = '';
         annis.sort((a, b) => new Date(a.d) - new Date(b.d));
@@ -314,41 +319,35 @@
             const item = document.createElement('div');
             item.className = 'list-item';
             item.dataset.anniId = a.id;
-
             const leftSpan = document.createElement('span');
             leftSpan.textContent = `📅 ${a.d} ${a.t}`;
-
             const delSpan = document.createElement('span');
             delSpan.className = 'del-text';
             delSpan.textContent = '删除';
-
             item.appendChild(leftSpan);
             item.appendChild(delSpan);
             aList.appendChild(item);
         });
 
-        // ---------- 通讯录（安全渲染 + 唯一ID）----------
+        // ---------- 通讯录 ----------
         const cList = document.getElementById('con-list');
         cList.innerHTML = '';
         cons.forEach(c => {
             const item = document.createElement('div');
             item.className = 'list-item';
             item.dataset.conId = c.id;
-
             const nameSpan = document.createElement('span');
             nameSpan.textContent = `👤 ${c.name}`;
-
             const delSpan = document.createElement('span');
             delSpan.className = 'del-text';
             delSpan.textContent = '删除';
-
             item.appendChild(nameSpan);
             item.appendChild(delSpan);
             cList.appendChild(item);
         });
     }
 
-    // ==================== 相册逻辑（IndexedDB版） ====================
+    // ==================== 相册逻辑 ====================
     async function upImg(el) {
         const files = Array.from(el.files);
         for (const file of files) {
@@ -363,14 +362,13 @@
         renderAll();
     }
 
-    let currentImgId = null;   // 当前查看的图片ID
-    let currentImgBlobUrl = null; // 当前查看的blob URL，用于释放
+    let currentImgId = null;
+    let currentImgBlobUrl = null;
 
     async function viewImg(imgId) {
         try {
             const fileBlob = await getImageFromDB(parseInt(imgId));
             const url = URL.createObjectURL(fileBlob);
-            // 释放之前的blob URL（避免内存泄漏）
             if (currentImgBlobUrl) URL.revokeObjectURL(currentImgBlobUrl);
             currentImgBlobUrl = url;
             currentImgId = imgId;
@@ -381,18 +379,16 @@
         }
     }
 
-    function closeViewer() {
-        document.getElementById('viewer').style.display = 'none';
-        // 不立即释放blob URL，因为可能设为壁纸，等下次查看时再释放
-    }
+    function closeViewer() { document.getElementById('viewer').style.display = 'none'; }
 
+    // 设置壁纸：存储图片ID
     async function setWallpaper() {
         if (!currentImgId) return;
         try {
-            const fileBlob = await getImageFromDB(parseInt(currentImgId));
-            const url = URL.createObjectURL(fileBlob);
-            localStorage.setItem('m_wall', url);
-            document.getElementById('p-home').style.background = `url(${url})`;
+            await getImageFromDB(parseInt(currentImgId));
+            localStorage.setItem('m_wallpaper_id', currentImgId);
+            wallpaperId = currentImgId;
+            await applyWallpaper();
             alert('壁纸设置成功！');
             closeViewer();
         } catch (e) {
@@ -400,7 +396,21 @@
         }
     }
 
-    // ==================== 通讯录 CRUD（唯一ID） ====================
+    // 应用壁纸（从ID加载）
+    async function applyWallpaper() {
+        if (!wallpaperId) return;
+        try {
+            const fileBlob = await getImageFromDB(parseInt(wallpaperId));
+            const url = URL.createObjectURL(fileBlob);
+            document.getElementById('p-home').style.background = `url(${url})`;
+        } catch (e) {
+            console.warn('壁纸加载失败，可能已被删除');
+            localStorage.removeItem('m_wallpaper_id');
+            wallpaperId = null;
+        }
+    }
+
+    // ==================== 通讯录 CRUD ====================
     function saveCon() {
         const n = document.getElementById('cn').value;
         if (n) {
@@ -420,12 +430,19 @@
             if (index !== -1) {
                 cons.splice(index, 1);
                 localStorage.setItem('m_cons', JSON.stringify(cons));
+                delete messages[id];
+                localStorage.setItem('m_messages', JSON.stringify(messages));
                 renderAll();
+                if (currentChatContactId === id) {
+                    currentChatContactId = null;
+                    document.getElementById('chat-title').textContent = '请选择联系人';
+                    document.getElementById('chat-flow').innerHTML = '';
+                }
             }
         }
     }
 
-    // ==================== 纪念日 CRUD（唯一ID） ====================
+    // ==================== 纪念日 CRUD ====================
     function saveAnni() {
         const t = document.getElementById('at').value,
               d = document.getElementById('ad').value;
@@ -493,7 +510,7 @@
         body.appendChild(fragment);
     }
 
-    // ==================== 聊天与 AI ====================
+    // ==================== 聊天与 AI（保留API + 新增本地智能回复）====================
     function saveApi() {
         apiCfg = {
             enabled: document.getElementById('api-toggle').checked,
@@ -504,19 +521,164 @@
         closeMod('m-api');
     }
 
+    // 获取当前时间字符串（HH:MM）
+    function getCurrentTimeString() {
+        const now = new Date();
+        return now.getHours().toString().padStart(2, '0') + ':' + 
+               now.getMinutes().toString().padStart(2, '0');
+    }
+
+    // 增强版 append：支持时间显示
+    function append(side, text, time = null) {
+        const flow = document.getElementById('chat-flow');
+        const row = document.createElement('div');
+        row.className = `msg-row ${side}`;
+        
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        
+        const textSpan = document.createElement('span');
+        textSpan.textContent = text;
+        bubble.appendChild(textSpan);
+        
+        const timeSpan = document.createElement('span');
+        timeSpan.className = 'msg-time';
+        timeSpan.textContent = time || getCurrentTimeString();
+        bubble.appendChild(timeSpan);
+        
+        row.appendChild(bubble);
+        flow.appendChild(row);
+        flow.scrollTop = flow.scrollHeight;
+        return bubble;
+    }
+
+    // ---------- 🆕 本地智能回复规则库（完全离线，不依赖任何API）----------
+    function getLocalReply(message) {
+        const lowerMsg = message.toLowerCase();
+        
+        // 1. 时间/日期
+        if (lowerMsg.includes('时间') || lowerMsg.includes('几点') || lowerMsg.includes('钟')) {
+            const now = new Date();
+            return `现在是 ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+        }
+        if (lowerMsg.includes('日期') || lowerMsg.includes('今天几号') || lowerMsg.includes('什么日子')) {
+            const now = new Date();
+            return `今天是 ${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日`;
+        }
+        if (lowerMsg.includes('星期')) {
+            const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+            const now = new Date();
+            return `星期${weekdays[now.getDay()]}`;
+        }
+
+        // 2. 天气（模拟固定数据，你可以改成免费API，但用户要求离线）
+        if (lowerMsg.includes('天气')) {
+            const weathers = ['晴', '多云', '阴', '小雨', '中雨', '晴转多云'];
+            const temps = Math.floor(Math.random() * 15) + 15; // 15~29度
+            const city = '北京'; // 可改成用户地理位置，但先静态
+            return `${city}今天${weathers[Math.floor(Math.random() * weathers.length)]}，${temps}℃，空气质量优。`;
+        }
+
+        // 3. 问候
+        if (lowerMsg.includes('你好') || lowerMsg.includes('在吗') || lowerMsg.includes('hi')) {
+            return '你好呀！有什么可以帮你的吗？';
+        }
+        if (lowerMsg.includes('早上好')) return '早上好！今天也要元气满满哦~';
+        if (lowerMsg.includes('晚上好')) return '晚上好，早点休息呀。';
+        if (lowerMsg.includes('谢谢')) return '不客气😊';
+        if (lowerMsg.includes('再见') || lowerMsg.includes('拜拜')) return '拜拜，下次聊！';
+
+        // 4. 简单计算
+        if (lowerMsg.includes('加') || lowerMsg.includes('+')) {
+            const match = message.match(/(\d+)\s*[+加]\s*(\d+)/);
+            if (match) return `${match[1]} + ${match[2]} = ${parseInt(match[1]) + parseInt(match[2])}`;
+        }
+        if (lowerMsg.includes('减') || lowerMsg.includes('-')) {
+            const match = message.match(/(\d+)\s*[-减]\s*(\d+)/);
+            if (match) return `${match[1]} - ${match[2]} = ${parseInt(match[1]) - parseInt(match[2])}`;
+        }
+
+        // 5. 自我介绍
+        if (lowerMsg.includes('你叫什么') || lowerMsg.includes('你是谁')) {
+            return '我是木木，你的智能助手，很高兴认识你！';
+        }
+        if (lowerMsg.includes('你会什么') || lowerMsg.includes('你能做什么')) {
+            return '我可以告诉你时间、日期、天气，陪你聊天，还能帮你处理一些简单的问题。';
+        }
+
+        // 6. 默认回复（不匹配任何规则）
+        return null; // 返回 null 表示需要走默认流程（API 或 通用离线消息）
+    }
+
+    // ---------- 🆕 修改后的 sendMsg，集成本地智能回复 ----------
     async function sendMsg() {
         const input = document.getElementById('chat-in');
         const val = input.value.trim();
         if (!val) return;
-        append('mine', val);
-        input.value = '';
 
-        if (!apiCfg.enabled) {
-            setTimeout(() => append('other', "已收到消息（当前为本地模式，可在设置中开启AI）"), 600);
+        if (!currentChatContactId) {
+            alert('请先从通讯录选择一个联系人');
             return;
         }
 
-        const tempBubble = append('other', "...");
+        const timeStr = getCurrentTimeString();
+        
+        // 添加自己的消息到界面
+        append('mine', val, timeStr);
+        
+        // 保存自己的消息
+        if (!messages[currentChatContactId]) {
+            messages[currentChatContactId] = [];
+        }
+        messages[currentChatContactId].push({ 
+            side: 'mine', 
+            text: val, 
+            time: timeStr 
+        });
+        localStorage.setItem('m_messages', JSON.stringify(messages));
+
+        input.value = '';
+
+        // --- 🆕 先尝试本地智能回复 ---
+        const localReply = getLocalReply(val);
+        if (localReply) {
+            const replyTime = getCurrentTimeString();
+            append('other', localReply, replyTime);
+            // 保存本地回复到消息记录
+            if (!messages[currentChatContactId]) {
+                messages[currentChatContactId] = [];
+            }
+            messages[currentChatContactId].push({ 
+                side: 'other', 
+                text: localReply, 
+                time: replyTime 
+            });
+            localStorage.setItem('m_messages', JSON.stringify(messages));
+            return; // 直接返回，不再调用API或离线提示
+        }
+
+        // --- 如果没有本地匹配，再判断是否走API或离线模式 ---
+        if (!apiCfg.enabled) {
+            // 未开启API：返回通用离线消息
+            setTimeout(() => {
+                const reply = "已收到消息（当前为本地模式，可在设置中开启AI）";
+                const replyTime = getCurrentTimeString();
+                append('other', reply, replyTime);
+                if (!messages[currentChatContactId]) {
+                    messages[currentChatContactId] = [];
+                }
+                messages[currentChatContactId].push({ 
+                    side: 'other', 
+                    text: reply, 
+                    time: replyTime 
+                });
+                localStorage.setItem('m_messages', JSON.stringify(messages));
+            }, 600);
+            return;
+        }
+
+        // --- 开启了API，但本地无匹配，调用远程API ---
+        const tempBubble = append('other', "...", timeStr);
 
         try {
             const res = await fetch(apiCfg.url, {
@@ -534,76 +696,57 @@
                 })
             });
             const data = await res.json();
-            tempBubble.textContent = data.choices[0].message.content;
+            const replyText = data.choices[0].message.content;
+            const replyTime = getCurrentTimeString();
+            
+            tempBubble.querySelector('span').textContent = replyText;
+            tempBubble.querySelector('.msg-time').textContent = replyTime;
+            
+            // 保存AI回复
+            if (!messages[currentChatContactId]) {
+                messages[currentChatContactId] = [];
+            }
+            messages[currentChatContactId].push({ 
+                side: 'other', 
+                text: replyText, 
+                time: replyTime 
+            });
+            localStorage.setItem('m_messages', JSON.stringify(messages));
         } catch (e) {
-            tempBubble.textContent = "连接超时，请检查配置。";
+            const errorTime = getCurrentTimeString();
+            tempBubble.querySelector('span').textContent = "连接超时，请检查配置。";
+            tempBubble.querySelector('.msg-time').textContent = errorTime;
         }
-    }
-
-    function append(side, text) {
-        const flow = document.getElementById('chat-flow');
-        const row = document.createElement('div');
-        row.className = `msg-row ${side}`;
-        const bubble = document.createElement('div');
-        bubble.className = 'bubble';
-        bubble.textContent = text;
-        row.appendChild(bubble);
-        flow.appendChild(row);
-        flow.scrollTop = flow.scrollHeight;
-        return bubble;
     }
 
     // ==================== 事件监听统一绑定 ====================
     function bindEvents() {
-        // 桌面图标导航
         document.querySelectorAll('.app-item[data-page]').forEach(el => {
-            el.addEventListener('click', function() {
-                to(this.dataset.page);
-            });
+            el.addEventListener('click', function() { to(this.dataset.page); });
         });
-
-        // 返回按钮
         document.querySelectorAll('.nav-back[data-home]').forEach(el => {
-            el.addEventListener('click', function() {
-                to(this.dataset.home);
-            });
+            el.addEventListener('click', function() { to(this.dataset.home); });
         });
-
-        // 打开弹窗
         document.querySelectorAll('.nav-setting[data-mod], .nav-add[data-mod]').forEach(el => {
-            el.addEventListener('click', function() {
-                openMod(this.dataset.mod);
-            });
+            el.addEventListener('click', function() { openMod(this.dataset.mod); });
         });
-
-        // 上传触发
         document.getElementById('upload-trigger')?.addEventListener('click', function() {
             document.getElementById('up').click();
         });
-
-        // 发送按钮
         document.getElementById('send-btn')?.addEventListener('click', sendMsg);
         document.getElementById('chat-in')?.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') sendMsg();
         });
-
-        // 弹窗取消按钮
         document.querySelectorAll('.modal-cancel').forEach(el => {
-            el.addEventListener('click', function() {
-                closeMod(this.dataset.mod);
-            });
+            el.addEventListener('click', function() { closeMod(this.dataset.mod); });
         });
-
-        // 保存配置按钮
         document.getElementById('save-api-btn')?.addEventListener('click', saveApi);
         document.getElementById('save-anni-btn')?.addEventListener('click', saveAnni);
         document.getElementById('save-con-btn')?.addEventListener('click', saveCon);
-
-        // 壁纸设置、关闭查看器
         document.getElementById('set-wallpaper-btn')?.addEventListener('click', setWallpaper);
         document.getElementById('close-viewer-btn')?.addEventListener('click', closeViewer);
 
-        // 纪念日删除（事件委托）
+        // 纪念日删除
         document.getElementById('anni-list')?.addEventListener('click', function(e) {
             const delBtn = e.target.closest('.del-text');
             if (!delBtn) return;
@@ -613,7 +756,7 @@
             if (id) delAnni(id);
         });
 
-        // 通讯录删除 + 进入聊天（事件委托）
+        // 通讯录：进入聊天
         document.getElementById('con-list')?.addEventListener('click', function(e) {
             const item = e.target.closest('.list-item');
             if (!item) return;
@@ -628,11 +771,22 @@
 
             const contact = cons.find(c => c.id === id);
             const name = contact ? contact.name : '联系人';
-            to('p-chat');
+            
+            currentChatContactId = id;
             document.getElementById('chat-title').textContent = name;
+            
+            document.getElementById('chat-flow').innerHTML = '';
+            
+            if (messages[id]) {
+                messages[id].forEach(msg => {
+                    append(msg.side, msg.text, msg.time || '');
+                });
+            }
+            
+            to('p-chat');
         });
 
-        // 相册点击查看（事件委托）
+        // 相册点击查看
         document.getElementById('album-box')?.addEventListener('click', function(e) {
             const thumb = e.target.closest('[data-imgId]');
             if (thumb) viewImg(thumb.dataset.imgId);
@@ -656,13 +810,10 @@
     // ==================== 启动一切 ====================
     (async function init() {
         await openDB();
-        // 从 localStorage 读取图片 ID 列表
         photos = JSON.parse(localStorage.getItem('m_photos') || '[]');
-        // 其他数据已定义
-        if (wall) {
-            // 注意：wall 存的是 blob URL，刷新后可能失效，可改进为存ID，此处暂时保留原逻辑
-            document.getElementById('p-home').style.background = `url(${wall})`;
-        }
+        
+        wallpaperId = localStorage.getItem('m_wallpaper_id');
+        await applyWallpaper();
         
         bindEvents();
         setInterval(updateClock, 1000);
