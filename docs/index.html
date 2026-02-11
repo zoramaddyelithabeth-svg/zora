@@ -1,198 +1,121 @@
-<!DOCTYPE html><html lang="zh-CN">
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>SmartOS Ultimate</title>
+    <title>SmartOS Pro</title>
     <style>
         :root {
             --wechat-green: #07C160;
             --ios-blue: #007AFF;
-            --bg-main: #F2F2F7;
-            --safe-top: env(safe-area-inset-top, 20px);
-            --safe-bottom: env(safe-area-inset-bottom, 20px);
+            --glass: rgba(255, 255, 255, 0.7);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, sans-serif; }
+        body { background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+
+        .app-container {
+            width: 100%; height: 100%; background: #fff; position: relative;
+            overflow: hidden; display: flex; flex-direction: column;
+        }
+        @media (min-width: 600px) {
+            .app-container { max-width: 375px; height: 812px; border-radius: 40px; border: 8px solid #333; }
         }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, sans-serif; }
-    body { background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        /* 状态栏 & 导航 */
+        .status-bar { height: 44px; padding: 14px 20px 0; display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 600; z-index: 100; }
+        .nav-bar { height: 50px; background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); border-bottom: 0.5px solid #ddd; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; flex-shrink: 0; }
+        
+        /* 页面引擎 */
+        .page { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #F2F2F7; display: none; flex-direction: column; z-index: 10; padding-top: 44px; }
+        .page.active { display: flex; }
 
-    /* 响应式容器 */
-        <div class="status-bar" style="height:24px; padding:0 15px; display:flex; justify-content:space-between; align-items:center; font-size:12px; font-weight:600; z-index:100;">
-    <span id="current-time">12:00</span>
-    <div style="display:flex; gap:5px;">
-        <span>📶</span><span>🔋</span>
-    </div>
-</div>
+        /* 桌面样式 */
+        .home-bg { transition: background 1s ease; }
+        .home-clock { text-align: center; padding: 30px 0; }
+        .home-clock h1 { font-size: 64px; font-weight: 200; letter-spacing: -2px; }
+        
+        .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 20px 25px; }
+        .app-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+        .app-icon { width: 60px; height: 60px; background: var(--glass); border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 28px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.4); box-shadow: 0 10px 20px rgba(0,0,0,0.06); }
+        .app-name { font-size: 11px; margin-top: 8px; font-weight: 500; }
 
-<div class="page active home-bg" id="p-home">
-    <div class="home-clock" style="text-align:center; padding: 40px 0 20px;">
-        <h1 id="big-clock" style="font-size: 48px; font-weight: 200; color: #333;">00:00</h1>
-        <p id="date-str" style="font-size: 14px; opacity: 0.6;">2月11日 星期三</p>
-    </div>
-    </div>
+        /* 聊天气泡优化 */
+        #chat-flow { flex: 1; overflow-y: auto; background: #ededed; padding: 15px; display: flex; flex-direction: column; gap: 12px; }
+        .msg-row { display: flex; gap: 10px; max-width: 85%; }
+        .msg-row.mine { align-self: flex-end; flex-direction: row-reverse; }
+        .avatar { width: 35px; height: 35px; border-radius: 6px; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+        .bubble { padding: 10px 14px; border-radius: 10px; font-size: 15px; line-height: 1.4; position: relative; }
+        .mine .bubble { background: var(--wechat-green); color: #fff; }
+        .other .bubble { background: #fff; color: #000; }
 
-    .app-container {
-        width: 100%; height: 100%; background: #fff; position: relative;
-        overflow: hidden; display: flex; flex-direction: column;
-    }
-    @media (min-width: 600px) {
-        .app-container { max-width: 375px; height: 812px; border-radius: 40px; border: 8px solid #333; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-    }
-
-    /* 页面引擎 */
-    .page { 
-        position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-        background: var(--bg-main); display: none; flex-direction: column; 
-        z-index: 10; padding-top: var(--safe-top); 
-    }
-    .page.active { display: flex; }
-
-    /* 通用导航栏 */
-    .nav-bar { 
-        height: 50px; background: #fff; border-bottom: 0.5px solid #ddd; 
-        display: flex; align-items: center; justify-content: space-between; 
-        padding: 0 15px; flex-shrink: 0; 
-    }
-    .back-btn { color: var(--ios-blue); cursor: pointer; font-size: 16px; font-weight: 500; }
-
-    /* --- 1. 桌面 --- */
-    .home-bg { background: linear-gradient(180deg, #e3f2fd 0%, #fce4ec 100%); }
-    .music-widget { 
-        margin: 20px; padding: 15px; background: rgba(255,255,255,0.8); 
-        border-radius: 20px; backdrop-filter: blur(10px); 
-    }
-    .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 20px; }
-    .app-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
-    .app-icon { 
-        width: 60px; height: 60px; background: #fff; border-radius: 14px; 
-        display: flex; align-items: center; justify-content: center; 
-        font-size: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
-    }
-    .app-name { font-size: 11px; margin-top: 8px; color: #333; font-weight: 500; }
-
-    /* --- 2. 微信聊天 --- */
-    #chat-flow { flex: 1; overflow-y: auto; background: #ededed; padding: 15px; display: flex; flex-direction: column; gap: 12px; }
-    .msg-row { display: flex; gap: 10px; max-width: 85%; }
-    .msg-row.mine { align-self: flex-end; flex-direction: row-reverse; }
-    .avatar { width: 40px; height: 40px; border-radius: 4px; background: #ddd; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-    .bubble { padding: 10px 14px; border-radius: 6px; font-size: 15px; line-height: 1.4; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-    .other .bubble { background: #fff; }
-    .mine .bubble { background: var(--wechat-green); }
-    .input-area { background: #f7f7f7; padding: 10px 10px calc(10px + var(--safe-bottom)); border-top: 0.5px solid #ddd; }
-    .input-row { display: flex; align-items: center; gap: 10px; }
-    #chat-in { flex: 1; height: 38px; background: #fff; border: 0.5px solid #ddd; border-radius: 6px; padding: 0 10px; outline: none; }
-
-    /* --- 3. 相册 & 浏览器 & 列表 --- */
-    .content-scroll { flex: 1; overflow-y: auto; background: #fff; }
-    .album-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 2px; }
-    .list-item { padding: 15px; border-bottom: 0.5px solid #eee; display: flex; align-items: center; gap: 12px; }
-
-    /* 弹窗 */
-    .modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; display: none; align-items: center; justify-content: center; }
-    .modal-body { width: 85%; background: #fff; border-radius: 20px; padding: 25px; }
-    .modal-body input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 10px; }
-    .btn-group { display: flex; gap: 10px; margin-top: 15px; }
-    .btn-group button { flex: 1; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; }
-        /* 状态栏样式 */
-.status-bar { color: #333; }
-
-/* 桌面大时钟 */
-.home-clock h1 {
-    letter-spacing: -2px;
-    font-variant-numeric: tabular-nums;
-}
-
-/* 改进 App 图标风格 */
-.app-icon {
-    border-radius: 20px; /* 更圆润 */
-    background: rgba(255, 255, 255, 0.7) !important;
-    backdrop-filter: blur(8px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.05) !important;
-    border: 1px solid rgba(255,255,255,0.3);
-}
-
-/* 微信气泡优化 */
-.bubble {
-    border-radius: 18px !important; /* 更现代的圆角 */
-    padding: 12px 16px !important;
-}
-</style>
-
-
+        /* 列表 & 弹窗 */
+        .list-item { padding: 15px; border-bottom: 0.5px solid #eee; background: #fff; display: flex; align-items: center; gap: 10px; }
+        .modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .modal-body { width: 85%; background: #fff; border-radius: 24px; padding: 25px; }
+        .modal-body input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 10px; outline: none; }
+    </style>
 </head>
-<body><div class="app-container">
+<body>
+
+<div class="app-container">
+    <div class="status-bar" id="status-bar">
+        <span id="st-time">00:00</span>
+        <div>📶 🔋</div>
+    </div>
+
     <div class="page active home-bg" id="p-home">
-        <div class="music-widget">
-            <input type="text" id="m-url" placeholder="贴入MP3链接..." style="width:100%; border:none; background:rgba(0,0,0,0.05); padding:8px; border-radius:8px; font-size:12px; margin-bottom:10px; outline:none;">
-            <div style="display:flex; align-items:center; gap:12px;">
-                <div id="play-btn" style="cursor:pointer; font-size:20px;">▶️</div>
-                <div style="flex:1; height:4px; background:#ddd; border-radius:2px;"><div id="m-fill" style="height:100%; background:var(--ios-blue); width:0%;"></div></div>
-            </div>
-            <audio id="player"></audio>
+        <div class="home-clock">
+            <h1 id="big-clock">00:00</h1>
+            <p id="big-date" style="opacity:0.6"></p>
         </div>
         <div class="app-grid">
-            <div class="app-item" onclick="to('p-chat')"><div class="app-icon" style="background:var(--wechat-green);color:#fff">💬</div><div class="app-name">微信</div></div>
+            <div class="app-item" onclick="to('p-chat')"><div class="app-icon">💬</div><div class="app-name">微信</div></div>
             <div class="app-item" onclick="to('p-album')"><div class="app-icon">🖼️</div><div class="app-name">相册</div></div>
             <div class="app-item" onclick="to('p-cal')"><div class="app-icon">📅</div><div class="app-name">日历</div></div>
-            <div class="app-item" onclick="to('p-con')"><div class="app-icon" style="background:var(--ios-blue);color:#fff">👥</div><div class="app-name">通讯录</div></div>
+            <div class="app-item" onclick="to('p-con')"><div class="app-icon">👥</div><div class="app-name">通讯录</div></div>
             <div class="app-item" onclick="to('p-safari')"><div class="app-icon">🌐</div><div class="app-name">Safari</div></div>
         </div>
     </div>
 
-<div class="page" id="p-chat">
-    <div class="nav-bar">
-        <span class="back-btn" onclick="to('p-home')">〈 桌面</span>
-        <b id="chat-title">木木</b>
-        <span onclick="openMod('m-api')" style="color:var(--ios-blue); font-size:13px; cursor:pointer;">API设置</span>
-    </div>
-    <div id="chat-flow"><div class="msg-row other"><div class="avatar">🪵</div><div class="bubble">我在。所有功能已修复。</div></div></div>
-    <div class="input-area">
-        <div class="input-row">
-            <input type="text" id="chat-in" placeholder="输入消息...">
-            <span onclick="sendMsg()" style="color:var(--wechat-green); font-weight:bold; cursor:pointer;">发送</span>
+    <div class="page" id="p-chat">
+        <div class="nav-bar"><span onclick="to('p-home')" style="color:var(--ios-blue)">〈 桌面</span><b id="chat-title">木木</b><span onclick="openMod('m-api')" style="font-size:12px;color:var(--ios-blue)">API设置</span></div>
+        <div id="chat-flow"></div>
+        <div style="padding:10px; background:#f7f7f7; display:flex; gap:10px;">
+            <input type="text" id="chat-in" style="flex:1; padding:10px; border-radius:8px; border:1px solid #ddd;">
+            <button onclick="sendMsg()" style="background:var(--wechat-green); color:#fff; border:none; padding:0 15px; border-radius:8px;">发送</button>
         </div>
     </div>
-</div>
 
-<div class="page" id="p-album">
-    <div class="nav-bar"><span class="back-btn" onclick="to('p-home')">〈 返回</span><b>相册</b><span onclick="document.getElementById('up').click()" style="color:var(--ios-blue)">上传</span></div>
-    <input type="file" id="up" hidden onchange="upImg(this)">
-    <div class="content-scroll"><div class="album-grid" id="album-box"></div></div>
-</div>
-
-<div class="page" id="p-cal">
-    <div class="nav-bar"><span class="back-btn" onclick="to('p-home')">〈 返回</span><b>日历纪念日</b><span onclick="openMod('m-anni')" style="color:var(--ios-blue)">添加</span></div>
-    <div class="content-scroll" id="anni-list"></div>
-</div>
-
-<div class="page" id="p-con">
-    <div class="nav-bar"><span class="back-btn" onclick="to('p-home')">〈 返回</span><b>通讯录</b><span onclick="openMod('m-con')" style="color:var(--ios-blue)">➕</span></div>
-    <div class="content-scroll" id="con-list"></div>
-</div>
-
-<div class="page" id="p-safari">
-    <div class="nav-bar"><span class="back-btn" onclick="to('p-home')">〈 退出</span><b>浏览器</b></div>
-    <iframe src="https://www.bing.com" style="flex:1; border:none; width:100%;"></iframe>
-</div>
-
-<div class="modal" id="m-api">
-    <div class="modal-body">
-        <h3>API 接入</h3>
-        <div style="margin:10px 0; display:flex; align-items:center; gap:10px;">
-            <input type="checkbox" id="api-toggle" style="width:20px; height:20px;"> 开启联网模式
-        </div>
-        <input type="text" id="api-url" placeholder="API 地址">
-        <input type="password" id="api-key" placeholder="API Key">
-        <div class="btn-group"><button onclick="closeMod('m-api')">取消</button><button onclick="saveApi()" style="background:var(--ios-blue);color:#fff">保存</button></div>
+    <div class="page" id="p-album">
+        <div class="nav-bar"><span onclick="to('p-home')" style="color:var(--ios-blue)">〈 返回</span><b>相册</b><span onclick="document.getElementById('up').click()" style="color:var(--ios-blue)">上传</span></div>
+        <input type="file" id="up" hidden onchange="upImg(this)">
+        <div style="flex:1; overflow-y:auto;" id="album-box" style="display:grid; grid-template-columns:repeat(3,1fr); gap:2px;"></div>
     </div>
+
+    <div class="page" id="p-cal">
+        <div class="nav-bar"><span onclick="to('p-home')" style="color:var(--ios-blue)">〈 返回</span><b>纪念日</b><span onclick="openMod('m-anni')" style="color:var(--ios-blue)">添加</span></div>
+        <div id="anni-list" style="flex:1; overflow-y:auto;"></div>
+    </div>
+
+    <div class="page" id="p-con">
+        <div class="nav-bar"><span onclick="to('p-home')" style="color:var(--ios-blue)">〈 返回</span><b>通讯录</b><span onclick="openMod('m-con')" style="color:var(--ios-blue)">➕</span></div>
+        <div id="con-list" style="flex:1; overflow-y:auto;"></div>
+    </div>
+
+    <div class="page" id="p-safari">
+        <div class="nav-bar"><span onclick="to('p-home')" style="color:var(--ios-blue)">〈 退出</span><b>浏览器</b></div>
+        <iframe src="https://m.bing.com" style="flex:1; border:none;"></iframe>
+    </div>
+
+    <div class="modal" id="m-api"><div class="modal-body"><h3>AI 设置</h3><input type="checkbox" id="api-toggle"> 开启联网<input type="text" id="api-url" placeholder="API URL"><input type="password" id="api-key" placeholder="API Key"><button onclick="saveApi()" style="width:100%; padding:12px; background:var(--ios-blue); color:#fff; border:none; border-radius:10px; margin-top:10px;">保存</button><button onclick="closeMod('m-api')" style="width:100%; margin-top:10px; border:none; background:none;">取消</button></div></div>
+    
+    <div class="modal" id="m-anni"><div class="modal-body"><h3>新纪念日</h3><input type="text" id="at" placeholder="名称"><input type="date" id="ad"><button onclick="saveAnni()" style="width:100%; padding:12px; background:var(--ios-blue); color:#fff; border:none; border-radius:10px;">保存</button></div></div>
+
+    <div class="modal" id="m-con"><div class="modal-body"><h3>新联系人</h3><input type="text" id="cn" placeholder="姓名"><button onclick="saveCon()" style="width:100%; padding:12px; background:var(--ios-blue); color:#fff; border:none; border-radius:10px;">保存</button></div></div>
 </div>
 
-<div class="modal" id="m-anni"><div class="modal-body"><h3>新纪念日</h3><input type="text" id="at" placeholder="名称"><input type="date" id="ad"><div class="btn-group"><button onclick="closeMod('m-anni')">取消</button><button onclick="saveAnni()" style="background:var(--ios-blue);color:#fff">保存</button></div></div></div>
-
-<div class="modal" id="m-con"><div class="modal-body"><h3>新联系人</h3><input type="text" id="cn" placeholder="姓名"><div class="btn-group"><button onclick="closeMod('m-con')">取消</button><button onclick="saveCon()" style="background:var(--ios-blue);color:#fff">保存</button></div></div></div>
-
-
-</div><script>
-    // --- 核心路由 ---
+<script>
+    // 基础路由
     function to(id) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(id).classList.add('active');
@@ -200,12 +123,68 @@
     function openMod(id) { document.getElementById(id).style.display = 'flex'; }
     function closeMod(id) { document.getElementById(id).style.display = 'none'; }
 
-    // --- API & 聊天逻辑 ---
-    let apiCfg = JSON.parse(localStorage.getItem('mumu_api_v2') || '{"enabled":false,"url":"https://api.siliconflow.cn/v1/chat/completions","key":"sk-zbjgaljxtcsufeooxqfbwhzlwqzooesqtnmuricxgubnjgzh"}');
-    document.getElementById('api-toggle').checked = apiCfg.enabled;
-    document.getElementById('api-url').value = apiCfg.url;
-    document.getElementById('api-key').value = apiCfg.key;
+    // 时间与背景感知
+    function updateClock() {
+        const now = new Date();
+        const h = String(now.getHours()).padStart(2, '0');
+        const m = String(now.getMinutes()).padStart(2, '0');
+        const timeStr = `${h}:${m}`;
+        document.getElementById('st-time').innerText = timeStr;
+        document.getElementById('big-clock').innerText = timeStr;
+        document.getElementById('big-date').innerText = now.toLocaleDateString('zh-CN', {month:'long', day:'numeric', weekday:'short'});
 
+        const hour = now.getHours();
+        const home = document.getElementById('p-home');
+        if (hour >= 18 || hour < 6) {
+            home.style.background = "linear-gradient(180deg, #1A237E 0%, #000 100%)";
+            home.style.color = "#fff";
+            document.getElementById('status-bar').style.color = "#fff";
+        } else {
+            home.style.background = "linear-gradient(180deg, #e3f2fd 0%, #fce4ec 100%)";
+            home.style.color = "#000";
+            document.getElementById('status-bar').style.color = "#000";
+        }
+    }
+    setInterval(updateClock, 1000); updateClock();
+
+    // 数据持久化逻辑
+    let photos = JSON.parse(localStorage.getItem('m_photos') || '[]');
+    let annis = JSON.parse(localStorage.getItem('m_annis') || '[]');
+    let cons = JSON.parse(localStorage.getItem('m_cons') || '[{"name":"木木"}]');
+
+    function renderAll() {
+        // 渲染相册
+        const box = document.getElementById('album-box'); box.innerHTML = '';
+        box.style.display = 'grid'; box.style.gridTemplateColumns = 'repeat(3,1fr)'; box.style.gap='2px';
+        photos.forEach(src => box.innerHTML += `<div style="aspect-ratio:1/1; background:url(${src}) center/cover"></div>`);
+        
+        // 渲染纪念日
+        const aList = document.getElementById('anni-list'); aList.innerHTML = '';
+        annis.forEach(a => aList.innerHTML += `<div class="list-item">📅 <b>${a.d}</b> ${a.t}</div>`);
+
+        // 渲染联系人
+        const cList = document.getElementById('con-list'); cList.innerHTML = '';
+        cons.forEach(c => cList.innerHTML += `<div class="list-item" onclick="to('p-chat')">👤 ${c.name}</div>`);
+    }
+
+    function upImg(el) {
+        const fr = new FileReader();
+        fr.onload = (e) => { photos.unshift(e.target.result); localStorage.setItem('m_photos', JSON.stringify(photos)); renderAll(); };
+        fr.readAsDataURL(el.files[0]);
+    }
+
+    function saveAnni() {
+        annis.push({t: document.getElementById('at').value, d: document.getElementById('ad').value});
+        localStorage.setItem('m_annis', JSON.stringify(annis)); renderAll(); closeMod('m-anni');
+    }
+
+    function saveCon() {
+        cons.push({name: document.getElementById('cn').value});
+        localStorage.setItem('m_cons', JSON.stringify(cons)); renderAll(); closeMod('m-con');
+    }
+
+    // 聊天功能
+    let apiCfg = JSON.parse(localStorage.getItem('mumu_api_v2') || '{"enabled":false,"url":"","key":""}');
     function saveApi() {
         apiCfg = { enabled: document.getElementById('api-toggle').checked, url: document.getElementById('api-url').value, key: document.getElementById('api-key').value };
         localStorage.setItem('mumu_api_v2', JSON.stringify(apiCfg));
@@ -216,13 +195,11 @@
         const input = document.getElementById('chat-in');
         const val = input.value.trim(); if(!val) return;
         append('mine', val); input.value = '';
-        document.getElementById('chat-title').innerText = '正在思考...';
-
+        
         if (!apiCfg.enabled) {
-            setTimeout(() => { append('other', "（本地模式）我在。"); document.getElementById('chat-title').innerText = '木木'; }, 600);
+            setTimeout(() => append('other', "本地模式：收到啦。"), 600);
             return;
         }
-
         try {
             const res = await fetch(apiCfg.url, {
                 method: 'POST',
@@ -231,89 +208,23 @@
             });
             const data = await res.json();
             append('other', data.choices[0].message.content);
-        } catch(e) { append('other', "网络异常。"); }
-        document.getElementById('chat-title').innerText = '木木';
+        } catch(e) { append('other', "连接超时。"); }
     }
 
     function append(side, text) {
         const flow = document.getElementById('chat-flow');
-        flow.insertAdjacentHTML('beforeend', `<div class="msg-row ${side}"><div class="avatar">${side=='mine'?'👤':'🪵'}</div><div class="bubble">${text}</div></div>`);
+        const avatar = side === 'mine' ? '👤' : '🪵';
+        flow.insertAdjacentHTML('beforeend', `
+            <div class="msg-row ${side}">
+                <div class="avatar">${avatar}</div>
+                <div class="bubble">${text}</div>
+            </div>
+        `);
         flow.scrollTop = flow.scrollHeight;
     }
 
-    // --- 数据持久化 (相册、日历、通讯录) ---
-    let photos = JSON.parse(localStorage.getItem('m_photos') || '[]');
-    let annis = JSON.parse(localStorage.getItem('m_annis') || '[]');
-    let cons = JSON.parse(localStorage.getItem('m_cons') || '[{"name":"木木"}]');
-
-    function upImg(el) {
-        const fr = new FileReader();
-        fr.onload = (e) => { photos.unshift(e.target.result); localStorage.setItem('m_photos', JSON.stringify(photos)); renderAlbum(); };
-        fr.readAsDataURL(el.files[0]);
-    }
-    function renderAlbum() {
-        const box = document.getElementById('album-box'); box.innerHTML = '';
-        photos.forEach(src => box.innerHTML += `<div style="aspect-ratio:1/1; background:url(${src}) center/cover no-repeat; background-color:#eee;"></div>`);
-    }
-    function saveAnni() {
-        annis.push({t: document.getElementById('at').value, d: document.getElementById('ad').value});
-        localStorage.setItem('m_annis', JSON.stringify(annis)); renderAnni(); closeMod('m-anni');
-    }
-    function renderAnni() {
-        const list = document.getElementById('anni-list'); list.innerHTML = '';
-        annis.forEach(a => list.innerHTML += `<div class="list-item">📅 <b>${a.d}</b> ${a.t}</div>`);
-    }
-    function saveCon() {
-        cons.push({name: document.getElementById('cn').value});
-        localStorage.setItem('m_cons', JSON.stringify(cons)); renderCon(); closeMod('m-con');
-    }
-    function renderCon() {
-        const list = document.getElementById('con-list'); list.innerHTML = '';
-        cons.forEach(c => list.innerHTML += `<div class="list-item" onclick="to('p-chat')">👤 ${c.name}</div>`);
-    }
-
-    // --- 音乐控制 ---
-    const player = document.getElementById('player');
-    document.getElementById('play-btn').onclick = function() {
-        const url = document.getElementById('m-url').value;
-        if(url && player.src !== url) player.src = url;
-        if(player.paused) { player.play(); this.innerText='⏸'; }
-        else { player.pause(); this.innerText='▶️'; }
-    };
-    player.ontimeupdate = () => document.getElementById('m-fill').style.width = (player.currentTime/player.duration)*100 + '%';
-
-    // 初始化渲染
-    renderAlbum(); renderAnni(); renderCon();
-    document.getElementById('chat-in').onkeypress = (e) => { if(e.key === 'Enter') sendMsg(); };
-    function updateClock() {
-    const now = new Date();
-    const h = String(now.getHours()).padStart(2, '0');
-    const m = String(now.getMinutes()).padStart(2, '0');
-    
-    // 更新所有显示时间的地方
-    if(document.getElementById('current-time')) document.getElementById('current-time').innerText = `${h}:${m}`;
-    if(document.getElementById('big-clock')) document.getElementById('big-clock').innerText = `${h}:${m}`;
-    
-    // 日期显示
-    const options = { month: 'short', day: 'numeric', weekday: 'short' };
-    if(document.getElementById('date-str')) {
-        document.getElementById('date-str').innerText = now.toLocaleDateString('zh-CN', options);
-    }
-
-    // 时间感知：根据时间段自动切换背景色
-    const hour = now.getHours();
-    const home = document.getElementById('p-home');
-    if (hour >= 6 && hour < 12) {
-        home.style.background = "linear-gradient(180deg, #E3F2FD, #FFF)"; // 早晨
-    } else if (hour >= 12 && hour < 18) {
-        home.style.background = "linear-gradient(180deg, #FFF9C4, #FFECB3)"; // 午后
-    } else {
-        home.style.background = "linear-gradient(180deg, #1A237E, #121212)"; // 夜晚
-        document.querySelector('.status-bar').style.color = "#fff";
-        document.getElementById('big-clock').style.color = "#fff";
-    }
-}
-setInterval(updateClock, 1000);
-updateClock();
-</script></body>
+    renderAll();
+</script>
+</body>
 </html>
+
