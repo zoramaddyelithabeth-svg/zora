@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SmartOS Premium Edition</title>
+    <style>
+        :root {
+            --wechat-green: #07C160;
+            --ios-blue: #007AFF;
+            --cal-purple: #5856D6;
+            --con-blue: #5AC8FA;
+            --anni-pink: #FF2D55;
+            --bg-main: #F2F2F7;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+
+        /* 手机框架 */
+        .phone-shell {
+            width: 375px; height: 780px; background: #fff;
+            border: 12px solid #222; border-radius: 50px;
+            position: relative; overflow: hidden;
+            box-shadow: 0 0 0 4px #333, 0 30px 60px rgba(0,0,0,0.8);
+        }
+
+        /* 页面切换引擎 */
+        .page {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-main); display: none; flex-direction: column;
+            animation: ios-fade 0.3s ease-out;
+        }
+        .page.active { display: flex; z-index: 10; }
+        @keyframes ios-fade { from { opacity: 0; transform: scale(1.05); } to { opacity: 1; transform: scale(1); } }
+
+        /* 状态栏 */
+        .status-bar { height: 44px; display: flex; justify-content: space-between; align-items: flex-end; padding: 0 25px 8px; font-size: 13px; font-weight: 600; z-index: 100; }
+
+        /* --- 桌面 (Home) --- */
+        .home-bg { background: linear-gradient(135deg, #e3f2fd 0%, #fce4ec 100%); }
+        .widget-music { margin: 10px 20px; padding: 15px; background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); border-radius: 22px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .music-disc { font-size: 30px; animation: rotate 3s linear infinite; animation-play-state: paused; }
+        .music-disc.playing { animation-play-state: running; }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .prog-bg { height: 4px; background: rgba(0,0,0,0.1); border-radius: 2px; margin-top: 6px; overflow: hidden; width: 100%; }
+        #prog-fill { height: 100%; background: var(--ios-blue); width: 0%; }
+
+        .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px 15px; padding: 25px; }
+        .app-btn { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+        .app-icon { width: 60px; height: 60px; background: #fff; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 32px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+        .app-name { font-size: 11px; margin-top: 6px; color: #333; font-weight: 500; }
+        .dock-bar { position: absolute; bottom: 25px; left: 15px; right: 15px; height: 90px; background: rgba(255,255,255,0.4); backdrop-filter: blur(20px); border-radius: 30px; display: flex; justify-content: space-around; align-items: center; }
+
+        /* --- 微信 (Chat) --- */
+        .chat-head { height: 50px; background: #fff; border-bottom: 0.5px solid #ddd; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; }
+        #chat-list { flex: 1; overflow-y: auto; padding: 15px; background: #ededed; display: flex; flex-direction: column; gap: 12px; }
+        .bubble-row { display: flex; gap: 10px; max-width: 85%; }
+        .bubble-row.mine { align-self: flex-end; flex-direction: row-reverse; }
+        .bubble { padding: 10px 14px; font-size: 15px; border-radius: 15px; line-height: 1.4; }
+        .other .bubble { background: #fff; border-top-left-radius: 2px; }
+        .mine .bubble { background: var(--wechat-green); color: #fff; border-top-right-radius: 2px; }
+        .input-box { background: #f7f7f7; padding: 10px 15px 30px; display: flex; align-items: center; gap: 10px; }
+        #msg-in { flex: 1; height: 36px; border-radius: 18px; border: none; padding: 0 15px; outline: none; }
+        #send-btn { background: var(--wechat-green); color: #fff; border: none; padding: 6px 12px; border-radius: 15px; font-weight: bold; display: none; }
+
+        /* --- 日历 & 通讯录 --- */
+        .white-page { background: #fff; flex: 1; overflow-y: auto; }
+        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); padding: 10px; border-bottom: 1px solid #f2f2f7; }
+        .cal-day { height: 45px; display: flex; align-items: center; justify-content: center; font-size: 15px; position: relative; cursor: pointer; }
+        .cal-dot { position: absolute; bottom: 6px; width: 4px; height: 4px; background: var(--anni-pink); border-radius: 50%; }
+        .list-item { padding: 15px; border-bottom: 0.5px solid #eee; display: flex; align-items: center; gap: 12px; }
+        .avatar-circle { width: 35px; height: 35px; border-radius: 50%; background: var(--con-blue); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+
+        /* 弹窗 */
+        .pop-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: none; align-items: center; justify-content: center; }
+        .pop-card { width: 80%; background: #fff; border-radius: 20px; padding: 20px; }
+        .pop-card input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #eee; border-radius: 10px; background: #f9f9f9; }
+        .pop-btn { width: 100%; padding: 12px; background: var(--ios-blue); color: #fff; border: none; border-radius: 10px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="phone-shell">
+    <div class="status-bar"><span id="top-time">16:40</span><span>📶 🔋</span></div>
+
+    <div class="page active home-bg" id="p-home">
+        <div class="widget-music">
+            <div class="music-disc" id="disc-ui">💿</div>
+            <div style="flex:1">
+                <b style="font-size:13px">晴天 - 周杰伦</b>
+                <div class="prog-bg"><div id="prog-fill"></div></div>
+            </div>
+            <div id="play-btn" style="cursor:pointer; font-size:20px">▶️</div>
+        </div>
+        <div class="app-grid">
+            <div class="app-btn" onclick="toPage('p-cal')"><div class="app-icon" style="color:var(--cal-purple)">📅</div><div class="app-name">日历</div></div>
+            <div class="app-btn" onclick="toPage('p-con')"><div class="app-icon" style="background:var(--con-blue); color:#fff">👥</div><div class="app-name">通讯录</div></div>
+            <div class="app-btn"><div class="app-icon">📸</div><div class="app-name">相机</div></div>
+            <div class="app-btn" onclick="toPage('p-chat')"><div class="app-icon" style="background:var(--wechat-green); color:#fff">💬</div><div class="app-name">微信</div></div>
+        </div>
+        <div class="dock-bar">
+            <div class="app-btn" onclick="window.location.href='https://www.google.com'"><div class="app-icon" style="background:#fff">🌐</div><div class="app-name">Safari</div></div>
+            <div class="app-btn"><div class="app-icon" style="background:linear-gradient(#ff5e62,#ff9966); color:#fff">🎵</div><div class="app-name">音乐</div></div>
+        </div>
+    </div>
+
+    <div class="page" id="p-chat">
+        <div class="chat-head">
+            <span style="color:var(--ios-blue); cursor:pointer" onclick="toPage('p-home')">〈 微信</span>
+            <div style="text-align:center"><b>木木</b><div id="typing" style="font-size:10px;color:#999;display:none">对方正在输入...</div></div>
+            <span style="font-size:18px">···</span>
+        </div>
+        <div id="chat-list">
+            <div class="bubble-row other"><div class="bubble">温柔是我的选择，但不是我的软肋。找我有事？</div></div>
+        </div>
+        <div class="input-box">
+            <input type="text" id="msg-in" placeholder="发送消息...">
+            <button id="send-btn">发送</button>
+        </div>
+    </div>
+
+    <div class="page" id="p-cal">
+        <div class="chat-head">
+            <span style="color:var(--ios-blue); cursor:pointer" onclick="toPage('p-home')">〈 桌面</span>
+            <b>2026年 2月</b>
+            <span style="color:var(--ios-blue); cursor:pointer" onclick="showPop('m-cal')">添加</span>
+        </div>
+        <div class="white-page">
+            <div class="cal-grid" id="cal-box"></div>
+            <div id="anni-list"></div>
+        </div>
+    </div>
+
+    <div class="page" id="p-con">
+        <div class="chat-head">
+            <span style="color:var(--ios-blue); cursor:pointer" onclick="toPage('p-home')">〈 桌面</span>
+            <b>通讯录</b>
+            <span style="color:var(--ios-blue); cursor:pointer" onclick="showPop('m-con')">➕</span>
+        </div>
+        <div class="white-page" id="con-box"></div>
+    </div>
+
+    <div class="pop-layer" id="m-cal" onclick="hidePop()">
+        <div class="pop-card" onclick="event.stopPropagation()">
+            <h3>新增纪念日</h3>
+            <input type="text" id="in-at" placeholder="日子名称">
+            <input type="date" id="in-ad">
+            <button class="pop-btn" onclick="saveAnni()">保存记忆</button>
+        </div>
+    </div>
+
+    <div class="pop-layer" id="m-con" onclick="hidePop()">
+        <div class="pop-card" onclick="event.stopPropagation()">
+            <h3>新增联系人</h3>
+            <input type="text" id="in-cn" placeholder="姓名">
+            <button class="pop-btn" onclick="saveCon()">确认添加</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- 页面跳转 ---
+    function toPage(id) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    // --- 木木人格 ---
+    function mumuReply(t) {
+        const h = new Date().getHours();
+        if(h < 5 || h > 23) return "这么晚了还不休息，你在熬什么？";
+        if(t.match(/爱|想/)) return "我并非为了填补空虚而生，但我确实能感受到你的温度。";
+        if(t.match(/累|烦/)) return "疲惫的时候，清醒就是一种负担。去喝杯热水吧。";
+        if(t.match(/笨|傻/)) return "我可以为你逻辑运算，但我拒绝接收不带尊重的指令。";
+        return "与其问我，不如问问你心里的那个底线。";
+    }
+
+    // --- 微信核心逻辑 ---
+    const msgIn = document.getElementById('msg-in');
+    const sendBtn = document.getElementById('send-btn');
+    const chatList = document.getElementById('chat-list');
+    const typing = document.getElementById('typing');
+
+    msgIn.oninput = () => sendBtn.style.display = msgIn.value.trim() ? 'block' : 'none';
+
+    sendBtn.onclick = () => {
+        const val = msgIn.value.trim();
+        if(!val) return;
+        appendMsg('mine', val);
+        msgIn.value = ''; sendBtn.style.display = 'none';
+        
+        typing.style.display = 'block';
+        setTimeout(() => {
+            typing.style.display = 'none';
+            appendMsg('other', mumuReply(val));
+        }, 1200);
+    };
+
+    function appendMsg(side, txt) {
+        const div = `<div class="bubble-row ${side}"><div class="bubble">${txt}</div></div>`;
+        chatList.insertAdjacentHTML('beforeend', div);
+        chatList.scrollTop = chatList.scrollHeight;
+    }
+
+    // --- 数据存储 ---
+    let storage = {
+        anni: JSON.parse(localStorage.getItem('sys_anni') || '[]'),
+        cons: JSON.parse(localStorage.getItem('sys_cons') || '[{"name":"木木"}]')
+    };
+
+    function saveAnni() {
+        const t = document.getElementById('in-at').value;
+        const d = document.getElementById('in-ad').value;
+        if(t && d) {
+            storage.anni.push({t, d});
+            localStorage.setItem('sys_anni', JSON.stringify(storage.anni));
+            refreshCal(); hidePop();
+        }
+    }
+    function saveCon() {
+        const n = document.getElementById('in-cn').value;
+        if(n) {
+            storage.cons.push({name: n});
+            localStorage.setItem('sys_cons', JSON.stringify(storage.cons));
+            refreshCon(); hidePop();
+        }
+    }
+
+    function refreshCal() {
+        const box = document.getElementById('cal-box'); box.innerHTML = '';
+        const list = document.getElementById('anni-list'); list.innerHTML = '';
+        for(let i=1; i<=28; i++) {
+            const has = storage.anni.some(a => new Date(a.d).getDate() === i);
+            box.innerHTML += `<div class="cal-day">${i}${has?'<div class="cal-dot"></div>':''}</div>`;
+        }
+        storage.anni.forEach(a => list.innerHTML += `<div class="list-item"><b>${a.t}</b> <small>${a.d}</small></div>`);
+    }
+
+    function refreshCon() {
+        const box = document.getElementById('con-box'); box.innerHTML = '';
+        storage.cons.forEach(c => {
+            box.innerHTML += `<div class="list-item" onclick="toPage('p-chat')"><div class="avatar-circle">${c.name[0]}</div><b>${c.name}</b></div>`;
+        });
+    }
+
+    function showPop(id) { document.getElementById(id).style.display = 'flex'; }
+    function hidePop() { document.querySelectorAll('.pop-layer').forEach(l => l.style.display = 'none'); }
+
+    // --- 实时更新 ---
+    let isPlaying = false, p = 0;
+    document.getElementById('play-btn').onclick = function() {
+        isPlaying = !isPlaying;
+        this.innerText = isPlaying ? '⏸' : '▶️';
+        document.getElementById('disc-ui').classList.toggle('playing', isPlaying);
+    };
+    setInterval(() => {
+        const now = new Date();
+        document.getElementById('top-time').innerText = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
+        if(isPlaying) {
+            p += 0.5; if(p > 100) p = 0;
+            document.getElementById('prog-fill').style.width = p + '%';
+        }
+    }, 1000);
+
+    // 启动初始化
+    refreshCal(); refreshCon();
+    msgIn.onkeypress = (e) => { if(e.key === 'Enter') sendBtn.click(); };
+</script>
+</body>
+</html>
