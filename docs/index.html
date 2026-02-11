@@ -775,23 +775,35 @@ function getLocalReply(message) {
 
         // --- 如果没有本地匹配，再判断是否走API或离线模式 ---
         if (!apiCfg.enabled) {
-            // 未开启API：返回通用离线消息
-            setTimeout(() => {
-                const reply = "已收到消息（当前为本地模式，可在设置中开启AI）";
-                const replyTime = getCurrentTimeString();
-                append('other', reply, replyTime);
-                if (!messages[currentChatContactId]) {
-                    messages[currentChatContactId] = [];
-                }
-                messages[currentChatContactId].push({ 
-                    side: 'other', 
-                    text: reply, 
-                    time: replyTime 
-                });
-                localStorage.setItem('m_messages', JSON.stringify(messages));
-            }, 600);
-            return;
+    setTimeout(() => {
+        // 🎉 趣味默认回复库
+        const funReplies = [
+            "嗯嗯，我在听～(可去设置开启AI让我更聪明✨)",
+            "收到啦！如果开启联网AI，我能回答更多问题哦📡",
+            "当前是本地小脑瓜～去设置里打开AI开关，我就能联网啦！",
+            "你的消息我收到了～需要我帮你查点什么吗？（目前离线模式）",
+            "📬 消息送达！离线模式下我只能简单应答，开启AI会更强～",
+            "我在我在！想聊点什么呢？(离线模式ing)",
+            "嘘～我在思考人生……（其实离线模式只能卖萌）😝",
+            "收到！要不要试试问我几点、天气、或者讲个笑话？",
+            "你的消息像一颗糖，甜到我了🍬（离线模式）"
+        ];
+        const reply = funReplies[Math.floor(Math.random() * funReplies.length)];
+        const replyTime = getCurrentTimeString();
+        append('other', reply, replyTime);
+        // 保存消息（原样保留）
+        if (!messages[currentChatContactId]) {
+            messages[currentChatContactId] = [];
         }
+        messages[currentChatContactId].push({ 
+            side: 'other', 
+            text: reply, 
+            time: replyTime 
+        });
+        localStorage.setItem('m_messages', JSON.stringify(messages));
+    }, 600);
+    return;
+}
 
         // --- 开启了API，但本地无匹配，调用远程API ---
         const tempBubble = append('other', "...", timeStr);
