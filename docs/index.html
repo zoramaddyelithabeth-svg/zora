@@ -337,31 +337,98 @@ function updateClock(){
 }
 setInterval(updateClock,1000);
 updateClock();
-<script>
+// --- 核心变量 ---
+const viewport = document.getElementById('viewport');
+const msgInput = document.getElementById('message-input');
+const sendBtn = document.getElementById('btn-send');
+const plusIcon = document.getElementById('plus-icon'); // 修复点：我们需要控制这个图标
+const chatContent = document.getElementById('chat-content');
 
-// ===== 桌面左右滑动 =====
-const slider = document.getElementById('home-slider');
-let startX = 0;
-let currentPage = 0;
+// --- 1. 界面切换 (切屏) ---
+document.getElementById('btn-open-wechat').onclick = () => {
+    viewport.classList.add('in-chat');
+};
+document.getElementById('btn-back-home').onclick = () => {
+    viewport.classList.remove('in-chat');
+};
 
-if(slider){
-    slider.addEventListener('touchstart', e=>{
-        startX = e.touches[0].clientX;
-    });
+// --- 2. 核心发送功能 (修复点) ---
+function sendMsg() {
+    const text = msgInput.value.trim();
+    if (!text) return;
 
-    slider.addEventListener('touchend', e=>{
-        const dx = e.changedTouches[0].clientX - startX;
+    // 添加用户消息
+    appendMessage(text, 'user');
+    msgInput.value = '';
+    updateInputUI(); // 发送后，输入框变空，UI要更新
 
-        if(dx < -50 && currentPage < 1){
-            currentPage++;
-        }else if(dx > 50 && currentPage > 0){
-            currentPage--;
-        }
-
-        slider.style.transform = `translateX(-${currentPage*100}%)`;
-    });
+    // 模拟对方回复
+    setTimeout(() => {
+        appendMessage("你说得对，我也这么觉得！✨", 'other');
+    }, 1000);
 }
 
-</script>
+function appendMessage(text, side) {
+    const msgHtml = `
+        <div class="msg-row ${side}">
+            <div class="avatar-box">${side === 'user' ? '😊' : '🪵'}</div>
+            <div class="bubble">${text}</div>
+        </div>
+    `;
+    chatContent.insertAdjacentHTML('beforeend', msgHtml);
+    chatContent.scrollTop = chatContent.scrollHeight;
+}
+
+// 修复在这里：更新输入框下方的按钮显示
+function updateInputUI() {
+    if (msgInput.value.length > 0) {
+        sendBtn.style.display = 'block';
+        plusIcon.style.display = 'none'; // 有文字时，隐藏加号
+    } else {
+        sendBtn.style.display = 'none';
+        plusIcon.style.display = 'block'; // 没文字时，显示加号 (这里之前漏掉了!)
+    }
+}
+
+// 绑定事件
+sendBtn.onclick = sendMsg;
+msgInput.oninput = updateInputUI; // 输入文字时触发
+msgInput.onkeypress = (e) => { 
+    if (e.key === 'Enter' && msgInput.value.trim()) sendMsg(); // 优化：只有有内容时才允许回车发送
+};
+
+// --- 3. 音乐播放逻辑 (修复时间显示) ---
+let isPlaying = false;
+let currentSeconds = 0; // 修复点：用秒数来计时，更准确
+const playCtrl = document.getElementById('play-ctrl');
+const progressFill = document.getElementById('progress-fill');
+const musicTime = document.getElementById('music-time');
+const musicIcon = document.getElementById('music-icon');
+const totalSeconds = 269; // 总时长 4:29
+
+playCtrl.onclick = () => {
+    isPlaying = !isPlaying;
+    playCtrl.innerText = isPlaying ? '⏸' : '▶️';
+    musicIcon.classList.toggle('playing', isPlaying);
+};
+
+setInterval(() => {
+    if (isPlaying) {
+        currentSeconds++;
+        
+        // 修复点：处理时间进位和循环
+        if (currentSeconds >= totalSeconds) {
+            currentSeconds = 0; // 重置为0秒
+        }
+
+        // 计算进度百分比
+        const percent = (currentSeconds / totalSeconds) * 100;
+        progressFill.style.width = percent + '%';
+
+        // 修复点：格式化时间显示
+        let m = Math.floor(currentSeconds / 60);
+        let s = currentSeconds % 60;
+        musicTime.innerText = `${m}:
+
 </body>
 </html>
