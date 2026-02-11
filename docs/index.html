@@ -76,6 +76,15 @@
         .modal-body h3 { margin-bottom: 10px; }
         .modal-body input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 10px; outline: none; font-size: 16px; }
         .modal-btn { width: 100%; padding: 14px; background: var(--ios-blue); color: #fff; border: none; border-radius: 12px; margin-top: 10px; font-weight: 600; }
+        .cal-weekday {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #999;
+    font-weight: 600;
+}
     </style>
 </head>
 <body>
@@ -152,15 +161,15 @@
     function to(id) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        if(id === 'p-cal') renderCalendar();
+        if (id === 'p-cal') renderCalendar();
     }
-    function openMod(id) { 
-        if(id === 'm-api') { // 自动回填API配置
+    function openMod(id) {
+        if (id === 'm-api') {
             document.getElementById('api-toggle').checked = apiCfg.enabled;
             document.getElementById('api-url').value = apiCfg.url;
             document.getElementById('api-key').value = apiCfg.key;
         }
-        document.getElementById(id).style.display = 'flex'; 
+        document.getElementById(id).style.display = 'flex';
     }
     function closeMod(id) { document.getElementById(id).style.display = 'none'; }
 
@@ -171,196 +180,206 @@
     let apiCfg = JSON.parse(localStorage.getItem('m_api_cfg') || '{"enabled":false,"url":"","key":""}');
     let wall = localStorage.getItem('m_wall') || '';
 
-    if(wall) document.getElementById('p-home').style.background = `url(${wall})`;
+    if (wall) document.getElementById('p-home').style.background = `url(${wall})`;
 
+    // --- 渲染所有动态列表 ---
     function renderAll() {
-        // 相册
-        const box = document.getElementById('album-box'); box.innerHTML = '';
-        photos.forEach(src => box.innerHTML += `<div onclick="viewImg('${src}')" style="background-image:url(${src})"></div>`);
-        
-        // 纪念日 - 安全渲染
-const aList = document.getElementById('anni-list');
-aList.innerHTML = ''; // 清空
+        // ---------- 相册（安全渲染）----------
+        const box = document.getElementById('album-box');
+        box.innerHTML = '';
+        const fragment = document.createDocumentFragment();
+        photos.forEach(src => {
+            const div = document.createElement('div');
+            div.style.backgroundImage = `url(${src})`;
+            div.dataset.src = src;
+            div.className = 'album-thumb';
+            fragment.appendChild(div);
+        });
+        box.appendChild(fragment);
 
-// 先把纪念日按日期排序
-annis.sort((a, b) => new Date(a.d) - new Date(b.d));
+        // ---------- 纪念日（安全渲染）----------
+        const aList = document.getElementById('anni-list');
+        aList.innerHTML = '';
+        annis.sort((a, b) => new Date(a.d) - new Date(b.d));
+        annis.forEach((a, index) => {
+            const item = document.createElement('div');
+            item.className = 'list-item';
+            item.dataset.anniIndex = index;
 
-annis.forEach((a, index) => {
-    // 创建一个外层 div
-    const item = document.createElement('div');
-    item.className = 'list-item';
-    // 把当前这个纪念日在数组里的位置存进去，方便后面删除
-    item.dataset.anniIndex = index;
+            const leftSpan = document.createElement('span');
+            leftSpan.textContent = `📅 ${a.d} ${a.t}`;
 
-    // 左边的文字（日期和事项）
-    const leftSpan = document.createElement('span');
-    // 📅 2026-02-14 情人节
-    leftSpan.textContent = `📅 ${a.d} ${a.t}`;  // ⚠️ 这里用了 textContent，绝对安全
+            const delSpan = document.createElement('span');
+            delSpan.className = 'del-text';
+            delSpan.textContent = '删除';
 
-    // 右边的“删除”按钮
-    const delSpan = document.createElement('span');
-    delSpan.className = 'del-text';
-    delSpan.textContent = '删除';
+            item.appendChild(leftSpan);
+            item.appendChild(delSpan);
+            aList.appendChild(item);
+        });
 
-    // 把左边和右边放进 item
-    item.appendChild(leftSpan);
-    item.appendChild(delSpan);
+        // ---------- 通讯录（安全渲染）----------
+        const cList = document.getElementById('con-list');
+        cList.innerHTML = '';
+        cons.forEach((c, index) => {
+            const item = document.createElement('div');
+            item.className = 'list-item';
+            item.dataset.conIndex = index;
 
-    // 把 item 放进列表容器
-    aList.appendChild(item);
-});
+            const nameSpan = document.createElement('span');
+            nameSpan.textContent = `👤 ${c.name}`;
 
-       // 通讯录 - 安全渲染
-const cList = document.getElementById('con-list');
-cList.innerHTML = ''; // 清空
+            const delSpan = document.createElement('span');
+            delSpan.className = 'del-text';
+            delSpan.textContent = '删除';
 
-cons.forEach((c, index) => {
-    // 创建整个条目
-    const item = document.createElement('div');
-    item.className = 'list-item';
-    // 存储当前联系人在数组中的位置（以后可以升级为唯一ID）
-    item.dataset.conIndex = index;
-
-    // 左边的名字（用 textContent，安全！）
-    const nameSpan = document.createElement('span');
-    nameSpan.textContent = `👤 ${c.name}`;
-
-    // 右边的删除按钮
-    const delSpan = document.createElement('span');
-    delSpan.className = 'del-text';
-    delSpan.textContent = '删除';
-
-    // 组装
-    item.appendChild(nameSpan);
-    item.appendChild(delSpan);
-
-    // 添加到列表容器
-    cList.appendChild(item);
-});
-        // 通讯录点击监听
-document.getElementById('con-list').addEventListener('click', function(e) {
-    // 找到被点击的整个条目
-    const item = e.target.closest('.list-item');
-    if (!item) return;
-
-    // 取出存在 dataset 里的索引
-    const index = parseInt(item.dataset.conIndex, 10);
-    if (isNaN(index)) return;
-
-    // 如果点的是“删除”文字
-    if (e.target.classList.contains('del-text')) {
-        e.stopPropagation(); // 防止触发父级点击
-        delCon(index);       // 调用原来的删除函数
-        return;
+            item.appendChild(nameSpan);
+            item.appendChild(delSpan);
+            cList.appendChild(item);
+        });
     }
 
-    // 否则就是点击条目本身 -> 进入聊天
-    const name = cons[index]?.name || '联系人';
-    to('p-chat');
-    // 使用 textContent 设置聊天标题，安全！
-    document.getElementById('chat-title').textContent = name;
-});
-
-    // --- 相册逻辑 ---
+    // --- 相册逻辑（查看、壁纸、上传）---
     function upImg(el) {
         const files = Array.from(el.files);
         files.forEach(file => {
             const fr = new FileReader();
-            fr.onload = (e) => { 
-                photos.unshift(e.target.result); 
-                localStorage.setItem('m_photos', JSON.stringify(photos)); 
-                renderAll(); 
+            fr.onload = (e) => {
+                photos.unshift(e.target.result);
+                localStorage.setItem('m_photos', JSON.stringify(photos));
+                renderAll();
             };
             fr.readAsDataURL(file);
         });
     }
+
     let currentImg = '';
-    function viewImg(src) { 
-        currentImg = src; 
-        document.getElementById('v-img').src = src; 
-        document.getElementById('viewer').style.display = 'flex'; 
+    function viewImg(src) {
+        currentImg = src;
+        document.getElementById('v-img').src = src;
+        document.getElementById('viewer').style.display = 'flex';
     }
     function closeViewer() { document.getElementById('viewer').style.display = 'none'; }
-    function setWallpaper() { 
-        localStorage.setItem('m_wall', currentImg); 
-        document.getElementById('p-home').style.background = `url(${currentImg})`; 
-        alert('壁纸设置成功！'); closeViewer(); 
+    function setWallpaper() {
+        localStorage.setItem('m_wall', currentImg);
+        document.getElementById('p-home').style.background = `url(${currentImg})`;
+        alert('壁纸设置成功！');
+        closeViewer();
     }
 
-    // --- 通讯录与纪念日 ---
-    function saveCon() { 
-        const n = document.getElementById('cn').value; 
-        if(n) { cons.push({name:n}); localStorage.setItem('m_cons', JSON.stringify(cons)); renderAll(); closeMod('m-con'); document.getElementById('cn').value=''; }
+    // --- 通讯录与纪念日 CRUD ---
+    function saveCon() {
+        const n = document.getElementById('cn').value;
+        if (n) {
+            cons.push({ name: n });
+            localStorage.setItem('m_cons', JSON.stringify(cons));
+            renderAll();
+            closeMod('m-con');
+            document.getElementById('cn').value = '';
+        }
     }
-    function delCon(i) { if(confirm("确定删除该联系人？")){ cons.splice(i,1); localStorage.setItem('m_cons', JSON.stringify(cons)); renderAll(); }}
-    
-    function saveAnni() { 
-        const t=document.getElementById('at').value, d=document.getElementById('ad').value; 
-        if(t&&d){ annis.push({t,d}); localStorage.setItem('m_annis', JSON.stringify(annis)); renderAll(); renderCalendar(); closeMod('m-anni'); }
-    }
-    function delAnni(i) { annis.splice(i,1); localStorage.setItem('m_annis', JSON.stringify(annis)); renderAll(); renderCalendar(); }
-
-    // --- 日历生成 ---
-    function renderCalendar() {
-        const now = new Date(); const y = now.getFullYear(); const m = now.getMonth();
-        document.getElementById('cal-month').innerText = `${y}年${m+1}月`;
-        const firstDay = new Date(y, m, 1).getDay();
-        const lastDate = new Date(y, m + 1, 0).getDate();
-        const body = document.getElementById('cal-body'); body.innerHTML = '';
-        ['日','一','二','三','四','五','六'].forEach(w => body.innerHTML += `<div class="cal-day" style="color:#999;font-weight:600">${w}</div>`);
-        for(let i=0; i<firstDay; i++) body.innerHTML += `<div class="cal-day"></div>`;
-        for(let d=1; d<=lastDate; d++) {
-            const dateStr = `${y}-${(m+1).toString().padStart(2,'0')}-${d.toString().padStart(2,'0')}`;
-            const isToday = d === now.getDate() ? 'today' : '';
-            const hasEvent = annis.some(a => a.d === dateStr) ? 'has-event' : '';
-            body.innerHTML += `<div class="cal-day ${isToday} ${hasEvent}">${d}</div>`;
+    function delCon(i) {
+        if (confirm("确定删除该联系人？")) {
+            cons.splice(i, 1);
+            localStorage.setItem('m_cons', JSON.stringify(cons));
+            renderAll();
         }
     }
 
-    // 监听纪念日列表的点击事件（事件委托）
-document.getElementById('anni-list').addEventListener('click', function(e) {
-    // 检查点的是不是“删除”文字
-    const delBtn = e.target.closest('.del-text');
-    if (!delBtn) return; // 如果点的不是删除，不管
-
-    // 找到整个条目（.list-item）
-    const item = delBtn.closest('.list-item');
-    if (!item) return;
-
-    // 取出之前存在 dataset 里的索引
-    const index = parseInt(item.dataset.anniIndex, 10);
-    if (!isNaN(index)) {
-        delAnni(index);  // 调用原来的删除函数
+    function saveAnni() {
+        const t = document.getElementById('at').value,
+              d = document.getElementById('ad').value;
+        if (t && d) {
+            annis.push({ t, d });
+            localStorage.setItem('m_annis', JSON.stringify(annis));
+            renderAll();
+            renderCalendar();
+            closeMod('m-anni');
+            document.getElementById('at').value = '';
+            document.getElementById('ad').value = '';
+        }
     }
-});
-    
-    // --- 聊天与AI ---
+    function delAnni(i) {
+        annis.splice(i, 1);
+        localStorage.setItem('m_annis', JSON.stringify(annis));
+        renderAll();
+        renderCalendar();
+    }
+
+    // --- 日历生成（安全 DOM 操作）---
+    function renderCalendar() {
+        const now = new Date();
+        const y = now.getFullYear();
+        const m = now.getMonth();
+        document.getElementById('cal-month').innerText = `${y}年${m + 1}月`;
+
+        const firstDay = new Date(y, m, 1).getDay();
+        const lastDate = new Date(y, m + 1, 0).getDate();
+
+        const body = document.getElementById('cal-body');
+        body.innerHTML = '';
+
+        const fragment = document.createDocumentFragment();
+
+        // 星期标题（独立类名，避免挤压）
+        ['日', '一', '二', '三', '四', '五', '六'].forEach(w => {
+            const div = document.createElement('div');
+            div.className = 'cal-weekday';
+            div.textContent = w;
+            fragment.appendChild(div);
+        });
+
+        // 空白占位
+        for (let i = 0; i < firstDay; i++) {
+            fragment.appendChild(document.createElement('div'));
+        }
+
+        // 日期格子
+        for (let d = 1; d <= lastDate; d++) {
+            const dateStr = `${y}-${(m + 1).toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}`;
+            const isToday = (d === now.getDate()) ? 'today' : '';
+            const hasEvent = annis.some(a => a.d === dateStr) ? 'has-event' : '';
+
+            const div = document.createElement('div');
+            div.className = `cal-day ${isToday} ${hasEvent}`.trim();
+            div.textContent = d;
+            fragment.appendChild(div);
+        }
+
+        body.appendChild(fragment);
+    }
+
+    // --- 聊天与 AI ---
     function saveApi() {
-        apiCfg = { enabled: document.getElementById('api-toggle').checked, url: document.getElementById('api-url').value, key: document.getElementById('api-key').value };
+        apiCfg = {
+            enabled: document.getElementById('api-toggle').checked,
+            url: document.getElementById('api-url').value,
+            key: document.getElementById('api-key').value
+        };
         localStorage.setItem('m_api_cfg', JSON.stringify(apiCfg));
         closeMod('m-api');
     }
-        async function sendMsg() {
-        const input = document.getElementById('chat-in'); 
+
+    async function sendMsg() {
+        const input = document.getElementById('chat-in');
         const val = input.value.trim();
-        if(!val) return; 
-        append('mine', val); 
+        if (!val) return;
+        append('mine', val);
         input.value = '';
-        
-        if (!apiCfg.enabled) { 
-            setTimeout(() => append('other', "已收到消息（当前为本地模式，可在设置中开启AI）"), 600); 
-            return; 
+
+        if (!apiCfg.enabled) {
+            setTimeout(() => append('other', "已收到消息（当前为本地模式，可在设置中开启AI）"), 600);
+            return;
         }
-        
-        // 先把等待气泡添加进去，并保存对这个气泡的引用
+
         const tempBubble = append('other', "...");
 
         try {
             const res = await fetch(apiCfg.url, {
                 method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json', 
-                    'Authorization': `Bearer ${apiCfg.key}` 
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiCfg.key}`
                 },
                 body: JSON.stringify({
                     model: 'deepseek-ai/DeepSeek-V3',
@@ -371,47 +390,80 @@ document.getElementById('anni-list').addEventListener('click', function(e) {
                 })
             });
             const data = await res.json();
-            // 直接更新刚刚那个气泡的文字
             tempBubble.textContent = data.choices[0].message.content;
-        } catch(e) { 
+        } catch (e) {
             tempBubble.textContent = "连接超时，请检查配置。";
         }
-    }  // ← 这里有一个 } 闭合 sendMsg
+    }
 
     function append(side, text) {
         const flow = document.getElementById('chat-flow');
-        
         const row = document.createElement('div');
         row.className = `msg-row ${side}`;
-        
         const bubble = document.createElement('div');
         bubble.className = 'bubble';
-        bubble.textContent = text;   // ⚠️ 关键：纯文本，不执行任何 HTML
-        
+        bubble.textContent = text;
         row.appendChild(bubble);
         flow.appendChild(row);
-        
         flow.scrollTop = flow.scrollHeight;
-        return bubble; // 返回气泡元素，用于 AI 回复时直接更新文字
+        return bubble;
+    }
+
+    // --- 事件委托监听（全部放在这里，避免重复绑定）---
+    function initEventListeners() {
+        // 纪念日删除
+        document.getElementById('anni-list').addEventListener('click', function (e) {
+            const delBtn = e.target.closest('.del-text');
+            if (!delBtn) return;
+            const item = delBtn.closest('.list-item');
+            if (!item) return;
+            const index = parseInt(item.dataset.anniIndex, 10);
+            if (!isNaN(index)) delAnni(index);
+        });
+
+        // 通讯录：进入聊天 / 删除
+        document.getElementById('con-list').addEventListener('click', function (e) {
+            const item = e.target.closest('.list-item');
+            if (!item) return;
+            const index = parseInt(item.dataset.conIndex, 10);
+            if (isNaN(index)) return;
+            if (e.target.classList.contains('del-text')) {
+                e.stopPropagation();
+                delCon(index);
+                return;
+            }
+            const name = cons[index]?.name || '联系人';
+            to('p-chat');
+            document.getElementById('chat-title').textContent = name;
+        });
+
+        // 相册点击查看大图
+        document.getElementById('album-box').addEventListener('click', function (e) {
+            const thumb = e.target.closest('[data-src]');
+            if (thumb) viewImg(thumb.dataset.src);
+        });
     }
 
     // --- 实时更新时间 ---
     function updateClock() {
         const now = new Date();
-        const timeStr = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
+        const timeStr = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
         document.getElementById('st-time').innerText = timeStr;
         document.getElementById('big-clock').innerText = timeStr;
-        document.getElementById('big-date').innerText = now.toLocaleDateString('zh-CN', {month:'long', day:'numeric', weekday:'short'});
-        
-        // 自动色调调节
+        document.getElementById('big-date').innerText = now.toLocaleDateString('zh-CN', { month: 'long', day: 'numeric', weekday: 'short' });
+
         const hour = now.getHours();
         const isNight = hour >= 18 || hour < 6;
         document.getElementById('p-home').style.color = isNight ? "#fff" : "#000";
         document.getElementById('status-bar').style.color = isNight ? "#fff" : "#000";
     }
-    setInterval(updateClock, 1000); updateClock();
 
+    // --- 启动一切 ---
+    initEventListeners();      // 绑定所有事件委托
+    setInterval(updateClock, 1000);
+    updateClock();
     renderAll();
+    renderCalendar();
 </script>
 </body>
 </html>
