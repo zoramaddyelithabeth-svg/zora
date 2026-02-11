@@ -485,7 +485,191 @@ body, #app-container {
 .narrative-action::before {
     content: none !important;
 }
-        
+
+        /* ====== 极简便签主题补丁（适配现有结构）====== */
+
+/* 1. 便签主题变量（不覆盖原有主题色） */
+.note-theme {
+    --note-bg-light: #F9F9F9;
+    --note-bg-white: #FFFFFF;
+    --note-accent: #AED5F3;
+    --note-pearl: #F5F0E6;
+    --note-hover: #F5F5F5;
+    --note-text-dark: #222222;
+    --note-text-gray: #8E8E93;
+    --note-border: #E5E5E5;
+    --note-shadow-light: rgba(0, 0, 0, 0.05);
+    --note-shadow-dark: rgba(0, 0, 0, 0.1);
+    --note-radius-soft: 12px;
+    --note-radius-hard: 8px;
+    --note-transition: all 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+    --note-spacing: 12px;
+}
+
+/* 2. 全局背景（仅应用于app-container内部） */
+.app-container {
+    background-color: var(--note-bg-light, #F9F9F9) !important;
+    font-family: "PingFang SC", "Helvetica Neue", sans-serif !important;
+}
+
+/* 3. 导航栏、卡片统一样式 */
+.nav-bar, 
+.contact-item, 
+#chat-options-menu .menu-item,
+.modal-body {
+    background: var(--note-bg-white) !important;
+    border: 1px solid var(--note-border) !important;
+    border-radius: var(--note-radius-soft) !important;
+    box-shadow: 0 1px 3px var(--note-shadow-light) !important;
+    transition: var(--note-transition) !important;
+}
+
+.nav-bar {
+    margin: var(--note-spacing) var(--note-spacing) 0 !important;
+    padding: 10px var(--note-spacing) !important;
+    min-height: 56px !important;
+}
+
+.contact-item {
+    margin: 8px var(--note-spacing) !important;
+    padding: 12px 16px !important;
+}
+
+/* 4. 底部导航（如果有） */
+.bottom-nav {
+    background: var(--note-bg-white) !important;
+    border-top: 1px solid var(--note-border) !important;
+    margin: 0 var(--note-spacing) var(--note-spacing) !important;
+    padding: 8px var(--note-spacing) !important;
+    display: flex !important;
+    justify-content: space-around !important;
+}
+
+/* 5. 输入框容器 */
+#chat-in + div, 
+.message-input-container {
+    background: var(--note-bg-white) !important;
+    border: 1px solid var(--note-border) !important;
+    border-radius: var(--note-radius-soft) !important;
+    margin: 0 var(--note-spacing) var(--note-spacing) !important;
+    padding: 10px var(--note-spacing) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+/* 发送按钮颜色 */
+#send-btn {
+    background: var(--note-accent) !important;
+    color: white !important;
+}
+
+/* 6. 聊天气泡 —— 重点修正 */
+/* 对方消息气泡（other） */
+.msg-row.other .bubble {
+    background: var(--note-bg-white) !important;
+    color: var(--note-text-dark) !important;
+    border: 1px solid var(--note-border) !important;
+    border-radius: 8px 8px 12px 8px !important;
+    box-shadow: 0 2px 4px var(--note-shadow-light) !important;
+    padding: 14px 18px !important;
+    line-height: 1.6 !important;
+    position: relative;
+    transform: perspective(100px) rotateY(1deg);
+}
+
+/* 我方消息气泡（mine） */
+.msg-row.mine .bubble {
+    background: var(--note-bg-white) !important;
+    color: var(--note-text-dark) !important;
+    border: 1px solid var(--note-border) !important;
+    border-radius: 8px 8px 8px 12px !important;
+    box-shadow: 0 2px 4px var(--note-shadow-light) !important;
+    padding: 14px 18px !important;
+    line-height: 1.6 !important;
+    position: relative;
+    transform: perspective(100px) rotateY(-1deg);
+}
+
+/* 毛边纹理（共用） */
+.msg-row.other .bubble::after,
+.msg-row.mine .bubble::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0L10 0L10 10L0 10Z' fill='%23F8F8F8' fill-opacity='0.1'/%3E%3C/svg%3E");
+    background-size: 20px 20px;
+    pointer-events: none;
+    border-radius: inherit;
+}
+
+/* 对方消息装饰（雪花） */
+.msg-row.other .bubble::before {
+    content: "";
+    position: absolute;
+    top: 12px;
+    left: 15px;
+    width: 14px;
+    height: 14px;
+    background: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 0L8 3L10 3L9 5L11 7L9 7L8 9L7 7L5 7L7 5L6 3L8 3L7 0Z' fill='%23AED5F3' fill-opacity='0.8'/%3E%3C/svg%3E") center no-repeat;
+    z-index: 2;
+}
+
+/* 我方消息装饰（爱心） */
+.msg-row.mine .bubble::before {
+    content: "";
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    width: 14px;
+    height: 14px;
+    background: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 5L9 3L11 5L10 7L12 9L10 11L8 9L7 11L5 9L3 11L1 9L3 7L2 5L4 3L6 5Z' fill='%23F5F0E6' fill-opacity='0.8'/%3E%3C/svg%3E") center no-repeat;
+    z-index: 2;
+}
+
+/* 时间标签颜色适配 */
+.msg-row.other .bubble .msg-time,
+.msg-row.mine .bubble .msg-time {
+    color: var(--note-text-gray) !important;
+}
+
+/* 7. 叙事模式样式（如果使用） */
+.narrative-speech {
+    color: var(--note-text-dark) !important;
+    background-color: var(--note-bg-white) !important;
+    border: 1px solid var(--note-border) !important;
+    border-radius: var(--note-radius-soft) !important;
+    padding: 6px 16px !important;
+    display: inline-block !important;
+    margin: 4px 0 0 0 !important;
+    box-shadow: 0 2px 4px var(--note-shadow-light) !important;
+    backdrop-filter: blur(8px) !important;
+}
+.narrative-psychology {
+    color: var(--note-text-dark) !important;
+    background-color: var(--note-hover) !important;
+    border: 1px solid var(--note-border) !important;
+    border-radius: var(--note-radius-soft) !important;
+    padding: 6px 16px !important;
+    display: inline-block !important;
+}
+.narrative-psychology::after {
+    content: none !important;
+}
+.narrative-action {
+    color: var(--note-text-dark) !important;
+    background-color: var(--note-hover) !important;
+    border: 1px solid var(--note-border) !important;
+    border-radius: var(--note-radius-soft) !important;
+    padding: 6px 16px !important;
+    display: block !important;
+    margin: 0 0 4px 0 !important;
+    box-shadow: 0 2px 4px var(--note-shadow-light) !important;
+    backdrop-filter: blur(8px) !important;
+}
+.narrative-action::before {
+    content: none !important;
+}
     </style>
 </head>
 <body>
