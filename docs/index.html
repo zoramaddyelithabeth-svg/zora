@@ -304,6 +304,188 @@ body, #app-container {
 .narrative-action::before {
     content: none !important;
 }
+        /* ====== 冬日温暖卡通+iOS便签主题美化 ====== */
+:root {
+    --theme-primary: #FFFFFF;
+    --theme-secondary: #F9F9F9;
+    --theme-accent: #AED5F3;
+    --theme-pearl: #F5F0E6;
+    --theme-primary-hover: #F5F5F5;
+    --text-on-primary: #333333;
+    --text-dark: #222222;
+    --text-gray: #8E8E93;
+    --background-light: #F9F9F9 !important;
+    --header-bg: #FFFFFF;
+    --card-background: #FFFFFF;
+    --border-color: #E5E5E5;
+    --shadow-color: rgba(0, 0, 0, 0.05);
+    --shadow-dark: rgba(0, 0, 0, 0.1);
+    --soft-radius: 12px;
+    --hard-radius: 8px;
+    --jelly-transition: all 0.2s cubic-bezier(0.25, 0.1, 0.25, 1) !important;
+    --common-spacing: 12px;
+}
+body, #app-container {
+    background: var(--background-light) !important;
+    color: var(--text-dark) !important;
+    font-family: "PingFang SC", "Helvetica Neue", sans-serif !important;
+}
+/* 去除原雪花装饰（避免冲突） */
+.profile-header::before, .status-card::before, .profile-header .avatar-container::after,
+.action-icon > .fas.fa-comment::before, .nav-icon > .fas::before, #chat-placeholder::before,
+.profile-name::before, .contact-item::before, .fas.fa-edit,
+.chat-header::after, .app-header::after, .bottom-nav .nav-item:not(:last-child)::after {
+    background-image: none !important;
+    content: none !important;
+    display: none !important;
+}
+/* 头部统一样式 */
+.chat-header, #chat-screen .chat-header,
+.app-header, .world-book-header, .api-header,
+.moments-header, .discover-header, .contact-settings-header,
+.profile-header, .bottom-nav {
+    background: var(--header-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    box-shadow: 0 1px 3px var(--shadow-color) !important;
+    color: var(--text-dark) !important;
+    border-radius: var(--soft-radius) !important;
+    transition: var(--jelly-transition);
+    margin: var(--common-spacing) var(--common-spacing) 0 !important;
+    padding: 10px var(--common-spacing) !important;
+    height: auto !important;
+    min-height: 56px !important;
+}
+.bottom-nav {
+    background: var(--theme-primary) !important;
+    border-top: 1px solid var(--border-color) !important;
+    margin: 0 var(--common-spacing) var(--common-spacing) !important;
+    padding: 8px var(--common-spacing) !important;
+    display: flex !important;
+    justify-content: space-around !important;
+}
+.bottom-nav .nav-item:not(:last-child)::after {
+    content: "";
+    width: 14px;
+    height: 14px;
+    background: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 8L2 10L4 12L10 12L12 10L10 8L4 8Z' fill='%23F5F0E6' fill-opacity='0.7'/%3E%3C/svg%3E") center no-repeat;
+    margin: 0 4px;
+}
+.profile-avatar, .user-avatar, .character-avatar {
+    border: 2px solid var(--border-color) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 4px var(--shadow-color) !important;
+    width: 64px !important;
+    height: 64px !important;
+    object-fit: cover !important;
+}
+#message-input-container {
+    background: var(--header-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--soft-radius) !important;
+    margin: 0 var(--common-spacing) var(--common-spacing) !important;
+    padding: 10px var(--common-spacing) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+#send-btn {
+    color: var(--theme-accent) !important;
+    font-size: 22px !important;
+}
+.contact-item, .post-item, .preset-item {
+    background: var(--card-background) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--soft-radius) !important;
+    box-shadow: 0 1px 3px var(--shadow-color) !important;
+    margin: 8px var(--common-spacing) !important;
+    padding: 12px 16px !important;
+}
+        /* 便签聊天气泡（梯形毛边质感） */
+.message.received, .message.sent {
+    position: relative;
+    border-radius: 8px 8px 12px 8px !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03) !important;
+    border: 1px solid #EBEBEB !important;
+    padding: 14px 18px !important;
+    line-height: 1.6 !important;
+    background: #FFFFFF !important;
+}
+.message.received::after, .message.sent::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0L10 0L10 10L0 10Z' fill='%23F8F8F8' fill-opacity='0.1'/%3E%3C/svg%3E");
+    background-size: 20px 20px;
+    pointer-events: none;
+}
+.message.received {
+    transform: perspective(100px) rotateY(1deg);
+}
+.message.received::before {
+    content: "";
+    position: absolute;
+    top: 12px;
+    left: 15px;
+    width: 14px;
+    height: 14px;
+    background: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 0L8 3L10 3L9 5L11 7L9 7L8 9L7 7L5 7L7 5L6 3L8 3L7 0Z' fill='%23AED5F3' fill-opacity='0.8'/%3E%3C/svg%3E") center no-repeat;
+}
+.message.sent {
+    transform: perspective(100px) rotateY(-1deg);
+    border-radius: 8px 8px 8px 12px !important;
+}
+.message.sent::before {
+    content: "";
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    width: 14px;
+    height: 14px;
+    background: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 5L9 3L11 5L10 7L12 9L10 11L8 9L7 11L5 9L3 11L1 9L3 7L2 5L4 3L6 5Z' fill='%23F5F0E6' fill-opacity='0.8'/%3E%3C/svg%3E") center no-repeat;
+}
+.message.received p, .message.sent p {
+    font-family: "PingFang SC", "Helvetica Neue", sans-serif !important;
+    font-size: 15px !important;
+    margin: 0 !important;
+}
+        /* 叙事模式 · 极简便签风 */
+.narrative-speech {
+    color: var(--text-dark) !important;
+    background-color: var(--card-background) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--soft-radius) !important;
+    padding: 6px 16px !important;
+    display: inline-block !important;
+    margin: 4px 0 0 0 !important;
+    box-shadow: 0 2px 4px var(--shadow-color) !important;
+    backdrop-filter: blur(8px) !important;
+}
+.narrative-psychology {
+    color: var(--text-dark) !important;
+    background-color: var(--theme-primary-hover) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--soft-radius) !important;
+    padding: 6px 16px !important;
+    display: inline-block !important;
+}
+.narrative-psychology::after {
+    content: none !important;
+}
+.narrative-action {
+    color: var(--text-dark) !important;
+    background-color: var(--theme-primary-hover) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--soft-radius) !important;
+    padding: 6px 16px !important;
+    display: block !important;
+    margin: 0 0 4px 0 !important;
+    box-shadow: 0 2px 4px var(--shadow-color) !important;
+    backdrop-filter: blur(8px) !important;
+}
+.narrative-action::before {
+    content: none !important;
+}
+        
     </style>
 </head>
 <body>
