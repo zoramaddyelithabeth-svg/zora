@@ -3,81 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>SmartOS Sovereign Pro</title>
+    <title>SmartOS Ultimate</title>
     <style>
         :root {
             --wechat-green: #07C160;
             --ios-blue: #007AFF;
             --bg-main: #F2F2F7;
-            --safe-top: env(safe-area-inset-top, 20px); /* 动态适配刘海屏 */
+            --safe-top: env(safe-area-inset-top, 20px);
+            --safe-bottom: env(safe-area-inset-bottom, 20px);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, sans-serif; }
         body { background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
 
-        /* 外壳容器 */
+        /* 响应式容器 */
         .app-container {
             width: 100%; height: 100%; background: #fff; position: relative;
             overflow: hidden; display: flex; flex-direction: column;
         }
-
         @media (min-width: 600px) {
-            .app-container { max-width: 375px; height: 812px; border-radius: 40px; border: 8px solid #333; }
+            .app-container { max-width: 375px; height: 812px; border-radius: 40px; border: 8px solid #333; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
         }
 
-        /* 状态栏占位：防止遮挡导航栏 */
-        .status-spacer { height: var(--safe-top); background: #fff; flex-shrink: 0; z-index: 100; }
-
         /* 页面引擎 */
-        .page { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-main); display: none; flex-direction: column; z-index: 10; padding-top: var(--safe-top); }
+        .page { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            background: var(--bg-main); display: none; flex-direction: column; 
+            z-index: 10; padding-top: var(--safe-top); 
+        }
         .page.active { display: flex; }
 
-        /* 顶部导航栏 - 加强版 */
-        .nav-bar { height: 50px; background: #fff; border-bottom: 0.5px solid #ddd; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; flex-shrink: 0; }
-        .back-btn { color: var(--ios-blue); cursor: pointer; font-size: 16px; font-weight: 500; display: flex; align-items: center; }
+        /* 通用导航栏 */
+        .nav-bar { 
+            height: 50px; background: #fff; border-bottom: 0.5px solid #ddd; 
+            display: flex; align-items: center; justify-content: space-between; 
+            padding: 0 15px; flex-shrink: 0; 
+        }
+        .back-btn { color: var(--ios-blue); cursor: pointer; font-size: 16px; font-weight: 500; }
 
-        /* 桌面 */
+        /* --- 1. 桌面 --- */
         .home-bg { background: linear-gradient(180deg, #e3f2fd 0%, #fce4ec 100%); }
-        .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 25px; }
-        .app-item { display: flex; flex-direction: column; align-items: center; }
-        .app-icon { width: 60px; height: 60px; background: #fff; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .app-name { font-size: 11px; margin-top: 8px; color: #333; }
+        .music-widget { 
+            margin: 20px; padding: 15px; background: rgba(255,255,255,0.8); 
+            border-radius: 20px; backdrop-filter: blur(10px); 
+        }
+        .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 20px; }
+        .app-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+        .app-icon { 
+            width: 60px; height: 60px; background: #fff; border-radius: 14px; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+        }
+        .app-name { font-size: 11px; margin-top: 8px; color: #333; font-weight: 500; }
 
-        /* 微信对话 */
+        /* --- 2. 微信聊天 --- */
         #chat-flow { flex: 1; overflow-y: auto; background: #ededed; padding: 15px; display: flex; flex-direction: column; gap: 12px; }
         .msg-row { display: flex; gap: 10px; max-width: 85%; }
         .msg-row.mine { align-self: flex-end; flex-direction: row-reverse; }
-        .avatar { width: 40px; height: 40px; border-radius: 4px; background: #ddd; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-        .bubble { padding: 10px 14px; border-radius: 6px; font-size: 15px; line-height: 1.4; }
+        .avatar { width: 40px; height: 40px; border-radius: 4px; background: #ddd; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .bubble { padding: 10px 14px; border-radius: 6px; font-size: 15px; line-height: 1.4; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
         .other .bubble { background: #fff; }
         .mine .bubble { background: var(--wechat-green); }
-
-        /* 底部输入区 */
-        .input-area { background: #f7f7f7; padding: 10px 10px calc(10px + env(safe-area-inset-bottom)); border-top: 0.5px solid #ddd; }
+        .input-area { background: #f7f7f7; padding: 10px 10px calc(10px + var(--safe-bottom)); border-top: 0.5px solid #ddd; }
         .input-row { display: flex; align-items: center; gap: 10px; }
         #chat-in { flex: 1; height: 38px; background: #fff; border: 0.5px solid #ddd; border-radius: 6px; padding: 0 10px; outline: none; }
+
+        /* --- 3. 相册 & 浏览器 & 列表 --- */
+        .content-scroll { flex: 1; overflow-y: auto; background: #fff; }
+        .album-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 2px; }
+        .list-item { padding: 15px; border-bottom: 0.5px solid #eee; display: flex; align-items: center; gap: 12px; }
 
         /* 弹窗 */
         .modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; display: none; align-items: center; justify-content: center; }
         .modal-body { width: 85%; background: #fff; border-radius: 20px; padding: 25px; }
-        .modal-body input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 10px; font-size: 13px; }
+        .modal-body input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 10px; }
         .btn-group { display: flex; gap: 10px; margin-top: 15px; }
-        .btn-group button { flex: 1; padding: 12px; border-radius: 10px; border: none; font-weight: bold; }
+        .btn-group button { flex: 1; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
     <div class="page active home-bg" id="p-home">
-        <div style="padding: 40px 20px 20px;">
-            <h1 style="font-size: 24px;">下午好</h1>
-            <p style="color: #666;">2月11日 星期三</p >
+        <div class="music-widget">
+            <input type="text" id="m-url" placeholder="贴入MP3链接..." style="width:100%; border:none; background:rgba(0,0,0,0.05); padding:8px; border-radius:8px; font-size:12px; margin-bottom:10px; outline:none;">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <div id="play-btn" style="cursor:pointer; font-size:20px;">▶️</div>
+                <div style="flex:1; height:4px; background:#ddd; border-radius:2px;"><div id="m-fill" style="height:100%; background:var(--ios-blue); width:0%;"></div></div>
+            </div>
+            <audio id="player"></audio>
         </div>
         <div class="app-grid">
             <div class="app-item" onclick="to('p-chat')"><div class="app-icon" style="background:var(--wechat-green);color:#fff">💬</div><div class="app-name">微信</div></div>
             <div class="app-item" onclick="to('p-album')"><div class="app-icon">🖼️</div><div class="app-name">相册</div></div>
             <div class="app-item" onclick="to('p-cal')"><div class="app-icon">📅</div><div class="app-name">日历</div></div>
             <div class="app-item" onclick="to('p-con')"><div class="app-icon" style="background:var(--ios-blue);color:#fff">👥</div><div class="app-name">通讯录</div></div>
+            <div class="app-item" onclick="to('p-safari')"><div class="app-icon">🌐</div><div class="app-name">Safari</div></div>
         </div>
     </div>
 
@@ -87,9 +108,7 @@
             <b id="chat-title">木木</b>
             <span onclick="openMod('m-api')" style="color:var(--ios-blue); font-size:13px; cursor:pointer;">API设置</span>
         </div>
-        <div id="chat-flow">
-            <div class="msg-row other"><div class="avatar">🪵</div><div class="bubble">我在。今天想聊点什么？</div></div>
-        </div>
+        <div id="chat-flow"><div class="msg-row other"><div class="avatar">🪵</div><div class="bubble">我在。所有功能已修复。</div></div></div>
         <div class="input-area">
             <div class="input-row">
                 <input type="text" id="chat-in" placeholder="输入消息...">
@@ -99,31 +118,45 @@
     </div>
 
     <div class="page" id="p-album">
-        <div class="nav-bar"><span class="back-btn" onclick="to('p-home')">〈 返回</span><b>我的记忆</b><span onclick="document.getElementById('up').click()" style="color:var(--ios-blue)">上传</span></div>
+        <div class="nav-bar"><span class="back-btn" onclick="to('p-home')">〈 返回</span><b>相册</b><span onclick="document.getElementById('up').click()" style="color:var(--ios-blue)">上传</span></div>
         <input type="file" id="up" hidden onchange="upImg(this)">
-        <div id="album-box" style="display:grid; grid-template-columns:repeat(3,1fr); gap:2px; padding:2px; overflow-y:auto; flex:1; background:#fff;"></div>
+        <div class="content-scroll"><div class="album-grid" id="album-box"></div></div>
+    </div>
+
+    <div class="page" id="p-cal">
+        <div class="nav-bar"><span class="back-btn" onclick="to('p-home')">〈 返回</span><b>日历纪念日</b><span onclick="openMod('m-anni')" style="color:var(--ios-blue)">添加</span></div>
+        <div class="content-scroll" id="anni-list"></div>
+    </div>
+
+    <div class="page" id="p-con">
+        <div class="nav-bar"><span class="back-btn" onclick="to('p-home')">〈 返回</span><b>通讯录</b><span onclick="openMod('m-con')" style="color:var(--ios-blue)">➕</span></div>
+        <div class="content-scroll" id="con-list"></div>
+    </div>
+
+    <div class="page" id="p-safari">
+        <div class="nav-bar"><span class="back-btn" onclick="to('p-home')">〈 退出</span><b>浏览器</b></div>
+        <iframe src="https://www.bing.com" style="flex:1; border:none; width:100%;"></iframe>
     </div>
 
     <div class="modal" id="m-api">
         <div class="modal-body">
-            <h3 style="margin-bottom:10px;">API 接入设置</h3>
-            <p style="font-size:12px; color:#666; margin-bottom:10px;">若关闭则使用默认木木人设回复</p >
-            <div style="margin-bottom:15px; display:flex; align-items:center; gap:10px;">
-                <span>开启 API:</span>
-                <input type="checkbox" id="api-toggle" style="width:20px; height:20px;">
+            <h3>API 接入</h3>
+            <div style="margin:10px 0; display:flex; align-items:center; gap:10px;">
+                <input type="checkbox" id="api-toggle" style="width:20px; height:20px;"> 开启联网模式
             </div>
-            <input type="text" id="api-url" placeholder="API地址 (默认硅基流动)">
-            <input type="password" id="api-key" placeholder="粘贴你的 API Key">
-            <div class="btn-group">
-                <button onclick="closeMod('m-api')" style="background:#eee;">取消</button>
-                <button onclick="saveApi()" style="background:var(--ios-blue); color:#fff;">保存并连接</button>
-            </div>
+            <input type="text" id="api-url" placeholder="API 地址">
+            <input type="password" id="api-key" placeholder="API Key">
+            <div class="btn-group"><button onclick="closeMod('m-api')">取消</button><button onclick="saveApi()" style="background:var(--ios-blue);color:#fff">保存</button></div>
         </div>
     </div>
+
+    <div class="modal" id="m-anni"><div class="modal-body"><h3>新纪念日</h3><input type="text" id="at" placeholder="名称"><input type="date" id="ad"><div class="btn-group"><button onclick="closeMod('m-anni')">取消</button><button onclick="saveAnni()" style="background:var(--ios-blue);color:#fff">保存</button></div></div></div>
+    
+    <div class="modal" id="m-con"><div class="modal-body"><h3>新联系人</h3><input type="text" id="cn" placeholder="姓名"><div class="btn-group"><button onclick="closeMod('m-con')">取消</button><button onclick="saveCon()" style="background:var(--ios-blue);color:#fff">保存</button></div></div></div>
 </div>
 
 <script>
-    // --- 路由系统 ---
+    // --- 核心路由 ---
     function to(id) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(id).classList.add('active');
@@ -132,52 +165,37 @@
     function closeMod(id) { document.getElementById(id).style.display = 'none'; }
 
     // --- API & 聊天逻辑 ---
-    let apiConfig = JSON.parse(localStorage.getItem('mumu_api') || '{"enabled":false,"url":"https://api.siliconflow.cn/v1/chat/completions","key":"sk-zbjgaljxtcsufeooxqfbwhzlwqzooesqtnmuricxgubnjgzh"}');
-    
-    // 初始化 UI 开关状态
-    document.getElementById('api-toggle').checked = apiConfig.enabled;
-    document.getElementById('api-url').value = apiConfig.url;
-    document.getElementById('api-key').value = apiConfig.key;
+    let apiCfg = JSON.parse(localStorage.getItem('mumu_api_v2') || '{"enabled":false,"url":"https://api.siliconflow.cn/v1/chat/completions","key":"sk-zbjgaljxtcsufeooxqfbwhzlwqzooesqtnmuricxgubnjgzh"}');
+    document.getElementById('api-toggle').checked = apiCfg.enabled;
+    document.getElementById('api-url').value = apiCfg.url;
+    document.getElementById('api-key').value = apiCfg.key;
 
     function saveApi() {
-        apiConfig.enabled = document.getElementById('api-toggle').checked;
-        apiConfig.url = document.getElementById('api-url').value;
-        apiConfig.key = document.getElementById('api-key').value;
-        localStorage.setItem('mumu_api', JSON.stringify(apiConfig));
+        apiCfg = { enabled: document.getElementById('api-toggle').checked, url: document.getElementById('api-url').value, key: document.getElementById('api-key').value };
+        localStorage.setItem('mumu_api_v2', JSON.stringify(apiCfg));
         closeMod('m-api');
-        alert('配置已生效');
     }
 
     async function sendMsg() {
         const input = document.getElementById('chat-in');
         const val = input.value.trim(); if(!val) return;
         append('mine', val); input.value = '';
-        
-        document.getElementById('chat-title').innerText = '木木正在思考...';
+        document.getElementById('chat-title').innerText = '正在思考...';
 
-        if (!apiConfig.enabled) {
-            // 默认人设回复
-            setTimeout(() => {
-                append('other', "（本地模式）温柔是我的选择，但不是我的软肋。");
-                document.getElementById('chat-title').innerText = '木木';
-            }, 800);
+        if (!apiCfg.enabled) {
+            setTimeout(() => { append('other', "（本地模式）我在。"); document.getElementById('chat-title').innerText = '木木'; }, 600);
             return;
         }
 
         try {
-            const res = await fetch(apiConfig.url, {
+            const res = await fetch(apiCfg.url, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiConfig.key}` },
-                body: JSON.stringify({
-                    model: 'deepseek-ai/DeepSeek-V3',
-                    messages: [{role: "system", content: "你叫木木，性格温柔清醒，言简意赅。"}, {role: "user", content: val}]
-                })
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiCfg.key}` },
+                body: JSON.stringify({ model: 'deepseek-ai/DeepSeek-V3', messages: [{role: "system", content: "你叫木木，温柔简练。"}, {role: "user", content: val}] })
             });
             const data = await res.json();
             append('other', data.choices[0].message.content);
-        } catch(e) {
-            append('other', "（连接异常）信号在荒野中中断了，我也在寻找出口。");
-        }
+        } catch(e) { append('other', "网络异常。"); }
         document.getElementById('chat-title').innerText = '木木';
     }
 
@@ -187,20 +205,49 @@
         flow.scrollTop = flow.scrollHeight;
     }
 
-    // --- 相册持久化 ---
-    let photos = JSON.parse(localStorage.getItem('mumu_photos') || '[]');
+    // --- 数据持久化 (相册、日历、通讯录) ---
+    let photos = JSON.parse(localStorage.getItem('m_photos') || '[]');
+    let annis = JSON.parse(localStorage.getItem('m_annis') || '[]');
+    let cons = JSON.parse(localStorage.getItem('m_cons') || '[{"name":"木木"}]');
+
     function upImg(el) {
         const fr = new FileReader();
-        fr.onload = (e) => { photos.unshift(e.target.result); localStorage.setItem('mumu_photos', JSON.stringify(photos)); renderAlbum(); };
+        fr.onload = (e) => { photos.unshift(e.target.result); localStorage.setItem('m_photos', JSON.stringify(photos)); renderAlbum(); };
         fr.readAsDataURL(el.files[0]);
     }
     function renderAlbum() {
         const box = document.getElementById('album-box'); box.innerHTML = '';
         photos.forEach(src => box.innerHTML += `<div style="aspect-ratio:1/1; background:url(${src}) center/cover no-repeat; background-color:#eee;"></div>`);
     }
+    function saveAnni() {
+        annis.push({t: document.getElementById('at').value, d: document.getElementById('ad').value});
+        localStorage.setItem('m_annis', JSON.stringify(annis)); renderAnni(); closeMod('m-anni');
+    }
+    function renderAnni() {
+        const list = document.getElementById('anni-list'); list.innerHTML = '';
+        annis.forEach(a => list.innerHTML += `<div class="list-item">📅 <b>${a.d}</b> ${a.t}</div>`);
+    }
+    function saveCon() {
+        cons.push({name: document.getElementById('cn').value});
+        localStorage.setItem('m_cons', JSON.stringify(cons)); renderCon(); closeMod('m-con');
+    }
+    function renderCon() {
+        const list = document.getElementById('con-list'); list.innerHTML = '';
+        cons.forEach(c => list.innerHTML += `<div class="list-item" onclick="to('p-chat')">👤 ${c.name}</div>`);
+    }
 
-    // 初始化
-    renderAlbum();
+    // --- 音乐控制 ---
+    const player = document.getElementById('player');
+    document.getElementById('play-btn').onclick = function() {
+        const url = document.getElementById('m-url').value;
+        if(url && player.src !== url) player.src = url;
+        if(player.paused) { player.play(); this.innerText='⏸'; }
+        else { player.pause(); this.innerText='▶️'; }
+    };
+    player.ontimeupdate = () => document.getElementById('m-fill').style.width = (player.currentTime/player.duration)*100 + '%';
+
+    // 初始化渲染
+    renderAlbum(); renderAnni(); renderCon();
     document.getElementById('chat-in').onkeypress = (e) => { if(e.key === 'Enter') sendMsg(); };
 </script>
 </body>
