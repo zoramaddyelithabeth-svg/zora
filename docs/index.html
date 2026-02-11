@@ -218,26 +218,25 @@
             aList.appendChild(item);
         });
 
-        // ---------- 通讯录（安全渲染）----------
-        const cList = document.getElementById('con-list');
-        cList.innerHTML = '';
-        cons.forEach((c, index) => {
-            const item = document.createElement('div');
-            item.className = 'list-item';
-            item.dataset.conIndex = index;
+       // ---------- 通讯录（安全渲染 + 唯一ID）----------
+const cList = document.getElementById('con-list');
+cList.innerHTML = '';
+cons.forEach(c => {
+    const item = document.createElement('div');
+    item.className = 'list-item';
+    item.dataset.conId = c.id;   // ✅ 存储唯一ID
 
-            const nameSpan = document.createElement('span');
-            nameSpan.textContent = `👤 ${c.name}`;
+    const nameSpan = document.createElement('span');
+    nameSpan.textContent = `👤 ${c.name}`;
 
-            const delSpan = document.createElement('span');
-            delSpan.className = 'del-text';
-            delSpan.textContent = '删除';
+    const delSpan = document.createElement('span');
+    delSpan.className = 'del-text';
+    delSpan.textContent = '删除';
 
-            item.appendChild(nameSpan);
-            item.appendChild(delSpan);
-            cList.appendChild(item);
-        });
-    }
+    item.appendChild(nameSpan);
+    item.appendChild(delSpan);
+    cList.appendChild(item);
+});
 
     // --- 相册逻辑（查看、壁纸、上传）---
     function upImg(el) {
@@ -271,20 +270,27 @@
     function saveCon() {
         const n = document.getElementById('cn').value;
         if (n) {
-            cons.push({ name: n });
+           cons.push({ 
+    id: Date.now() + '-' + Math.random().toString(36).substr(2, 6),  // 唯一ID
+    name: n 
+});
             localStorage.setItem('m_cons', JSON.stringify(cons));
             renderAll();
             closeMod('m-con');
             document.getElementById('cn').value = '';
         }
     }
-    function delCon(i) {
-        if (confirm("确定删除该联系人？")) {
-            cons.splice(i, 1);
+   function delCon(id) {
+    if (confirm("确定删除该联系人？")) {
+        // 找到数组中 id 匹配的那一项并删除
+        const index = cons.findIndex(c => c.id === id);
+        if (index !== -1) {
+            cons.splice(index, 1);
             localStorage.setItem('m_cons', JSON.stringify(cons));
             renderAll();
         }
     }
+}
 
     function saveAnni() {
         const t = document.getElementById('at').value,
@@ -421,21 +427,26 @@
             if (!isNaN(index)) delAnni(index);
         });
 
-        // 通讯录：进入聊天 / 删除
-        document.getElementById('con-list').addEventListener('click', function (e) {
-            const item = e.target.closest('.list-item');
-            if (!item) return;
-            const index = parseInt(item.dataset.conIndex, 10);
-            if (isNaN(index)) return;
-            if (e.target.classList.contains('del-text')) {
-                e.stopPropagation();
-                delCon(index);
-                return;
-            }
-            const name = cons[index]?.name || '联系人';
-            to('p-chat');
-            document.getElementById('chat-title').textContent = name;
-        });
+        // 通讯录点击监听
+document.getElementById('con-list').addEventListener('click', function (e) {
+    const item = e.target.closest('.list-item');
+    if (!item) return;
+    const id = item.dataset.conId;   // 获取唯一ID
+    if (!id) return;
+
+    // 如果点的是删除按钮
+    if (e.target.classList.contains('del-text')) {
+        e.stopPropagation();
+        delCon(id);
+        return;
+    }
+
+    // 进入聊天
+    const contact = cons.find(c => c.id === id);
+    const name = contact ? contact.name : '联系人';
+    to('p-chat');
+    document.getElementById('chat-title').textContent = name;
+});
 
         // 相册点击查看大图
         document.getElementById('album-box').addEventListener('click', function (e) {
