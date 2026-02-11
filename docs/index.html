@@ -4,492 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>SmartOS Pro Ultra · 自定义主题色</title>
-    <style>
-        /* ------- 根变量（主题色会动态修改这里）------- */
-        :root {
-            --wechat-green: #07C160;
-            --ios-blue: #007AFF;
-            --ios-red: #FF3B30;
-            --glass: rgba(255, 255, 255, 0.7);
-            --theme-primary: #007AFF;      /* 默认蓝，可被用户修改 */
-            --theme-soft-bg: rgba(0, 122, 255, 0.1);
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, sans-serif; }
-        body { background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
-
-        .app-container {
-            width: 100%; height: 100%; background: #fff; position: relative;
-            overflow: hidden; display: flex; flex-direction: column;
-        }
-        @media (min-width: 600px) {
-            .app-container { max-width: 375px; height: 812px; border-radius: 40px; border: 8px solid #333; }
-        }
-
-        .status-bar { height: 44px; padding: 14px 20px 0; display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 600; z-index: 1000; position: absolute; top: 0; width: 100%; }
-        .nav-bar { height: 50px; background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); border-bottom: 0.5px solid #ddd; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; flex-shrink: 0; }
-        
-        /* 主题色应用点 */
-        .nav-bar span[style*="color:var(--ios-blue)"] { color: var(--theme-primary) !important; }
-        .modal-btn { background: var(--theme-primary) !important; }
-        #send-btn { background: var(--theme-primary) !important; }
-        .cal-day.today { background: var(--theme-primary) !important; }
-        .app-item:active .app-icon { background: var(--theme-soft-bg); } /* 触摸反馈 */
-
-        .page { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #F2F2F7; display: none; flex-direction: column; z-index: 10; padding-top: 44px; }
-        .page.active { display: flex; }
-
-        .home-bg { transition: background 0.8s ease; background-size: cover !important; background-position: center !important; }
-        .home-clock { text-align: center; padding: 30px 0; text-shadow: 0 1px 5px rgba(0,0,0,0.1); }
-        .home-clock h1 { font-size: 64px; font-weight: 200; letter-spacing: -2px; }
-        .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 20px 25px; }
-        .app-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.1s; }
-        .app-item:active { transform: scale(0.9); }
-        .app-icon { width: 60px; height: 60px; background: var(--glass); border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 28px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.4); box-shadow: 0 8px 15px rgba(0,0,0,0.05); transition: background 0.2s; }
-        .app-name { font-size: 11px; margin-top: 8px; font-weight: 500; }
-
-        #album-box { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; padding: 2px 0; overflow-y: auto; flex: 1; background: #fff; }
-        #album-box div { aspect-ratio: 1/1; background-size: cover; background-position: center; transition: opacity 0.2s; }
-        #album-box div:active { opacity: 0.7; }
-
-        .cal-header { background: #fff; padding: 15px; text-align: center; border-bottom: 0.5px solid #eee; }
-        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); background: #fff; padding: 10px; border-bottom: 0.5px solid #eee; }
-        .cal-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 14px; position: relative; }
-        .cal-day.today { background: var(--theme-primary); color: #fff; border-radius: 50%; }
-        .cal-day.has-event::after { content: ''; width: 4px; height: 4px; background: #999; border-radius: 50%; position: absolute; bottom: 4px; }
-        .cal-weekday {
-            aspect-ratio: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            color: #999;
-            font-weight: 600;
-        }
-
-        .list-item { padding: 15px; border-bottom: 0.5px solid #eee; background: #fff; display: flex; align-items: center; justify-content: space-between; font-size: 16px; }
-        .del-text { color: var(--ios-red); font-size: 14px; font-weight: 500; padding: 5px; }
-
-        #chat-flow { flex: 1; overflow-y: auto; background: #ededed; padding: 15px; display: flex; flex-direction: column; gap: 12px; }
-        .msg-row { display: flex; gap: 10px; max-width: 85%; }
-        .msg-row.mine { align-self: flex-end; flex-direction: row-reverse; }
-        .bubble {
-            padding: 10px 14px;
-            border-radius: 10px;
-            font-size: 15px;
-            line-height: 1.4;
-            word-wrap: break-word;
-            position: relative;
-        }
-        .mine .bubble { background: var(--wechat-green); color: #fff; }  /* 自己气泡固定为绿色，也可以让用户改 */
-        .other .bubble { background: #fff; color: #000; }
-        .msg-time {
-            font-size: 10px;
-            color: #999;
-            margin-top: 4px;
-            text-align: right;
-            display: block;
-        }
-        .mine .msg-time { color: rgba(255,255,255,0.7); }
-
-        #viewer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 2000; display: none; flex-direction: column; justify-content: center; align-items: center; }
-        #viewer img { max-width: 100%; max-height: 85%; object-fit: contain; }
-        .viewer-btns { position: absolute; bottom: 60px; display: flex; gap: 20px; z-index: 2001; }
-        .v-btn { padding: 12px 25px; border-radius: 25px; background: rgba(255,255,255,0.25); color: #fff; border: none; backdrop-filter: blur(15px); font-size: 14px; }
-
-        .modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 1500; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-        .modal-body { width: 85%; background: #fff; border-radius: 24px; padding: 25px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
-        .modal-body h3 { margin-bottom: 10px; }
-        .modal-body input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 10px; outline: none; font-size: 16px; }
-        .modal-btn { width: 100%; padding: 14px; background: var(--theme-primary); color: #fff; border: none; border-radius: 12px; margin-top: 10px; font-weight: 600; cursor: pointer; }
-        .theme-color-option {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin: 5px;
-            cursor: pointer;
-            border: 3px solid transparent;
-            transition: border 0.2s;
-        }
-        .theme-color-option.active {
-            border: 3px solid #333;
-        }
-        .theme-color-picker {
-            margin: 15px 0 5px;
-        }
-/* ====== 冬日温暖卡通+iOS便签主题美化（无雪花装饰版） ====== */
+   <style>
+/* ====== 🌸 极简便签·统一主题色 ====== */
 :root {
-    --theme-primary: #FFFFFF;
-    --theme-secondary: #F9F9F9;
-    --theme-accent: #AED5F3;
-    --theme-pearl: #F5F0E6;
-    --theme-primary-hover: #F5F5F5;
-    --text-on-primary: #333333;
-    --text-dark: #222222;
-    --text-gray: #8E8E93;
-    --background-light: #F9F9F9 !important;
-    --header-bg: #FFFFFF;
-    --card-background: #FFFFFF;
-    --border-color: #E5E5E5;
-    --shadow-color: rgba(0, 0, 0, 0.05);
-    --shadow-dark: rgba(0, 0, 0, 0.1);
-    --soft-radius: 12px;
-    --hard-radius: 8px;
-    --jelly-transition: all 0.2s cubic-bezier(0.25, 0.1, 0.25, 1) !important;
-    --common-spacing: 12px;
-    --profile-gap: 16px;
-    --profile-padding-y: 20px;
-    --profile-padding-x: var(--common-spacing);
-}
-body, #app-container {
-    background: var(--background-light) !important;
-    color: var(--text-dark) !important;
-    font-family: "PingFang SC", "Helvetica Neue", sans-serif !important;
-}
-/* 去除原雪花装饰（避免冲突） */
-.profile-header::before, .status-card::before, .profile-header .avatar-container::after,
-.action-icon > .fas.fa-comment::before, .nav-icon > .fas::before, #chat-placeholder::before,
-.profile-name::before, .contact-item::before, .fas.fa-edit,
-.chat-header::after, .app-header::after, .bottom-nav .nav-item:not(:last-child)::after {
-    background-image: none !important;
-    content: none !important;
-    display: none !important;
-}
-/* 头部统一样式 */
-.chat-header, #chat-screen .chat-header,
-.app-header, .world-book-header, .api-header,
-.moments-header, .discover-header, .contact-settings-header,
-.profile-header, .bottom-nav {
-    background: var(--header-bg) !important;
-    border: 1px solid var(--border-color) !important;
-    box-shadow: 0 1px 3px var(--shadow-color) !important;
-    color: var(--text-dark) !important;
-    border-radius: var(--soft-radius) !important;
-    transition: var(--jelly-transition);
-    margin: var(--common-spacing) var(--common-spacing) 0 !important;
-    padding: 10px var(--common-spacing) !important;
-    height: auto !important;
-    min-height: 56px !important;
-}
-/* 底部导航特殊处理 */
-.bottom-nav {
-    background: var(--theme-primary) !important;
-    border-top: 1px solid var(--border-color) !important;
-    margin: 0 var(--common-spacing) var(--common-spacing) !important;
-    padding: 8px var(--common-spacing) !important;
-    display: flex !important;
-    justify-content: space-around !important;
-}
-.bottom-nav .nav-item:not(:last-child)::after {
-    content: "";
-    width: 14px;
-    height: 14px;
-    background: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 8L2 10L4 12L10 12L12 10L10 8L4 8Z' fill='%23F5F0E6' fill-opacity='0.7'/%3E%3C/svg%3E") center no-repeat;
-    margin: 0 4px;
-}
-/* 头像、输入框、按钮等细节（已为你精简必要部分） */
-.profile-avatar, .user-avatar, .character-avatar {
-    border: 2px solid var(--border-color) !important;
-    border-radius: 12px !important;
-    box-shadow: 0 2px 4px var(--shadow-color) !important;
-    width: 64px !important;
-    height: 64px !important;
-    object-fit: cover !important;
-}
-#message-input-container {
-    background: var(--header-bg) !important;
-    border: 1px solid var(--border-color) !important;
-    border-radius: var(--soft-radius) !important;
-    margin: 0 var(--common-spacing) var(--common-spacing) !important;
-    padding: 10px var(--common-spacing) !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 8px !important;
-}
-#send-btn {
-    color: var(--theme-accent) !important;
-    font-size: 22px !important;
-}
-.contact-item, .post-item, .preset-item {
-    background: var(--card-background) !important;
-    border: 1px solid var(--border-color) !important;
-    border-radius: var(--soft-radius) !important;
-    box-shadow: 0 1px 3px var(--shadow-color) !important;
-    margin: 8px var(--common-spacing) !important;
-    padding: 12px 16px !important;
-}
-/* 音乐播放器独立适配（如果你有）…… 篇幅原因省略，但主题包内已完整 */
-/* 便签聊天气泡（梯形毛边质感） */
-.message.received, .message.sent {
-    position: relative;
-    border-radius: 8px 8px 12px 8px !important;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03) !important;
-    border: 1px solid #EBEBEB !important;
-    padding: 14px 18px !important;
-    line-height: 1.6 !important;
-    background: #FFFFFF !important;
-}
-.message.received::after, .message.sent::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0L10 0L10 10L0 10Z' fill='%23F8F8F8' fill-opacity='0.1'/%3E%3C/svg%3E");
-    background-size: 20px 20px;
-    pointer-events: none;
-}
-.message.received {
-    transform: perspective(100px) rotateY(1deg);
-}
-.message.received::before {
-    content: "";
-    position: absolute;
-    top: 12px;
-    left: 15px;
-    width: 14px;
-    height: 14px;
-    background: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 0L8 3L10 3L9 5L11 7L9 7L8 9L7 7L5 7L7 5L6 3L8 3L7 0Z' fill='%23AED5F3' fill-opacity='0.8'/%3E%3C/svg%3E") center no-repeat;
-}
-.message.sent {
-    transform: perspective(100px) rotateY(-1deg);
-    border-radius: 8px 8px 8px 12px !important;
-}
-.message.sent::before {
-    content: "";
-    position: absolute;
-    top: 12px;
-    right: 15px;
-    width: 14px;
-    height: 14px;
-    background: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 5L9 3L11 5L10 7L12 9L10 11L8 9L7 11L5 9L3 11L1 9L3 7L2 5L4 3L6 5Z' fill='%23F5F0E6' fill-opacity='0.8'/%3E%3C/svg%3E") center no-repeat;
-}
-.message.received p, .message.sent p {
-    font-family: "PingFang SC", "Helvetica Neue", sans-serif !important;
-    font-size: 15px !important;
-    margin: 0 !important;
-}
-/* 叙事模式 · 极简便签风 */
-.narrative-speech {
-    color: var(--text-dark) !important;
-    background-color: var(--card-background) !important;
-    border: 1px solid var(--border-color) !important;
-    border-radius: var(--soft-radius) !important;
-    padding: 6px 16px !important;
-    display: inline-block !important;
-    margin: 4px 0 0 0 !important;
-    box-shadow: 0 2px 4px var(--shadow-color) !important;
-    backdrop-filter: blur(8px) !important;
-}
-.narrative-psychology {
-    color: var(--text-dark) !important;
-    background-color: var(--theme-primary-hover) !important;
-    border: 1px solid var(--border-color) !important;
-    border-radius: var(--soft-radius) !important;
-    padding: 6px 16px !important;
-    display: inline-block !important;
-}
-.narrative-psychology::after {
-    content: none !important;
-}
-.narrative-action {
-    color: var(--text-dark) !important;
-    background-color: var(--theme-primary-hover) !important;
-    border: 1px solid var(--border-color) !important;
-    border-radius: var(--soft-radius) !important;
-    padding: 6px 16px !important;
-    display: block !important;
-    margin: 0 0 4px 0 !important;
-    box-shadow: 0 2px 4px var(--shadow-color) !important;
-    backdrop-filter: blur(8px) !important;
-}
-.narrative-action::before {
-    content: none !important;
-}
-        /* ====== 冬日温暖卡通+iOS便签主题美化 ====== */
-:root {
-    --theme-primary: #FFFFFF;
-    --theme-secondary: #F9F9F9;
-    --theme-accent: #AED5F3;
-    --theme-pearl: #F5F0E6;
-    --theme-primary-hover: #F5F5F5;
-    --text-on-primary: #333333;
-    --text-dark: #222222;
-    --text-gray: #8E8E93;
-    --background-light: #F9F9F9 !important;
-    --header-bg: #FFFFFF;
-    --card-background: #FFFFFF;
-    --border-color: #E5E5E5;
-    --shadow-color: rgba(0, 0, 0, 0.05);
-    --shadow-dark: rgba(0, 0, 0, 0.1);
-    --soft-radius: 12px;
-    --hard-radius: 8px;
-    --jelly-transition: all 0.2s cubic-bezier(0.25, 0.1, 0.25, 1) !important;
-    --common-spacing: 12px;
-}
-body, #app-container {
-    background: var(--background-light) !important;
-    color: var(--text-dark) !important;
-    font-family: "PingFang SC", "Helvetica Neue", sans-serif !important;
-}
-/* 去除原雪花装饰（避免冲突） */
-.profile-header::before, .status-card::before, .profile-header .avatar-container::after,
-.action-icon > .fas.fa-comment::before, .nav-icon > .fas::before, #chat-placeholder::before,
-.profile-name::before, .contact-item::before, .fas.fa-edit,
-.chat-header::after, .app-header::after, .bottom-nav .nav-item:not(:last-child)::after {
-    background-image: none !important;
-    content: none !important;
-    display: none !important;
-}
-/* 头部统一样式 */
-.chat-header, #chat-screen .chat-header,
-.app-header, .world-book-header, .api-header,
-.moments-header, .discover-header, .contact-settings-header,
-.profile-header, .bottom-nav {
-    background: var(--header-bg) !important;
-    border: 1px solid var(--border-color) !important;
-    box-shadow: 0 1px 3px var(--shadow-color) !important;
-    color: var(--text-dark) !important;
-    border-radius: var(--soft-radius) !important;
-    transition: var(--jelly-transition);
-    margin: var(--common-spacing) var(--common-spacing) 0 !important;
-    padding: 10px var(--common-spacing) !important;
-    height: auto !important;
-    min-height: 56px !important;
-}
-.bottom-nav {
-    background: var(--theme-primary) !important;
-    border-top: 1px solid var(--border-color) !important;
-    margin: 0 var(--common-spacing) var(--common-spacing) !important;
-    padding: 8px var(--common-spacing) !important;
-    display: flex !important;
-    justify-content: space-around !important;
-}
-.bottom-nav .nav-item:not(:last-child)::after {
-    content: "";
-    width: 14px;
-    height: 14px;
-    background: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 8L2 10L4 12L10 12L12 10L10 8L4 8Z' fill='%23F5F0E6' fill-opacity='0.7'/%3E%3C/svg%3E") center no-repeat;
-    margin: 0 4px;
-}
-.profile-avatar, .user-avatar, .character-avatar {
-    border: 2px solid var(--border-color) !important;
-    border-radius: 12px !important;
-    box-shadow: 0 2px 4px var(--shadow-color) !important;
-    width: 64px !important;
-    height: 64px !important;
-    object-fit: cover !important;
-}
-#message-input-container {
-    background: var(--header-bg) !important;
-    border: 1px solid var(--border-color) !important;
-    border-radius: var(--soft-radius) !important;
-    margin: 0 var(--common-spacing) var(--common-spacing) !important;
-    padding: 10px var(--common-spacing) !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 8px !important;
-}
-#send-btn {
-    color: var(--theme-accent) !important;
-    font-size: 22px !important;
-}
-.contact-item, .post-item, .preset-item {
-    background: var(--card-background) !important;
-    border: 1px solid var(--border-color) !important;
-    border-radius: var(--soft-radius) !important;
-    box-shadow: 0 1px 3px var(--shadow-color) !important;
-    margin: 8px var(--common-spacing) !important;
-    padding: 12px 16px !important;
-}
-        /* 便签聊天气泡（梯形毛边质感） */
-.message.received, .message.sent {
-    position: relative;
-    border-radius: 8px 8px 12px 8px !important;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03) !important;
-    border: 1px solid #EBEBEB !important;
-    padding: 14px 18px !important;
-    line-height: 1.6 !important;
-    background: #FFFFFF !important;
-}
-.message.received::after, .message.sent::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0L10 0L10 10L0 10Z' fill='%23F8F8F8' fill-opacity='0.1'/%3E%3C/svg%3E");
-    background-size: 20px 20px;
-    pointer-events: none;
-}
-.message.received {
-    transform: perspective(100px) rotateY(1deg);
-}
-.message.received::before {
-    content: "";
-    position: absolute;
-    top: 12px;
-    left: 15px;
-    width: 14px;
-    height: 14px;
-    background: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 0L8 3L10 3L9 5L11 7L9 7L8 9L7 7L5 7L7 5L6 3L8 3L7 0Z' fill='%23AED5F3' fill-opacity='0.8'/%3E%3C/svg%3E") center no-repeat;
-}
-.message.sent {
-    transform: perspective(100px) rotateY(-1deg);
-    border-radius: 8px 8px 8px 12px !important;
-}
-.message.sent::before {
-    content: "";
-    position: absolute;
-    top: 12px;
-    right: 15px;
-    width: 14px;
-    height: 14px;
-    background: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 5L9 3L11 5L10 7L12 9L10 11L8 9L7 11L5 9L3 11L1 9L3 7L2 5L4 3L6 5Z' fill='%23F5F0E6' fill-opacity='0.8'/%3E%3C/svg%3E") center no-repeat;
-}
-.message.received p, .message.sent p {
-    font-family: "PingFang SC", "Helvetica Neue", sans-serif !important;
-    font-size: 15px !important;
-    margin: 0 !important;
-}
-        /* 叙事模式 · 极简便签风 */
-.narrative-speech {
-    color: var(--text-dark) !important;
-    background-color: var(--card-background) !important;
-    border: 1px solid var(--border-color) !important;
-    border-radius: var(--soft-radius) !important;
-    padding: 6px 16px !important;
-    display: inline-block !important;
-    margin: 4px 0 0 0 !important;
-    box-shadow: 0 2px 4px var(--shadow-color) !important;
-    backdrop-filter: blur(8px) !important;
-}
-.narrative-psychology {
-    color: var(--text-dark) !important;
-    background-color: var(--theme-primary-hover) !important;
-    border: 1px solid var(--border-color) !important;
-    border-radius: var(--soft-radius) !important;
-    padding: 6px 16px !important;
-    display: inline-block !important;
-}
-.narrative-psychology::after {
-    content: none !important;
-}
-.narrative-action {
-    color: var(--text-dark) !important;
-    background-color: var(--theme-primary-hover) !important;
-    border: 1px solid var(--border-color) !important;
-    border-radius: var(--soft-radius) !important;
-    padding: 6px 16px !important;
-    display: block !important;
-    margin: 0 0 4px 0 !important;
-    box-shadow: 0 2px 4px var(--shadow-color) !important;
-    backdrop-filter: blur(8px) !important;
-}
-.narrative-action::before {
-    content: none !important;
-}
+    /* 主色 —— 你依然可以在设置里改它，默认是淡蓝 */
+    --theme-primary: #AED5F3 !important;
+    --theme-soft-bg: rgba(174, 213, 243, 0.1);
 
-        /* ====== 极简便签主题补丁（适配现有结构）====== */
-
-/* 1. 便签主题变量（不覆盖原有主题色） */
-.note-theme {
+    /* 便签固定色 */
     --note-bg-light: #F9F9F9;
     --note-bg-white: #FFFFFF;
     --note-accent: #AED5F3;
@@ -502,93 +24,290 @@ body, #app-container {
     --note-shadow-dark: rgba(0, 0, 0, 0.1);
     --note-radius-soft: 12px;
     --note-radius-hard: 8px;
-    --note-transition: all 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
     --note-spacing: 12px;
+    --note-transition: all 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+
+    /* 覆盖原微信绿等 */
+    --wechat-green: var(--theme-primary) !important;
+    --ios-blue: var(--theme-primary) !important;
 }
 
-/* 2. 全局背景（仅应用于app-container内部） */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "PingFang SC", "Helvetica Neue", -apple-system, sans-serif !important;
+}
+
+body {
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
 .app-container {
-    background-color: var(--note-bg-light, #F9F9F9) !important;
-    font-family: "PingFang SC", "Helvetica Neue", sans-serif !important;
+    width: 100%;
+    height: 100%;
+    background: var(--note-bg-light) !important;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
-/* 3. 导航栏、卡片统一样式 */
-.nav-bar, 
-.contact-item, 
-#chat-options-menu .menu-item,
-.modal-body {
-    background: var(--note-bg-white) !important;
-    border: 1px solid var(--note-border) !important;
-    border-radius: var(--note-radius-soft) !important;
-    box-shadow: 0 1px 3px var(--note-shadow-light) !important;
-    transition: var(--note-transition) !important;
+@media (min-width: 600px) {
+    .app-container {
+        max-width: 375px;
+        height: 812px;
+        border-radius: 40px;
+        border: 8px solid #333;
+    }
+}
+
+/* ----- 状态栏 & 导航（便签白卡片）----- */
+.status-bar {
+    height: 44px;
+    padding: 14px 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 600;
+    z-index: 1000;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    color: var(--note-text-dark) !important;
 }
 
 .nav-bar {
-    margin: var(--note-spacing) var(--note-spacing) 0 !important;
-    padding: 10px var(--note-spacing) !important;
-    min-height: 56px !important;
-}
-
-.contact-item {
-    margin: 8px var(--note-spacing) !important;
-    padding: 12px 16px !important;
-}
-
-/* 4. 底部导航（如果有） */
-.bottom-nav {
+    height: 50px;
     background: var(--note-bg-white) !important;
-    border-top: 1px solid var(--note-border) !important;
-    margin: 0 var(--note-spacing) var(--note-spacing) !important;
-    padding: 8px var(--note-spacing) !important;
-    display: flex !important;
-    justify-content: space-around !important;
-}
-
-/* 5. 输入框容器 */
-#chat-in + div, 
-.message-input-container {
-    background: var(--note-bg-white) !important;
+    backdrop-filter: none;
     border: 1px solid var(--note-border) !important;
     border-radius: var(--note-radius-soft) !important;
-    margin: 0 var(--note-spacing) var(--note-spacing) !important;
-    padding: 10px var(--note-spacing) !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 8px !important;
+    box-shadow: 0 1px 3px var(--note-shadow-light) !important;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+    flex-shrink: 0;
+    margin: var(--note-spacing) var(--note-spacing) 0 !important;
+    width: calc(100% - 24px);
 }
 
-/* 发送按钮颜色 */
-#send-btn {
-    background: var(--note-accent) !important;
-    color: white !important;
-}
-
-/* 6. 聊天气泡 —— 重点修正 */
-/* 对方消息气泡（other） */
-.msg-row.other .bubble {
-    background: var(--note-bg-white) !important;
+.nav-bar span,
+.nav-bar b {
     color: var(--note-text-dark) !important;
-    border: 1px solid var(--note-border) !important;
-    border-radius: 8px 8px 12px 8px !important;
-    box-shadow: 0 2px 4px var(--note-shadow-light) !important;
-    padding: 14px 18px !important;
-    line-height: 1.6 !important;
-    position: relative;
-    transform: perspective(100px) rotateY(1deg);
 }
 
-/* 我方消息气泡（mine） */
+.nav-bar span[style*="color:var(--ios-blue)"] {
+    color: var(--theme-primary) !important;
+}
+
+/* ----- 页面容器 ----- */
+.page {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--note-bg-light) !important;
+    display: none;
+    flex-direction: column;
+    z-index: 10;
+    padding-top: 44px;
+}
+.page.active { display: flex; }
+
+/* ----- 桌面（壁纸背景）----- */
+.home-bg {
+    transition: background 0.8s ease;
+    background-size: cover !important;
+    background-position: center !important;
+}
+.home-clock {
+    text-align: center;
+    padding: 30px 0;
+    color: var(--note-text-dark) !important;
+}
+.home-clock h1 {
+    font-size: 64px;
+    font-weight: 200;
+    letter-spacing: -2px;
+}
+.app-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    padding: 20px 25px;
+}
+.app-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+.app-item:active { transform: scale(0.9); }
+.app-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--note-bg-white) !important;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    backdrop-filter: none;
+    border: 1px solid var(--note-border) !important;
+    box-shadow: 0 2px 4px var(--note-shadow-light) !important;
+    color: var(--note-text-dark) !important;
+}
+.app-name {
+    font-size: 11px;
+    margin-top: 8px;
+    font-weight: 500;
+    color: var(--note-text-dark) !important;
+}
+
+/* ----- 相册（卡片网格）----- */
+#album-box {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    padding: 2px 0;
+    overflow-y: auto;
+    flex: 1;
+    background: var(--note-bg-light) !important;
+}
+#album-box div {
+    aspect-ratio: 1/1;
+    background-size: cover;
+    background-position: center;
+    transition: opacity 0.2s;
+    border: 1px solid var(--note-border) !important;
+    border-radius: var(--note-radius-hard) !important;
+}
+#album-box div:active { opacity: 0.7; }
+
+/* ----- 日历（便签卡片）----- */
+.cal-header {
+    background: var(--note-bg-white) !important;
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid var(--note-border) !important;
+    border-radius: var(--note-radius-soft) var(--note-radius-soft) 0 0 !important;
+    margin: var(--note-spacing) var(--note-spacing) 0 !important;
+    width: calc(100% - 24px);
+}
+.cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background: var(--note-bg-white) !important;
+    padding: 10px;
+    border: 1px solid var(--note-border) !important;
+    border-top: none;
+    border-radius: 0 0 var(--note-radius-soft) var(--note-radius-soft) !important;
+    margin: 0 var(--note-spacing) var(--note-spacing) !important;
+    width: calc(100% - 24px);
+    box-shadow: 0 1px 3px var(--note-shadow-light) !important;
+}
+.cal-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    position: relative;
+    color: var(--note-text-dark) !important;
+}
+.cal-day.today {
+    background: var(--theme-primary) !important;
+    color: #fff !important;
+    border-radius: 50%;
+}
+.cal-day.has-event::after {
+    content: '';
+    width: 4px;
+    height: 4px;
+    background: var(--note-text-gray) !important;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 4px;
+}
+.cal-weekday {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: var(--note-text-gray) !important;
+    font-weight: 600;
+}
+
+/* ----- 通讯录 & 纪念日列表（卡片）----- */
+.list-item {
+    padding: 15px;
+    border-bottom: 1px solid var(--note-border) !important;
+    background: var(--note-bg-white) !important;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 16px;
+    color: var(--note-text-dark) !important;
+    border-radius: var(--note-radius-soft) !important;
+    margin: 8px var(--note-spacing) !important;
+    width: calc(100% - 24px);
+    box-shadow: 0 1px 3px var(--note-shadow-light) !important;
+}
+.del-text {
+    color: var(--note-text-gray) !important;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 5px;
+}
+
+/* ----- 聊天区域（纯白气泡）----- */
+#chat-flow {
+    flex: 1;
+    overflow-y: auto;
+    background: var(--note-bg-light) !important;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.msg-row {
+    display: flex;
+    gap: 10px;
+    max-width: 85%;
+}
+.msg-row.mine { align-self: flex-end; flex-direction: row-reverse; }
+
+/* 气泡统一纯白 + 便签毛边 */
+.msg-row.other .bubble,
 .msg-row.mine .bubble {
     background: var(--note-bg-white) !important;
     color: var(--note-text-dark) !important;
     border: 1px solid var(--note-border) !important;
-    border-radius: 8px 8px 8px 12px !important;
     box-shadow: 0 2px 4px var(--note-shadow-light) !important;
     padding: 14px 18px !important;
-    line-height: 1.6 !important;
     position: relative;
+    border-radius: 8px 8px 12px 8px !important;
+}
+
+/* 对方气泡梯形（左窄右宽） */
+.msg-row.other .bubble {
+    transform: perspective(100px) rotateY(1deg);
+}
+/* 自己气泡梯形（右窄左宽） */
+.msg-row.mine .bubble {
     transform: perspective(100px) rotateY(-1deg);
+    border-radius: 8px 8px 8px 12px !important;
 }
 
 /* 毛边纹理（共用） */
@@ -603,7 +322,7 @@ body, #app-container {
     border-radius: inherit;
 }
 
-/* 对方消息装饰（雪花） */
+/* 对方气泡装饰（小雪花） */
 .msg-row.other .bubble::before {
     content: "";
     position: absolute;
@@ -612,10 +331,9 @@ body, #app-container {
     width: 14px;
     height: 14px;
     background: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 0L8 3L10 3L9 5L11 7L9 7L8 9L7 7L5 7L7 5L6 3L8 3L7 0Z' fill='%23AED5F3' fill-opacity='0.8'/%3E%3C/svg%3E") center no-repeat;
-    z-index: 2;
 }
 
-/* 我方消息装饰（爱心） */
+/* 自己气泡装饰（小爱心） */
 .msg-row.mine .bubble::before {
     content: "";
     position: absolute;
@@ -624,53 +342,151 @@ body, #app-container {
     width: 14px;
     height: 14px;
     background: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 5L9 3L11 5L10 7L12 9L10 11L8 9L7 11L5 9L3 11L1 9L3 7L2 5L4 3L6 5Z' fill='%23F5F0E6' fill-opacity='0.8'/%3E%3C/svg%3E") center no-repeat;
-    z-index: 2;
 }
 
-/* 时间标签颜色适配 */
-.msg-row.other .bubble .msg-time,
-.msg-row.mine .bubble .msg-time {
+/* 消息时间 */
+.msg-time {
+    font-size: 10px;
     color: var(--note-text-gray) !important;
+    margin-top: 4px;
+    text-align: right;
+    display: block;
 }
 
-/* 7. 叙事模式样式（如果使用） */
-.narrative-speech {
-    color: var(--note-text-dark) !important;
-    background-color: var(--note-bg-white) !important;
+/* ----- 大图查看器（不变）----- */
+#viewer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    z-index: 2000;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#viewer img {
+    max-width: 100%;
+    max-height: 85%;
+    object-fit: contain;
+}
+.viewer-btns {
+    position: absolute;
+    bottom: 60px;
+    display: flex;
+    gap: 20px;
+    z-index: 2001;
+}
+.v-btn {
+    padding: 12px 25px;
+    border-radius: 25px;
+    background: rgba(255,255,255,0.25);
+    color: #fff;
+    border: none;
+    backdrop-filter: blur(15px);
+    font-size: 14px;
+}
+
+/* ----- 弹窗（便签卡片）----- */
+.modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+    z-index: 1500;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+}
+.modal-body {
+    width: 85%;
+    background: var(--note-bg-white) !important;
     border: 1px solid var(--note-border) !important;
     border-radius: var(--note-radius-soft) !important;
-    padding: 6px 16px !important;
-    display: inline-block !important;
-    margin: 4px 0 0 0 !important;
-    box-shadow: 0 2px 4px var(--note-shadow-light) !important;
-    backdrop-filter: blur(8px) !important;
+    padding: 25px;
+    box-shadow: 0 4px 12px var(--note-shadow-dark) !important;
 }
-.narrative-psychology {
+.modal-body h3 {
+    margin-bottom: 10px;
     color: var(--note-text-dark) !important;
-    background-color: var(--note-hover) !important;
+}
+.modal-body input {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
     border: 1px solid var(--note-border) !important;
-    border-radius: var(--note-radius-soft) !important;
-    padding: 6px 16px !important;
-    display: inline-block !important;
+    border-radius: var(--note-radius-hard) !important;
+    outline: none;
+    font-size: 16px;
+    background: var(--note-bg-white) !important;
 }
-.narrative-psychology::after {
-    content: none !important;
+.modal-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--theme-primary) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: var(--note-radius-hard) !important;
+    margin-top: 10px;
+    font-weight: 600;
+    cursor: pointer;
 }
-.narrative-action {
-    color: var(--note-text-dark) !important;
-    background-color: var(--note-hover) !important;
+.modal-cancel {
+    width: 100%;
+    background: none;
+    border: none;
+    margin-top: 10px;
+    color: var(--note-text-gray) !important;
+    cursor: pointer;
+}
+
+/* ----- 主题色选择器（保留）----- */
+.theme-color-option {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin: 5px;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: border 0.2s;
+}
+.theme-color-option.active {
+    border: 3px solid #333;
+}
+.theme-color-picker {
+    margin: 15px 0 5px;
+}
+
+/* ----- 其他微调 ----- */
+#chat-in {
+    background: var(--note-bg-white) !important;
     border: 1px solid var(--note-border) !important;
+    border-radius: var(--note-radius-hard) !important;
+    padding: 12px !important;
+}
+#send-btn {
+    background: var(--theme-primary) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: var(--note-radius-hard) !important;
+    padding: 0 15px;
+    font-size: 14px;
+}
+iframe {
+    border: none !important;
+    background: var(--note-bg-white) !important;
     border-radius: var(--note-radius-soft) !important;
-    padding: 6px 16px !important;
-    display: block !important;
-    margin: 0 0 4px 0 !important;
-    box-shadow: 0 2px 4px var(--note-shadow-light) !important;
-    backdrop-filter: blur(8px) !important;
+    margin: var(--note-spacing);
+    width: calc(100% - 24px);
+    height: calc(100% - 88px);
 }
-.narrative-action::before {
-    content: none !important;
-}
-    </style>
+</style>
 </head>
 <body>
 <div class="app-container">
