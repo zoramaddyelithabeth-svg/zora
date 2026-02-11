@@ -619,6 +619,120 @@
             color: var(--note-text-gray);
             margin-left: 6px;
         }
+/* ====== 五子棋组件样式（由用户提供）====== */
+.gobang-widget-mini {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    width: 240px;
+    background-color: #f3e9dc;
+    border-radius: 16px;
+    box-shadow: 0 6px 22px rgba(0,0,0,0.12);
+    border: 1px solid #e4d7c7;
+    padding: 12px;
+    box-sizing: border-box;
+}
+.gobang-header-mini {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.gobang-header-mini .status {
+    font-size: 13px;
+    font-weight: 600;
+    color: #5d4037;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.gobang-header-mini .status .stone-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+.gobang-header-mini .status .white { background-color: #fff; }
+.gobang-header-mini .more-icon { color: #a1887f; cursor: pointer; }
+.gobang-board-mini {
+    --board-size: 216px;
+    --grid-size: 9;
+    --cell-size: calc(var(--board-size) / var(--grid-size));
+    position: relative;
+    width: var(--board-size);
+    height: var(--board-size);
+    background-color: #e6bf8f;
+    border-radius: 8px;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+}
+.grid-lines {
+    position: absolute;
+    inset: calc(var(--cell-size) / 2);
+    width: calc(var(--board-size) - var(--cell-size));
+    height: calc(var(--board-size) - var(--cell-size));
+    display: grid;
+    grid-template-columns: repeat(calc(var(--grid-size) - 1), 1fr);
+    grid-template-rows: repeat(calc(var(--grid-size) - 1), 1fr);
+}
+.grid-lines .line {
+    border-right: 1px solid #8d6e63;
+    border-bottom: 1px solid #8d6e63;
+}
+.grid-lines .line:nth-child(8n) { border-right: none; }
+.grid-lines .line:nth-last-child(-n+8) { border-bottom: none; }
+.star-points { position: absolute; inset: 0; }
+.star-point {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background-color: #8d6e63;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
+.star-point:nth-child(1) { top: calc(var(--cell-size) * 2.5); left: calc(var(--cell-size) * 2.5); }
+.star-point:nth-child(2) { top: calc(var(--cell-size) * 2.5); left: calc(var(--cell-size) * 6.5); }
+.star-point:nth-child(3) { top: calc(var(--cell-size) * 6.5); left: calc(var(--cell-size) * 2.5); }
+.star-point:nth-child(4) { top: calc(var(--cell-size) * 6.5); left: calc(var(--cell-size) * 6.5); }
+.star-point:nth-child(5) { top: calc(var(--cell-size) * 4.5); left: calc(var(--cell-size) * 4.5); }
+.stones { position: absolute; inset: 0; }
+.stone {
+    --stone-size: calc(var(--cell-size) * 0.8);
+    position: absolute;
+    width: var(--stone-size);
+    height: var(--stone-size);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+.stone.black { background: radial-gradient(circle at 35% 35%, #555, #000); }
+.stone.white { background: radial-gradient(circle at 35% 35%, #fff, #ccc); }
+.coords {
+    position: absolute;
+    display: flex;
+    font-size: 9px;
+    font-weight: 500;
+    color: #a1887f;
+    pointer-events: none;
+    user-select: none;
+}
+.coords-top, .coords-bottom {
+    left: calc(var(--cell-size) / 2);
+    right: calc(var(--cell-size) / 2);
+    height: calc(var(--cell-size) / 2);
+    justify-content: space-between;
+    align-items: center;
+}
+.coords-top { top: 0; }
+.coords-bottom { bottom: 0; }
+.coords-left, .coords-right {
+    top: calc(var(--cell-size) / 2);
+    bottom: calc(var(--cell-size) / 2);
+    width: calc(var(--cell-size) / 2);
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+.coords-left { left: 0; }
+.coords-right { right: 0; }
+</div>
     </style>
 </head>
 <body>
@@ -667,6 +781,54 @@
             <span class="nav-setting" data-mod="m-api" style="color:var(--ios-blue); font-size:13px;">设置</span>
         </div>
         <div id="chat-flow"></div>
+        <!-- ========== 互动工具条 ========== -->
+        <div style="display:flex; gap:12px; padding:8px 16px; background:var(--note-bg-white); border-bottom:1px solid var(--note-border);">
+        <button id="chat-dice-btn" style="background:none; border:none; font-size:22px; cursor:pointer; padding:4px;" title="掷骰子">🎲</button>
+        <button id="chat-hongbao-btn" style="background:none; border:none; font-size:22px; cursor:pointer; padding:4px;" title="发红包">🧧</button>
+        <button id="chat-gobang-btn" style="background:none; border:none; font-size:22px; cursor:pointer; padding:4px;" title="五子棋">♟️</button>
+</div>
+<!-- ========== 五子棋棋盘（默认隐藏）========== -->
+<div id="gobang-container" style="display: none; margin-bottom: 12px; display:flex; justify-content:center;">
+   <div class="gobang-widget-mini">
+    <div class="gobang-header-mini">
+        <div class="status">
+            <div class="stone-indicator white"></div>
+            <span>轮到白棋</span>
+        </div>
+        <div class="more-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
+        </div>
+    </div>
+    <div class="gobang-board-mini">
+        <div class="grid-lines">
+            <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+            <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+            <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+            <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+            <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+            <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+            <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+            <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+        </div>
+        <div class="star-points">
+            <div class="star-point"></div><div class="star-point"></div><div class="star-point"></div><div class="star-point"></div><div class="star-point"></div>
+        </div>
+        <div class="stones">
+        </div>
+        <div class="coords coords-top">
+            <span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span><span>G</span><span>H</span><span>I</span>
+        </div>
+        <div class="coords coords-bottom">
+            <span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span><span>G</span><span>H</span><span>I</span>
+        </div>
+        <div class="coords coords-left">
+            <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span>
+        </div>
+        <div class="coords coords-right">
+            <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span>
+        </div>
+    </div>
+</div>
         <div style="padding:10px; background:#f7f7f7; display:flex; gap:10px; padding-bottom: 25px;">
             <input type="text" id="chat-in" placeholder="用回车发送..." style="flex:1; padding:10px; border-radius:8px; border:1px solid #ddd;">
             <button id="send-btn" style="background:var(--theme-primary); color:#fff; border:none; padding:0 15px; border-radius:8px;">发送</button>
@@ -753,13 +915,14 @@
             <span onclick="openMod('m-forum-world')" style="color:var(--ios-blue); font-size:13px;">🌍 世界观</span>
         </div>
         <div class="forum-header">
-            <div class="forum-slogan">“在这里，每一段漂流都是为了更好的靠岸”</div>
-            <div class="forum-tags">
-                <span>🎣 钓鱼</span>
-                <span>🤿 潜水</span>
-                <span>🏊 漂流</span>
-                <span>⛵ 上岸</span>
-            </div>
+    <div class="forum-slogan">“每一个声音都值得被听见”</div>
+    <div class="forum-tags">
+        <span>💬 闲聊</span>
+        <span>📷 摄影</span>
+        <span>🎮 游戏</span>
+        <span>📚 阅读</span>
+    </div>
+</div>
         </div>
         <div class="forum-sections" id="forum-sections"></div>
         <div class="forum-current-section">
@@ -881,43 +1044,46 @@
     }
 
     // -------------------- 论坛世界观设定 --------------------
-    const FORUM_WORLD = {
-        name: "打工人摸鱼论坛",
-        slogan: "在这里，每一段漂流都是为了更好的靠岸",
-        users: ["漂流者", "钓鱼人", "潜水员"],
-        sections: [
-            { id: "tools", name: "工具补给站", desc: "漂流技巧交流区", icon: "🛠️" },
-            { id: "energy", name: "能量补给站", desc: "餐饮求生指南区", icon: "🍱" },
-            { id: "wind", name: "风向观测塔", desc: "行业八卦情报区", icon: "🗼" },
-            { id: "valve", name: "情绪泄压阀", desc: "职场吐槽树洞区", icon: "🌊" },
-            { id: "side", name: "副业小艇", desc: "需审核进入", icon: "🚤", requireAuth: true },
-            { id: "log", name: "航海日志库", desc: "核心贡献者专属", icon: "📚", requireContribution: true }
-        ],
-        rules: [
-            "禁止传播极端积极的工作态度",
-            "禁止泄露公司机密或他人隐私",
-            "禁止人身攻击和职场歧视",
-            "禁止非法兼职、传销等违法内容",
-            "禁止过度负能量",
-            "禁止宣传不摸鱼为老板好等恐怖言论"
-        ],
-        anonymous: true
-    };
+   // -------------------- 论坛世界观设定（全能版）--------------------
+const FORUM_WORLD = {
+    name: "智慧岛 · 全能论坛",        // 您自己取的名字
+    slogan: "每一个声音都值得被听见", // 您自己写的口号
+    users: ["岛民", "旅人", "学者"],
+    sections: [
+        { id: "tech", name: "💻 科技前沿", desc: "编程、数码、黑科技", icon: "💻" },
+        { id: "life", name: "🌿 生活杂谈", desc: "美食、旅行、日常", icon: "🌿" },
+        { id: "emotion", name: "💕 情感树洞", desc: "悄悄话、心事、恋爱", icon: "💕" },
+        { id: "secondhand", name: "🔄 二手交易", desc: "闲置交换、求购", icon: "🔄" },
+        { id: "game", name: "🎮 游戏天地", desc: "攻略、开黑、Steam", icon: "🎮" },
+        { id: "study", name: "📚 学习成长", desc: "考研、技能、读书", icon: "📚" },
+        { id: "job", name: "💼 求职招聘", desc: "内推、面经、职场", icon: "💼" },
+        { id: "pet", name: "🐾 萌宠乐园", desc: "猫狗、仓鼠、爬宠", icon: "🐾" }
+    ],
+    rules: [
+        "禁止人身攻击和歧视言论",
+        "禁止色情、赌博、违法信息",
+        "禁止恶意刷屏、广告骚扰",
+        "交易请走正规平台，注意防骗",
+        "尊重他人，理性讨论",
+        "原创内容请注明出处"
+    ],
+    anonymous: true   // 保留匿名发帖
+};
 
     // -------------------- 论坛数据 --------------------
     let forumSections = FORUM_WORLD.sections;
-    let currentSectionId = 'tools';
+    let currentSectionId = FORUM_WORLD.sections[0].id; // 默认显示第一个分区
     let forumPosts = JSON.parse(localStorage.getItem('m_forum_posts') || '[]');
 
     // 首次启动插入示例帖子
     if (forumPosts.length === 0) {
-        forumPosts = [
-            { id: 'p1', sectionId: 'tools', author: '匿名漂流者', time: '10:23', content: '分享一下我的“走动式摸鱼”：每半小时接水一次，路过老板位时拿个文件，完美～', anonymous: true, likes: 15, replies: 3 },
-            { id: 'p2', sectionId: 'energy', author: '外卖猎人', time: '12:05', content: '今天测评公司楼下新开的轻食，三明治配羽衣甘蓝，28元，送券后23，味道3.5星，饱腹感一般。', anonymous: false, likes: 7, replies: 2 },
-            { id: 'p3', sectionId: 'valve', author: '树洞用户9527', time: '15:47', content: '老板今天又在我身后站了10分钟，什么话都没说，我假装在改PPT，其实在逛论坛……', anonymous: true, likes: 42, replies: 8 }
-        ];
-        localStorage.setItem('m_forum_posts', JSON.stringify(forumPosts));
-    }
+    forumPosts = [
+        { id: 'p1', sectionId: 'tech', author: '岛民小智', time: '10:23', content: '大家最近有在玩什么新的AI工具吗？分享一下～', anonymous: false, likes: 5, replies: 2 },
+        { id: 'p2', sectionId: 'life', author: '旅行猫', time: '12:05', content: '周末去了植物园，拍到了超美的郁金香！🌷', anonymous: false, likes: 12, replies: 3 },
+        { id: 'p3', sectionId: 'emotion', author: '树洞用户', time: '15:47', content: '喜欢的人好像有对象了，很难受……', anonymous: true, likes: 24, replies: 7 }
+    ];
+    localStorage.setItem('m_forum_posts', JSON.stringify(forumPosts));
+}
 
     // 渲染分区卡片
     function renderForumSections() {
@@ -1193,13 +1359,13 @@ if (musicList.length === 0) {
 
     // 打开弹窗（整合论坛世界观 + 智谱）
     window.openMod = function(id) {
-        if (id === 'm-forum-world') {
-            const modalHtml = `<div class="modal" id="m-forum-world" style="display:flex;"><div class="modal-body"><h3>🌍 打工人摸鱼论坛 · 世界观</h3><p style="margin-bottom:12px;"><strong>口号：</strong>“${FORUM_WORLD.slogan}”</p><p style="margin-bottom:12px;"><strong>文化符号：</strong>带薪拉屎 · 钓鱼 · 潜水 · 上岸</p><p style="margin-bottom:12px;"><strong>绝对禁忌：</strong></p><ul style="padding-left:20px; color:var(--note-text-gray);">${FORUM_WORLD.rules.map(r => `<li style="margin-bottom:4px;">${r}</li>`).join('')}</ul><button class="modal-cancel" onclick="closeMod('m-forum-world')">关闭</button></div></div>`;
-            const div = document.createElement('div');
-            div.innerHTML = modalHtml;
-            document.body.appendChild(div);
-            return;
-        }
+       if (id === 'm-forum-world') {
+    const modalHtml = `<div class="modal" id="m-forum-world" style="display:flex;"><div class="modal-body"><h3>🌍 ${FORUM_WORLD.name} · 岛规</h3><p style="margin-bottom:12px;"><strong>口号：</strong>“${FORUM_WORLD.slogan}”</p><p style="margin-bottom:12px;"><strong>文化符号：</strong>💬 闲聊 · 📷 摄影 · 🎮 游戏 · 📚 阅读</p><p style="margin-bottom:12px;"><strong>全岛守则：</strong></p><ul style="padding-left:20px; color:var(--note-text-gray);">${FORUM_WORLD.rules.map(r => `<li style="margin-bottom:4px;">${r}</li>`).join('')}</ul><button class="modal-cancel" onclick="closeMod('m-forum-world')">关闭</button></div></div>`;
+    const div = document.createElement('div');
+    div.innerHTML = modalHtml;
+    document.body.appendChild(div);
+    return;
+}
         // 其他弹窗预处理
         if (id === 'm-api') {
             document.getElementById('api-toggle').checked = apiCfg.enabled;
@@ -1846,7 +2012,7 @@ async function sendMsg() {
 }
 // ==================== 函数定义结束（bindEvents 不包含在内）====================。
 
-// ==================== 事件监听统一绑定 ====================
+// ==================== 事件监听统一绑定（完整版）====================
 function bindEvents() {
     // 桌面图标
     document.querySelectorAll('.app-item[data-page]').forEach(el => {
@@ -1940,6 +2106,36 @@ function bindEvents() {
     document.getElementById('bottom-sms')?.addEventListener('click', function() { to('p-sms'); });
     document.getElementById('bottom-settings')?.addEventListener('click', function() { openMod('m-api'); });
     document.getElementById('bottom-memory')?.addEventListener('click', function() { openMod('m-music-player'); });
+
+    // ========== 🎲 新增互动工具按钮 ==========
+    // 骰子
+    document.getElementById('chat-dice-btn')?.addEventListener('click', function() {
+        const userRoll = Math.floor(Math.random() * 6) + 1;
+        append('mine', `🎲 掷出了 ${userRoll} 点`);
+        setTimeout(() => {
+            const aiRoll = Math.floor(Math.random() * 6) + 1;
+            append('other', `🎲 我掷出了 ${aiRoll} 点`);
+            if (userRoll > aiRoll) append('other', '你赢啦！🎉');
+            else if (userRoll < aiRoll) append('other', '哈哈，我赢咯～');
+            else append('other', '平局，再玩一次？');
+        }, 600);
+    });
+    // 红包（简易版）
+  document.getElementById('chat-hongbao-btn')?.addEventListener('click', function() {
+    // 随机生成红包金额（0.01~10.00）
+    const amount = (Math.random() * 9.99 + 0.01).toFixed(2);
+    append('mine', `🧧 我发了一个 ${amount} 元的红包，快抢！`);
+    
+    setTimeout(() => {
+        // 木木“抢”红包
+        const lucky = (Math.random() * amount).toFixed(2);
+        append('other', `💰 我抢到了 ${lucky} 元！谢谢老板～`);
+    }, 800);
+});
+    // 五子棋
+   document.getElementById('chat-gobang-btn')?.addEventListener('click', function() {
+    startGobangGame();
+});
 }
 
     // -------------------- 时钟 --------------------
@@ -2080,6 +2276,181 @@ window.closeMod = window.closeMod || function(id) {
     }
 })();
 // ==================== 导出功能结束 ====================
-</script>
+// ==================== 五子棋游戏（与木木对战）====================
+let gobangBoard = [];          // 9x9棋盘，0空，1黑（用户），2白（木木）
+let gobangGameActive = false; // 游戏是否进行中
+let gobangPlayerTurn = true;  // true=黑棋（用户），false=白棋（木木）
+let gobangStonesContainer = document.getElementById('gobang-stones');
+let gobangTurnText = document.getElementById('gobang-turn-text');
+let gobangTurnIndicator = document.getElementById('gobang-turn-indicator');
+
+// 初始化空棋盘
+function initGobangBoard() {
+    gobangBoard = Array(9).fill().map(() => Array(9).fill(0));
+    gobangGameActive = true;
+    gobangPlayerTurn = true;
+    updateGobangStatus();
+    // 清空所有棋子
+    if (gobangStonesContainer) gobangStonesContainer.innerHTML = '';
+}
+
+// 更新状态栏显示
+function updateGobangStatus() {
+    if (!gobangTurnText || !gobangTurnIndicator) return;
+    if (gobangPlayerTurn) {
+        gobangTurnText.innerText = '轮到黑棋（你）';
+        gobangTurnIndicator.className = 'stone-indicator black';
+    } else {
+        gobangTurnText.innerText = '轮到白棋（木木）';
+        gobangTurnIndicator.className = 'stone-indicator white';
+    }
+}
+
+// 将行列索引转换为 top/left 的百分比样式（中心点）
+function getStonePosition(row, col) {
+    const cellSize = 24; // 因为 --cell-size = 216/9 = 24px
+    const top = (row + 0.5) * cellSize;
+    const left = (col + 0.5) * cellSize;
+    return { top: top + 'px', left: left + 'px' };
+}
+
+// 在棋盘上放置一颗棋子
+function placeStone(row, col, player) {
+    if (!gobangGameActive) return;
+    if (row < 0 || row > 8 || col < 0 || col > 8) return;
+    if (gobangBoard[row][col] !== 0) return;
+
+    // 更新棋盘数组
+    gobangBoard[row][col] = player; // 1:黑(用户), 2:白(木木)
+    
+    // 添加棋子元素
+    const stone = document.createElement('div');
+    stone.className = `stone ${player === 1 ? 'black' : 'white'}`;
+    const pos = getStonePosition(row, col);
+    stone.style.top = pos.top;
+    stone.style.left = pos.left;
+    gobangStonesContainer.appendChild(stone);
+
+    // 检查胜利
+    if (checkWin(row, col, player)) {
+        const winner = player === 1 ? '你' : '木木';
+        append('other', `🎉 恭喜！${winner} 五子连珠，赢了！`);
+        gobangGameActive = false;
+        gobangTurnText.innerText = '游戏结束';
+        return;
+    }
+
+    // 切换玩家
+    gobangPlayerTurn = !gobangPlayerTurn;
+    updateGobangStatus();
+
+    // 如果轮到木木（白棋），自动下棋
+    if (!gobangPlayerTurn && gobangGameActive) {
+        setTimeout(() => aiMove(), 600);
+    }
+}
+
+// 木木AI：随机选择一个空白位置下棋
+function aiMove() {
+    if (!gobangGameActive) return;
+    if (gobangPlayerTurn) return; // 不该AI下
+
+    // 收集所有空白位置
+    let empty = [];
+    for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+            if (gobangBoard[i][j] === 0) empty.push([i, j]);
+        }
+    }
+    if (empty.length === 0) {
+        append('other', '棋盘满了，平局～');
+        gobangGameActive = false;
+        gobangTurnText.innerText = '平局';
+        return;
+    }
+
+    // 随机选一个
+    const [row, col] = empty[Math.floor(Math.random() * empty.length)];
+    placeStone(row, col, 2); // 白棋
+
+    // 木木下棋后发一条消息告知坐标（增强沉浸感）
+    const colLetter = String.fromCharCode(65 + col); // A-I
+    const rowNumber = row + 1;
+    append('other', `🤖 我下在 ${colLetter}${rowNumber}`);
+}
+
+// 五子棋胜利判断（8方向）
+function checkWin(row, col, player) {
+    const dirs = [[1,0], [0,1], [1,1], [1,-1]];
+    for (let [dx, dy] of dirs) {
+        let count = 1;
+        // 正方向
+        for (let step = 1; step < 5; step++) {
+            let nr = row + dx * step, nc = col + dy * step;
+            if (nr < 0 || nr >= 9 || nc < 0 || nc >= 9) break;
+            if (gobangBoard[nr][nc] === player) count++; else break;
+        }
+        // 反方向
+        for (let step = 1; step < 5; step++) {
+            let nr = row - dx * step, nc = col - dy * step;
+            if (nr < 0 || nr >= 9 || nc < 0 || nc >= 9) break;
+            if (gobangBoard[nr][nc] === player) count++; else break;
+        }
+        if (count >= 5) return true;
+    }
+    return false;
+}
+
+// 点击棋盘格子事件（使用事件委托）
+function bindGobangBoardClick() {
+    const board = document.getElementById('gobang-board');
+    if (!board) return;
+    board.addEventListener('click', function(e) {
+        if (!gobangGameActive) {
+            alert('游戏未开始，请点击♟️开始新一局');
+            return;
+        }
+        if (!gobangPlayerTurn) {
+            alert('现在是木木的回合，请稍等～');
+            return;
+        }
+
+        // 计算点击位置对应的行列
+        const rect = board.getBoundingClientRect();
+        const cellSize = 24; // 棋盘格子像素大小（216/9=24）
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        if (x < 0 || x > 216 || y < 0 || y > 216) return;
+
+        const col = Math.floor(x / cellSize);
+        const row = Math.floor(y / cellSize);
+        if (row < 0 || row > 8 || col < 0 || col > 8) return;
+        
+        // 用户下棋（黑子）
+        placeStone(row, col, 1);
+        
+        // 可选：在聊天流显示用户下的位置
+        const colLetter = String.fromCharCode(65 + col);
+        const rowNumber = row + 1;
+        append('mine', `♟️ 我下在 ${colLetter}${rowNumber}`);
+    });
+}
+
+// 开始新游戏（点击♟️按钮时调用）
+function startGobangGame() {
+    const container = document.getElementById('gobang-container');
+    if (container) container.style.display = 'flex';
+    
+    // 👇 在这里获取元素
+    gobangStonesContainer = document.getElementById('gobang-stones');
+    gobangTurnText = document.getElementById('gobang-turn-text');
+    gobangTurnIndicator = document.getElementById('gobang-turn-indicator');
+    
+    initGobangBoard();
+    if (!window.gobangBound) {
+        bindGobangBoardClick();
+        window.gobangBound = true;
+    }
+}</script>
 </body>
 </html>
