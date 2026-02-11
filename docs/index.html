@@ -780,20 +780,20 @@
             <span class="nav-setting" data-mod="m-api" style="color:var(--ios-blue); font-size:13px;">设置</span>
         </div>
         <div id="chat-flow"></div>
-        <!-- ========== 互动工具条 ========== -->
-        <div style="display:flex; gap:12px; padding:8px 16px; background:var(--note-bg-white); border-bottom:1px solid var(--note-border);">
-        <button id="chat-dice-btn" style="background:none; border:none; font-size:22px; cursor:pointer; padding:4px;" title="掷骰子">🎲</button>
-        <button id="chat-hongbao-btn" style="background:none; border:none; font-size:22px; cursor:pointer; padding:4px;" title="发红包">🧧</button>
-        <button id="chat-gobang-btn" style="background:none; border:none; font-size:22px; cursor:pointer; padding:4px;" title="五子棋">♟️</button>
+       <!-- ========== 互动工具条 ========== -->
+<div id="chat-toolbar" style="display:flex; gap:12px; padding:8px 16px; background:var(--note-bg-white); border-bottom:1px solid var(--note-border);">
+    <button id="chat-dice-btn" style="background:none; border:none; font-size:22px; cursor:pointer; padding:4px;" title="掷骰子">🎲</button>
+    <button id="chat-hongbao-btn" style="background:none; border:none; font-size:22px; cursor:pointer; padding:4px;" title="发红包">🧧</button>
+    <button id="chat-gobang-btn" style="background:none; border:none; font-size:22px; cursor:pointer; padding:4px;" title="五子棋">♟️</button>
 </div>
 <!-- ========== 五子棋棋盘（默认隐藏）========== -->
-<div id="gobang-container" style="display: none; margin-bottom: 12px; display:flex; justify-content:center;">
+<div id="gobang-container" style="display: none; margin-bottom: 12px; justify-content:center;">
    <div class="gobang-widget-mini">
     <div class="gobang-header-mini">
         <div class="status">
-            <div class="stone-indicator white"></div>
-            <span>轮到白棋</span>
-        </div>
+    <div class="stone-indicator black" id="gobang-turn-indicator"></div>
+    <span id="gobang-turn-text">轮到黑棋（你）</span>
+</div>
         <div class="more-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
         </div>
@@ -829,10 +829,10 @@
     </div>
 </div>
         <div style="padding:10px; background:#f7f7f7; display:flex; gap:10px; padding-bottom: 25px;">
-            <input type="text" id="chat-in" placeholder="用回车发送..." style="flex:1; padding:10px; border-radius:8px; border:1px solid #ddd;">
-            <button id="send-btn" style="background:var(--theme-primary); color:#fff; border:none; padding:0 15px; border-radius:8px;">发送</button>
-        </div>
-    </div>
+    <button id="chat-toggle-btn" style="background:none; border:none; font-size:24px; cursor:pointer; padding:0 8px; color:var(--theme-primary);" title="展开/收起工具">➕</button>
+    <input type="text" id="chat-in" placeholder="用回车发送..." style="flex:1; ...">
+    <button id="send-btn" ...>发送</button>
+</div>
 
     <!-- ========== 相册页面 ========== -->
     <div class="page" id="p-album">
@@ -2449,6 +2449,43 @@ function startGobangGame() {
         bindGobangBoardClick();
         window.gobangBound = true;
     }
-}</script>
+// ========== 聊天工具栏折叠/展开（独立版，自动绑定）==========
+(function() {
+    function bindToggleButton() {
+        const toggleBtn = document.getElementById('chat-toggle-btn');
+        if (!toggleBtn) {
+            setTimeout(bindToggleButton, 300); // 按钮还没出现，等一会儿再试
+            return;
+        }
+        // 移除之前可能绑定的旧事件，防止重复
+        toggleBtn.removeEventListener('click', toggleHandler);
+        toggleBtn.addEventListener('click', toggleHandler);
+        console.log('加号按钮已绑定');
+    }
+
+    function toggleHandler() {
+        const toolbar = document.getElementById('chat-toolbar');
+        const board = document.getElementById('gobang-container');
+        if (!toolbar) return;
+
+        // 如果工具栏当前是显示的，就隐藏它，并同时隐藏棋盘
+        if (toolbar.style.display !== 'none' && toolbar.style.display !== '') {
+            toolbar.style.display = 'none';
+            if (board) board.style.display = 'none';
+            // 可选项：把加号改成「➖」表示收起，这里先保持加号
+        } else {
+            toolbar.style.display = 'flex';
+            if (board) board.style.display = 'none'; // 棋盘仍然保持隐藏
+        }
+    }
+
+    // 页面加载完成后开始绑定
+    if (document.readyState === 'complete') {
+        bindToggleButton();
+    } else {
+        window.addEventListener('load', bindToggleButton);
+    }
+})();
+</script>
 </body>
 </html>
