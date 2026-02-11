@@ -349,25 +349,46 @@ document.getElementById('anni-list').addEventListener('click', function(e) {
             return; 
         }
         
-        append('other', "..."); // 等待状态
-        try {
-            const res = await fetch(apiCfg.url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiCfg.key}` },
-                body: JSON.stringify({ model: 'deepseek-ai/DeepSeek-V3', messages: [{role: "system", content: "你叫木木，温柔简练。"}, {role: "user", content: val}] })
-            });
-            const data = await res.json();
-            document.querySelector('#chat-flow .msg-row.other:last-child .bubble').innerText = data.choices[0].message.content;
-        } catch(e) { 
-            document.querySelector('#chat-flow .msg-row.other:last-child .bubble').innerText = "连接超时，请检查配置。"; 
-        }
-    }
-    function append(side, text) {
-        const flow = document.getElementById('chat-flow');
-        flow.insertAdjacentHTML('beforeend', `<div class="msg-row ${side}"><div class="bubble">${text}</div></div>`);
-        flow.scrollTop = flow.scrollHeight;
-    }
-    document.getElementById('chat-in').addEventListener('keypress', (e) => { if(e.key === 'Enter') sendMsg(); });
+        // 先把等待气泡添加进去，并保存对这个气泡的引用
+const tempBubble = append('other', "...");
+
+try {
+    const res = await fetch(apiCfg.url, {
+        method: 'POST',
+        headers: { 
+            'Content-Type': 'application/json', 
+            'Authorization': `Bearer ${apiCfg.key}` 
+        },
+        body: JSON.stringify({
+            model: 'deepseek-ai/DeepSeek-V3',
+            messages: [
+                { role: "system", content: "你叫木木，温柔简练。" },
+                { role: "user", content: val }
+            ]
+        })
+    });
+    const data = await res.json();
+    // 直接更新刚刚那个气泡的文字
+    tempBubble.textContent = data.choices[0].message.content;
+} catch(e) { 
+    tempBubble.textContent = "连接超时，请检查配置。";
+}
+   function append(side, text) {
+    const flow = document.getElementById('chat-flow');
+    
+    const row = document.createElement('div');
+    row.className = `msg-row ${side}`;
+    
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    bubble.textContent = text;   // ⚠️ 关键：纯文本，不执行任何 HTML
+    
+    row.appendChild(bubble);
+    flow.appendChild(row);
+    
+    flow.scrollTop = flow.scrollHeight;
+    return bubble; // 返回气泡元素，用于 AI 回复时直接更新文字
+}
 
     // --- 实时更新时间 ---
     function updateClock() {
