@@ -1949,6 +1949,186 @@ function setupDesktopPhotoWidget() {
         renderCalendar();
         await renderProfile();
     })();
+    // ========== 🆕 论坛数据初始化 ==========
+let forumSections = FORUM_WORLD.sections;
+let currentSectionId = 'tools'; // 默认显示工具补给站
+let forumPosts = JSON.parse(localStorage.getItem('m_forum_posts') || '[]');
+
+// 首次启动时，插入几条示例帖子（符合打工人摸鱼主题）
+if (forumPosts.length === 0) {
+    forumPosts = [
+        { id: 'p1', sectionId: 'tools', author: '匿名漂流者', time: '10:23', content: '分享一下我的“走动式摸鱼”：每半小时接水一次，路过老板位时拿个文件，完美～', anonymous: true, likes: 15, replies: 3 },
+        { id: 'p2', sectionId: 'energy', author: '外卖猎人', time: '12:05', content: '今天测评公司楼下新开的轻食，三明治配羽衣甘蓝，28元，送券后23，味道3.5星，饱腹感一般。', anonymous: false, likes: 7, replies: 2 },
+        { id: 'p3', sectionId: 'valve', author: '树洞用户9527', time: '15:47', content: '老板今天又在我身后站了10分钟，什么话都没说，我假装在改PPT，其实在逛论坛……', anonymous: true, likes: 42, replies: 8 }
+    ];
+    localStorage.setItem('m_forum_posts', JSON.stringify(forumPosts));
+}
+
+// ========== 渲染分区卡片 ==========
+function renderForumSections() {
+    const container = document.getElementById('forum-sections');
+    if (!container) return;
+    container.innerHTML = '';
+    forumSections.forEach(section => {
+        const card = document.createElement('div');
+        card.className = `section-card ${section.requireAuth || section.requireContribution ? 'locked' : ''}`;
+        card.onclick = () => {
+            if (section.requireAuth) { alert('副业小艇需要人工审核，请联系管理员'); return; }
+            if (section.requireContribution) { alert('航海日志库仅对核心贡献者开放'); return; }
+            currentSectionId = section.id;
+            document.getElementById('forum-section-header').innerText = section.name;
+            renderPosts(section.id);
+        };
+        card.innerHTML = `
+            <div class="icon">${section.icon}</div>
+            <div class="name">${section.name}</div>
+            <div class="desc">${section.desc}</div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+// ========== 渲染帖子列表 ==========
+function renderPosts(sectionId) {
+    const postsContainer = document.getElementById('forum-posts');
+    if (!postsContainer) return;
+    postsContainer.innerHTML = '';
+    const filtered = forumPosts.filter(p => p.sectionId === sectionId).reverse();
+    if (filtered.length === 0) {
+        postsContainer.innerHTML = '<div style="text-align:center; color:var(--note-text-gray); padding:30px;">🌊 还没有漂流帖，快来发布第一条～</div>';
+        return;
+    }
+    filtered.forEach(post => {
+        const postEl = document.createElement('div');
+        postEl.className = 'post-card';
+        postEl.innerHTML = `
+            <div class="post-header">
+                <span class="post-author">${post.author}${post.anonymous ? '<span class="anonymous-badge">匿名</span>' : ''}</span>
+                <span>${post.time}</span>
+            </div>
+            <div class="post-content">${post.content}</div>
+            <div class="post-footer">
+                <div class="post-stats">
+                    <span>👍 ${post.likes}</span>
+                    <span>💬 ${post.replies}</span>
+                </div>
+                <span onclick="likePost('${post.id}')" style="cursor:pointer; color:var(--theme-primary);">点赞</span>
+            </div>
+        `;
+        postsContainer.appendChild(postEl);
+    });
+}
+
+// ========== 点赞功能 ==========
+function likePost(postId) {
+    const post = forumPosts.find(p => p.id === postId);
+    if (post) {
+        post.likes += 1;
+        localStorage.setItem('m_forum_posts', JSON.stringify(forumPosts));
+        renderPosts(currentSectionId);
+    }
+}
+
+// ========== 打开发帖弹窗 ==========
+function openForumPostModal() {
+    const availableSections = forumSections.filter(s => !s.requireAuth && !s.requireContribution);
+    const optionsHtml = availableSections.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+    const modalHtml = `
+        <div class="modal" id="m-forum-post" style="display:flex;">
+            <div class="modal-body">
+                <h3>漂流日记 · 发布新帖</h3>
+                <select id="post-section" style="margin-bottom:12px; width:100%; padding:12px; border:1px solid var(--note-border); border-radius:var(--note-radius-hard);">
+                    ${optionsHtml}
+                </select>
+                <textarea id="post-content" rows="5" placeholder="分享你的漂流心得..." style="width:100%; resize:vertical;"></textarea>
+                <label style="display:flex; align-items:center; margin:12px 0;">
+                    <input type="checkbox" id="post-anonymous" checked> 匿名发布
+                </label>
+                <button class="modal-btn" id="submit-post-btn">发布</button>
+                <button class="modal-cancel" onclick="closeMod('m-forum-post')">取消</button>
+            </div>
+        </div>
+    `;
+    const div = document.createElement('div');
+    div.innerHTML = modalHtml;
+    document.body.appendChild(div);
+    document.getElementById('submit-post-btn').onclick = submitForumPost;
+}
+
+// ========== 提交帖子 ==========
+function submitForumPost() {
+    const sectionId = document.getElementById('post-section').value;
+    const content = document.getElementById('post-content').value.trim();
+    if (!content) { alert('内容不能为空'); return; }
+    const anonymous = document.getElementById('post-anonymous').checked;
+    const now = new Date();
+    const timeStr = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+    const newPost = {
+        id: Date.now() + '-' + Math.random().toString(36).substr(2, 4),
+        sectionId,
+        author: anonymous ? '匿名漂流者' : `漂流者${Math.floor(Math.random()*1000)}`,
+        time: timeStr,
+        content,
+        anonymous,
+        likes: 0,
+        replies: 0
+    };
+    forumPosts.push(newPost);
+    localStorage.setItem('m_forum_posts', JSON.stringify(forumPosts));
+    closeMod('m-forum-post');
+    setTimeout(() => {
+        const el = document.getElementById('m-forum-post');
+        if (el) el.remove();
+    }, 100);
+    renderPosts(currentSectionId);
+}
+
+// ========== 世界观弹窗 ==========
+// 在原有的 openMod 函数中增加 m-forum-world 处理
+// 如果你之前已经改过 openMod，请确保包含以下逻辑；若没改，直接复制下面整个函数会覆盖原函数！
+// 安全做法：在 openMod 函数内部添加以下分支
+const originalOpenMod = openMod;
+openMod = function(id) {
+    if (id === 'm-forum-world') {
+        const modalHtml = `
+            <div class="modal" id="m-forum-world" style="display:flex;">
+                <div class="modal-body">
+                    <h3>🌍 打工人摸鱼论坛 · 世界观</h3>
+                    <p style="margin-bottom:12px;"><strong>口号：</strong>“${FORUM_WORLD.slogan}”</p>
+                    <p style="margin-bottom:12px;"><strong>文化符号：</strong>带薪拉屎 · 钓鱼 · 潜水 · 上岸</p>
+                    <p style="margin-bottom:12px;"><strong>绝对禁忌：</strong></p>
+                    <ul style="padding-left:20px; color:var(--note-text-gray);">
+                        ${FORUM_WORLD.rules.map(r => `<li style="margin-bottom:4px;">${r}</li>`).join('')}
+                    </ul>
+                    <button class="modal-cancel" onclick="closeMod('m-forum-world')">关闭</button>
+                </div>
+            </div>
+        `;
+        const div = document.createElement('div');
+        div.innerHTML = modalHtml;
+        document.body.appendChild(div);
+        return;
+    }
+    // 调用原 openMod 函数
+    if (originalOpenMod) originalOpenMod.call(this, id);
+};
+
+// ========== 修改路由 to 函数，进入论坛时渲染 ==========
+const originalTo = to;
+to = function(id) {
+    if (originalTo) originalTo.call(this, id);
+    if (id === 'p-forum') {
+        // 如果当前没有选中分区，默认选第一个可用分区
+        if (!currentSectionId || currentSectionId === '') {
+            const firstAvail = forumSections.find(s => !s.requireAuth && !s.requireContribution);
+            currentSectionId = firstAvail ? firstAvail.id : 'tools';
+        }
+        renderForumSections();
+        const sectionName = forumSections.find(s => s.id === currentSectionId)?.name || '工具补给站';
+        document.getElementById('forum-section-header').innerText = sectionName;
+        renderPosts(currentSectionId);
+    }
+};
 </script>
 </body>
 </html>
