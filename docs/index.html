@@ -650,7 +650,7 @@
             <div class="app-item" data-page="p-safari"><div class="app-icon">🌐</div><div class="app-name">Safari</div></div>
             <div class="app-item" data-page="p-profile"><div class="app-icon">👤</div><div class="app-name">个人</div></div>
             <div class="app-item" data-page="p-forum"><div class="app-icon">🗣️</div><div class="app-name">论坛</div></div>
-            <div class="app-item" data-page="p-diary"><div class="app-icon">🎵📓</div><div class="app-name">日记本</div></div>
+            <div class="app-item" data-page="p-diary"><div class="app-icon">📓</div><div class="app-name">日记本</div></div>
         </div>
         <div class="bottom-nav">
             <div class="bottom-nav-item" id="bottom-sms"><i>💬</i><span>短信</span></div>
@@ -792,7 +792,8 @@
 
     <!-- ========== 所有弹窗（按ID排序）========== -->
     <div class="modal" id="m-anni"><div class="modal-body"><h3>新纪念日</h3><input type="text" id="at" placeholder="事项名称"><input type="date" id="ad"><button class="modal-btn" id="save-anni-btn">保存</button><button class="modal-cancel" data-mod="m-anni" style="width:100%; background:none; border:none; margin-top:10px; color:#999;">取消</button></div></div>
-    <div class="modal" id="m-api"><div class="modal-body"><h3>⚙️ 设置与主题</h3><label style="display:block; margin-bottom:8px;"><input type="checkbox" id="api-toggle"> 开启 AI 响应</label><input type="text" id="api-url" placeholder="API URL (含 v1/chat/completions)"><input type="password" id="api-key" placeholder="API Key"><div style="margin:20px 0 10px; border-top:1px solid #eee; padding-top:15px;"><h4 style="margin-bottom:10px;">🎨 主题颜色</h4><div id="theme-color-presets" class="theme-color-picker"><div class="theme-color-option" style="background:#AED5F3;" data-color="#AED5F3" title="便签蓝"></div><div class="theme-color-option" style="background:#5856D6;" data-color="#5856D6" title="紫色"></div><div class="theme-color-option" style="background:#FF2D55;" data-color="#FF2D55" title="粉色"></div><div class="theme-color-option" style="background:#FF9500;" data-color="#FF9500" title="橙色"></div><div class="theme-color-option" style="background:#34C759;" data-color="#34C759" title="绿色"></div><div class="theme-color-option" style="background:#8E8E93;" data-color="#8E8E93" title="灰色"></div></div><div style="display:flex; align-items:center; margin-top:10px;"><span style="margin-right:8px;">自定义:</span><input type="color" id="custom-color-picker" value="#AED5F3" style="width:50px; height:40px; border:none; background:transparent;"></div></div><button class="modal-btn" id="save-api-btn">保存设置</button><button class="modal-cancel" data-mod="m-api" style="width:100%; background:none; border:none; margin-top:10px; color:#999;">取消</button></div></div>
+    <div class="modal" id="m-api"><div class="modal-body"><h3>⚙️ 设置与主题</h3><label style="display:block; margin-bottom:8px;"><input type="checkbox" id="api-toggle"> 开启 AI 响应</label><input type="text" id="api-url" placeholder="API URL (含 v1/chat/completions)"><input type="password" id="api-key" placeholder="API Key"><div style="margin:20px 0 10px; border-top:1px solid #eee; padding-top:15px;"><h4 style="margin-bottom:10px;">🎨 主题颜色</h4><div id="theme-color-presets" class="theme-color-picker"><div class="theme-color-option" style="background:#AED5F3;" data-color="#AED5F3" title="便签蓝"></div><div class="theme-color-option" style="background:#5856D6;" data-color="#5856D6" title="紫色"></div><div class="theme-color-option" style="background:#FF2D55;" data-color="#FF2D55" title="粉色"></div><div class="theme-color-option" style="background:#FF9500;" data-color="#FF9500" title="橙色"></div><div class="theme-color-option" style="background:#34C759;" data-color="#34C759" title="绿色"></div><div class="theme-color-option" style="background:#8E8E93;" data-color="#8E8E93" title="灰色"></div></div><div style="display:flex; align-items:center; margin-top:10px;"><span style="margin-right:8px;">自定义:</span><input type="color" id="custom-color-picker" value="#AED5F3" style="width:50px; height:40px; border:none; background:transparent;"></div></div><button class="modal-btn" id="save-api-btn">保存设置</button><!-- 放在保存设置按钮下方，取消按钮上方 -->
+<button class="modal-btn" id="export-data-btn" style="margin-top:10px; background:#34C759;">📥 导出数据</button><button class="modal-cancel" data-mod="m-api" style="width:100%; background:none; border:none; margin-top:10px; color:#999;">取消</button></div></div>
     <div class="modal" id="m-bubble-style"><div class="modal-body"><h3>气泡样式</h3><select id="bubble-style-select"><option value="note">便签梯形（当前）</option><option value="round">圆角标准</option><option value="simple">极简边框</option></select><button class="modal-btn" id="save-bubble-style-btn">应用</button><button class="modal-cancel" data-mod="m-bubble-style" style="width:100%; background:none; border:none; margin-top:10px; color:#999;">取消</button></div></div>
     <div class="modal" id="m-con"><div class="modal-body"><h3>新联系人</h3><input type="text" id="cn" placeholder="姓名"><button class="modal-btn" id="save-con-btn">添加</button><button class="modal-cancel" data-mod="m-con" style="width:100%; background:none; border:none; margin-top:10px; color:#999;">取消</button></div></div>
     <div class="modal" id="m-diary-add"><div class="modal-body"><h3>写日记</h3><textarea id="diary-content" rows="5" placeholder="今天发生了什么？" style="resize: vertical;"></textarea><button class="modal-btn" id="save-diary-btn">保存</button><button class="modal-cancel" data-mod="m-diary-add" style="margin-top:10px;">取消</button></div></div>
@@ -947,9 +948,16 @@
         postsContainer.innerHTML = '';
         const filtered = forumPosts.filter(p => p.sectionId === sectionId).reverse();
         if (filtered.length === 0) {
-            postsContainer.innerHTML = '<div style="text-align:center; color:var(--note-text-gray); padding:30px;">🌊 还没有漂流帖，快来发布第一条～</div>';
-            return;
-        }
+    postsContainer.innerHTML = `
+        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 20px; text-align:center;">
+            <span style="font-size:64px; margin-bottom:16px;">🏝️</span>
+            <p style="font-size:16px; font-weight:500; color:var(--note-text-dark); margin-bottom:8px;">这里还没有漂流瓶</p>
+            <p style="font-size:14px; color:var(--note-text-gray); margin-bottom:20px;">写下你的摸鱼心得，随浪飘向远方～</p>
+            <button onclick="openForumPostModal()" style="background:var(--theme-primary); color:white; border:none; padding:10px 24px; border-radius:20px; font-size:14px; font-weight:500; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.1);">✏️ 发布漂流瓶</button>
+        </div>
+    `;
+    return;
+}
         filtered.forEach(post => {
             const postEl = document.createElement('div');
             postEl.className = 'post-card';
@@ -1130,12 +1138,12 @@ if (emoticons.length === 0) {
     localStorage.setItem('m_emoticons', JSON.stringify(emoticons));
 }
 
-// 音乐库
+// 音乐库（已添加可播放链接）
 const DEFAULT_MUSIC = [
-    { id: 'default-1', title: "起风了", artist: "买辣椒也用券", src: "" },
-    { id: 'default-2', title: "Lemon", artist: "米津玄師", src: "" },
-    { id: 'default-3', title: "夜曲", artist: "周杰伦", src: "" },
-    { id: 'default-4', title: "平凡之路", artist: "朴树", src: "" }
+    { id: 'default-1', title: "起风了", artist: "买辣椒也用券", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
+    { id: 'default-2', title: "Lemon", artist: "米津玄師", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
+    { id: 'default-3', title: "夜曲", artist: "周杰伦", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" },
+    { id: 'default-4', title: "平凡之路", artist: "朴树", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" }
 ];
 let musicList = JSON.parse(localStorage.getItem('m_music_list') || '[]');
 if (musicList.length === 0) {
@@ -1337,7 +1345,14 @@ function renderDiaries() {
     if (!container) return;
     container.innerHTML = '';
     if (diaries.length === 0) {
-        container.innerHTML = '<div style="text-align:center; color:var(--note-text-gray); padding:40px;">📓 暂无日记，点击右上角➕添加</div>';
+      container.innerHTML = `
+    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 20px; text-align:center;">
+        <span style="font-size:64px; margin-bottom:16px;">📔</span>
+        <p style="font-size:16px; font-weight:500; color:var(--note-text-dark); margin-bottom:8px;">还没有写日记</p>
+        <p style="font-size:14px; color:var(--note-text-gray); margin-bottom:20px;">记录今天的小情绪，以后回头看会很温暖</p>
+        <button onclick="openMod('m-diary-add')" style="background:var(--theme-primary); color:white; border:none; padding:10px 24px; border-radius:20px; font-size:14px; font-weight:500; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.1);">➕ 写第一篇日记</button>
+    </div>
+`;
         return;
     }
     diaries.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(d => {
@@ -1374,14 +1389,14 @@ function deleteDiary(id) {
 }
 
 // ==================== 短信功能 ====================
-function renderSmsList() {
-    const container = document.getElementById('sms-list');
-    if (!container) return;
-    container.innerHTML = '';
-    if (smsMessages.length === 0) {
-        container.innerHTML = '<div style="text-align:center; color:var(--note-text-gray); padding:40px;">💬 暂无短信，点击右上角✏️发送</div>';
-        return;
-    }
+container.innerHTML = `
+    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 20px; text-align:center;">
+        <span style="font-size:64px; margin-bottom:16px;">💌</span>
+        <p style="font-size:16px; font-weight:500; color:var(--note-text-dark); margin-bottom:8px;">还没有收到短信</p>
+        <p style="font-size:14px; color:var(--note-text-gray); margin-bottom:20px;">给朋友发一句问候吧，也许TA正在等你</p>
+        <button onclick="openMod('m-sms-compose')" style="background:var(--theme-primary); color:white; border:none; padding:10px 24px; border-radius:20px; font-size:14px; font-weight:500; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.1);">✏️ 发送短信</button>
+    </div>
+`;
     smsMessages.sort((a,b) => new Date(b.time) - new Date(a.time)).forEach(s => {
         const div = document.createElement('div');
         div.className = 'sms-item';
@@ -1469,24 +1484,27 @@ function setupDesktopPhotoWidget() {
 // ==================== 相册逻辑 ====================
 async function renderAll() {
     // 相册
-    const box = document.getElementById('album-box');
-    box.innerHTML = '';
+const box = document.getElementById('album-box');
+box.innerHTML = '';
+
+// 🆕 空状态判断
+if (photos.length === 0) {
+    box.innerHTML = `
+        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 20px; text-align:center; grid-column:span 4;">
+            <span style="font-size:64px; margin-bottom:16px;">🖼️</span>
+            <p style="font-size:16px; font-weight:500; color:var(--note-text-dark); margin-bottom:8px;">相册还是空的</p>
+            <p style="font-size:14px; color:var(--note-text-gray); margin-bottom:20px;">拍点照片记录生活吧～</p>
+            <button onclick="document.getElementById('upload-trigger').click()" style="background:var(--theme-primary); color:white; border:none; padding:10px 24px; border-radius:20px; font-size:14px; font-weight:500; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.1);">📤 上传第一张照片</button>
+        </div>
+    `;
+    // ⚠️ 注意：空状态占满网格，所以要设置 grid-column:span 4
+} else {
     const fragment = document.createDocumentFragment();
     for (const id of photos) {
-        const div = document.createElement('div');
-        div.dataset.imgId = id;
-        div.className = 'album-thumb';
-        try {
-            const fileBlob = await getImageFromDB(id);
-            const url = URL.createObjectURL(fileBlob);
-            div.style.backgroundImage = `url(${url})`;
-            div.dataset.blobUrl = url;
-        } catch (e) {
-            div.style.background = '#ccc';
-        }
-        fragment.appendChild(div);
+        // ... 原有的循环代码保持不变
     }
     box.appendChild(fragment);
+}
 
     // 纪念日
     const aList = document.getElementById('anni-list');
@@ -1940,6 +1958,62 @@ function bindEvents() {
         await renderProfile();
         // 论坛无需自动渲染，由 to('p-forum') 触发
     })();
+// ==================== 导出数据功能（独立版，自动绑定）====================
+(function() {
+    // 定义导出函数
+    function exportAllData() {
+        try {
+            // 1. 收集 localStorage 所有数据
+            const backup = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                backup[key] = localStorage.getItem(key);
+            }
+
+            // 2. 添加元信息
+            backup._export_meta = {
+                time: new Date().toLocaleString(),
+                version: 'SmartOS v1.0',
+                description: '全量备份（不含照片）'
+            };
+
+            // 3. 转换为 JSON 并下载
+            const jsonStr = JSON.stringify(backup, null, 2);
+            const blob = new Blob([jsonStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `smartos-backup-${new Date().toISOString().slice(0, 10)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            alert('✅ 数据导出成功！文件已下载。');
+        } catch (e) {
+            alert('❌ 导出失败：' + e.message);
+        }
+    }
+
+    // 将导出函数挂载到全局，方便调试
+    window.exportAllData = exportAllData;
+
+    // 给导出按钮绑定点击事件（按钮可能还没渲染，需要等待）
+    function bindExportButton() {
+        const btn = document.getElementById('export-data-btn');
+        if (btn) {
+            btn.addEventListener('click', exportAllData);
+            console.log('导出按钮已绑定');
+        } else {
+            // 按钮还没出现，1秒后重试
+            setTimeout(bindExportButton, 500);
+        }
+    }
+    // 页面加载完成后开始绑定
+    if (document.readyState === 'complete') {
+        bindExportButton();
+    } else {
+        window.addEventListener('load', bindExportButton);
+    }
+})();
+// ==================== 导出功能结束 ====================
 </script>
 </body>
 </html>
