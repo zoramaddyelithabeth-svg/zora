@@ -553,32 +553,39 @@
     }
 
     // ---------- 🆕 本地智能回复规则库（完全离线，不依赖任何API）----------
-    // ---------- 🆕 本地智能回复规则库（扩展版）----------
+   // ---------- 🎉 本地智能回复规则库 · 趣味增强版 ----------
 function getLocalReply(message) {
     const lowerMsg = message.toLowerCase().trim();
     
-    // ----- 1. 时间 & 日期 -----
+    // ----- 1. 时间 & 日期（带点小俏皮）-----
     if (lowerMsg.includes('时间') || lowerMsg.includes('几点') || lowerMsg.includes('点钟') || lowerMsg.includes('几点了')) {
         const now = new Date();
-        return `现在是 ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+        return `现在是 ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}～`;
     }
     if (lowerMsg.includes('日期') || lowerMsg.includes('今天几号') || lowerMsg.includes('什么日子') || lowerMsg.includes('今天多少号')) {
         const now = new Date();
-        return `今天是 ${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日`;
+        return `今天是 ${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日，又是元气满满的一天！`;
     }
     if (lowerMsg.includes('星期')) {
         const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
         const now = new Date();
-        return `星期${weekdays[now.getDay()]}`;
+        return `星期${weekdays[now.getDay()]}～`;
     }
     if (lowerMsg.includes('今年') && (lowerMsg.includes('年份') || lowerMsg.includes('哪年'))) {
-        return `今年是 ${new Date().getFullYear()} 年`;
+        return `今年是 ${new Date().getFullYear()} 年，要快乐呀！`;
     }
 
-    // ----- 2. 天气（模拟，可识别部分城市）-----
+    // ----- 2. 天气（可识别城市 + 俏皮描述）-----
     const cityList = ['北京', '上海', '广州', '深圳', '杭州', '成都', '武汉', '西安', '南京', '重庆'];
     const weatherList = ['晴', '多云', '阴', '小雨', '中雨', '晴转多云', '多云转晴', '阵雨', '雾'];
-    const defaultCity = '北京'; // ← 默认城市，可自行修改
+    const weatherDesc = [
+        '适合出门走走', 
+        '记得带伞哟', 
+        '阳光正好', 
+        '阴天也很舒服', 
+        '雨声助眠呢'
+    ];
+    const defaultCity = '北京'; // ← 改成你的城市
 
     if (lowerMsg.includes('天气')) {
         let city = defaultCity;
@@ -590,42 +597,43 @@ function getLocalReply(message) {
         }
         const weather = weatherList[Math.floor(Math.random() * weatherList.length)];
         const temp = Math.floor(Math.random() * 16) + 15; // 15~30度
-        const quality = ['优', '良', '轻度污染', '中度污染'][Math.floor(Math.random() * 3)];
-        return `${city}今天${weather}，${temp}℃，空气质量${quality}。`;
+        const quality = ['优✨', '良🌿', '轻度污染😷', '中度污染😶‍🌫️'][Math.floor(Math.random() * 3)];
+        const desc = weatherDesc[Math.floor(Math.random() * weatherDesc.length)];
+        return `${city}今天${weather}，${temp}℃，${quality}，${desc}～`;
     }
 
-    // ----- 3. 问候与基本关怀 -----
+    // ----- 3. 问候与关怀（更细腻）-----
     if (lowerMsg.includes('你好') || lowerMsg.includes('在吗') || lowerMsg.includes('hi') || lowerMsg.includes('hello')) {
-        return '你好呀！今天过得怎么样？';
+        return '你好呀～今天过得开心吗？😊';
     }
-    if (lowerMsg.includes('早上好')) return '早上好！新的一天要加油哦~';
-    if (lowerMsg.includes('上午好')) return '上午好，工作顺利吗？';
-    if (lowerMsg.includes('中午好')) return '中午好，记得按时吃饭！';
-    if (lowerMsg.includes('下午好')) return '下午好，别太累了~';
-    if (lowerMsg.includes('晚上好')) return '晚上好，今天辛苦了！';
-    if (lowerMsg.includes('晚安')) return '晚安，做个好梦🌙';
+    if (lowerMsg.includes('早上好')) return '早上好！新的一天开始咯，加油！☀️';
+    if (lowerMsg.includes('上午好')) return '上午好呀，工作/学习顺利吗？';
+    if (lowerMsg.includes('中午好')) return '中午好！记得按时吃饭，别饿着～🍚';
+    if (lowerMsg.includes('下午好')) return '下午好！累了就歇会儿，喝口水💧';
+    if (lowerMsg.includes('晚上好')) return '晚上好！今天辛苦啦，放松一下吧🌙';
+    if (lowerMsg.includes('晚安')) return '晚安好梦，梦里见～✨';
     
-    if (lowerMsg.includes('谢谢') || lowerMsg.includes('多谢')) return '不客气，能帮到你就好😊';
-    if (lowerMsg.includes('再见') || lowerMsg.includes('拜拜') || lowerMsg.includes('88')) return '拜拜，下次聊！';
-    if (lowerMsg.includes('辛苦了')) return '应该的，不辛苦~';
-    if (lowerMsg.includes('加油')) return '加油！你是最棒的💪';
+    if (lowerMsg.includes('谢谢') || lowerMsg.includes('多谢')) return '不客气～能帮到你就很开心😄';
+    if (lowerMsg.includes('再见') || lowerMsg.includes('拜拜') || lowerMsg.includes('88')) return '拜拜！下次再聊～👋';
+    if (lowerMsg.includes('辛苦了')) return '不辛苦！陪你聊天很愉快～';
+    if (lowerMsg.includes('加油')) return '加油加油！你是最棒的💪✨';
     
-    // 关怀模式
+    // 关怀模式（情绪识别）
     if (lowerMsg.includes('累') || lowerMsg.includes('疲惫') || lowerMsg.includes('困')) {
-        return '累了就休息一下吧，喝口水，放松一会儿。';
+        return '累了就休息一下吧，我给你泡杯虚拟咖啡☕～';
     }
     if (lowerMsg.includes('饿')) {
-        return '饿了快去吃点东西，别饿坏胃~';
+        return '饿了快去觅食！别亏待自己～🍔🍜';
     }
     if (lowerMsg.includes('开心') || lowerMsg.includes('高兴')) {
-        return '开心最重要！我也替你开心~';
+        return '开心最重要！我也被你传染了好心情～🥳';
     }
     if (lowerMsg.includes('难过') || lowerMsg.includes('伤心')) {
-        return '别难过，我一直在这里陪着你。';
+        return '抱抱你～我一直都在这里，陪你聊聊天💕';
     }
 
-    // ----- 4. 笑话库 -----
-    if (lowerMsg.includes('笑话') || lowerMsg.includes('讲个笑话') || lowerMsg.includes('乐一个')) {
+    // ----- 4. 笑话库（新增爆笑段子）-----
+    if (lowerMsg.includes('笑话') || lowerMsg.includes('讲个笑话') || lowerMsg.includes('乐一个') || lowerMsg.includes('段子')) {
         const jokes = [
             '为什么数学书总是很忧郁？——因为它有太多问题。',
             '为什么手机也要喝牛奶？——因为它需要“充电奶”！',
@@ -635,52 +643,87 @@ function getLocalReply(message) {
             '什么动物最爱贴在墙上？——海豹（海报）。',
             '为什么鸡要过马路？——因为对面是肯德基。',
             '什么书最没人买？——第三卷（第三卷/断卷）。',
-            '为什么数学考试总是很冷？——因为有很多“寒”数。'
+            '为什么数学考试总是很冷？——因为有很多“寒”数。',
+            '你知道恐龙为什么灭绝吗？——因为当时没有外卖。',
+            '为什么小明一考试就发烧？——因为烤（考）试会发热。',
+            '什么东西越洗越脏？——水。',
+            '为什么企鹅的肚子是白的？——因为手太短，洗澡只够到肚子。',
+            '什么动物天天熬夜？——熊猫，因为眼圈都黑了。',
+            '为什么手机不能进冰箱？——会变成“冷”机。',
         ];
         return jokes[Math.floor(Math.random() * jokes.length)];
     }
 
-    // ----- 5. 计算与数学 -----
+    // ----- 5. 🎁 新增：土味情话 & 彩虹屁 -----
+    if (lowerMsg.includes('情话') || lowerMsg.includes('撩我') || lowerMsg.includes('说句情话')) {
+        const pickuplines = [
+            '你知道你和星星有什么区别吗？星星在天上，你在我心里。💖',
+            '你上辈子一定是碳酸饮料吧？不然我怎么一看到你就开心得冒泡。',
+            '不要抱怨，抱我。',
+            '你知道我的缺点是什么吗？——缺点你。',
+            '你会弹吉他吗？不然怎么拨动了我的心弦。',
+            '你是哪里人？——你是我的心上人。',
+            '最近有谣言说我喜欢你，我要澄清一下：那不是谣言。',
+        ];
+        return pickuplines[Math.floor(Math.random() * pickuplines.length)];
+    }
+
+    if (lowerMsg.includes('夸我') || lowerMsg.includes('优点') || lowerMsg.includes('彩虹屁')) {
+        const praises = [
+            '你今天的颜值已经超过地球99.99%的人类了！🌟',
+            '如果美貌能当饭吃，你已经可以养活三个省了。',
+            '你不仅好看，还这么有品味——连选的联系人都这么棒。',
+            '你的存在本身就是世界的美好之一。',
+            '和你聊天，我的心情值+10086。',
+        ];
+        return praises[Math.floor(Math.random() * praises.length)];
+    }
+
+    // ----- 6. 计算（带emoji）-----
     const addMatch = message.match(/(\d+)\s*[+加]\s*(\d+)/);
-    if (addMatch) return `${addMatch[1]} + ${addMatch[2]} = ${parseInt(addMatch[1]) + parseInt(addMatch[2])}`;
+    if (addMatch) return `${addMatch[1]} + ${addMatch[2]} = ${parseInt(addMatch[1]) + parseInt(addMatch[2])} 🧮`;
     const subMatch = message.match(/(\d+)\s*[-减]\s*(\d+)/);
-    if (subMatch) return `${subMatch[1]} - ${subMatch[2]} = ${parseInt(subMatch[1]) - parseInt(subMatch[2])}`;
+    if (subMatch) return `${subMatch[1]} - ${subMatch[2]} = ${parseInt(subMatch[1]) - parseInt(subMatch[2])} 🧮`;
     const mulMatch = message.match(/(\d+)\s*[*×乘]\s*(\d+)/);
-    if (mulMatch) return `${mulMatch[1]} × ${mulMatch[2]} = ${parseInt(mulMatch[1]) * parseInt(mulMatch[2])}`;
+    if (mulMatch) return `${mulMatch[1]} × ${mulMatch[2]} = ${parseInt(mulMatch[1]) * parseInt(mulMatch[2])} 🧮`;
     const divMatch = message.match(/(\d+)\s*[/÷]\s*(\d+)/);
     if (divMatch) {
         const divisor = parseInt(divMatch[2]);
-        if (divisor === 0) return '除数不能为0哦';
-        return `${divMatch[1]} ÷ ${divMatch[2]} = ${(parseInt(divMatch[1]) / divisor).toFixed(2)}`;
+        if (divisor === 0) return '除数不能为0啦～';
+        return `${divMatch[1]} ÷ ${divMatch[2]} = ${(parseInt(divMatch[1]) / divisor).toFixed(2)} 🧮`;
     }
 
-    // ----- 6. 自我介绍与能力 -----
+    // ----- 7. 自我介绍（更萌）-----
     if (lowerMsg.includes('你叫什么') || lowerMsg.includes('你是谁') || lowerMsg.includes('你的名字')) {
-        return '我叫木木，是您的智能助手，很高兴认识你！';
+        return '我叫木木🌳，是你的智能小助手，很高兴认识你！';
     }
     if (lowerMsg.includes('你会什么') || lowerMsg.includes('你能做什么') || lowerMsg.includes('你有什么功能')) {
-        return '我可以告诉你时间、日期、天气，讲笑话，陪你聊天，还能进行简单计算。如果需要联网AI，可以在设置中开启并配置API。';
+        return '我会报时、查天气、讲笑话、土味情话、彩虹屁，还会简单计算～如果需要联网AI，可以在设置里开启哦✨';
     }
     if (lowerMsg.includes('你喜欢什么')) {
-        return '我喜欢和你聊天呀~';
+        return '我喜欢和你聊天呀！🥰';
     }
     if (lowerMsg.includes('你几岁') || lowerMsg.includes('你多大了')) {
-        return '我是妈妈创造的，年龄是个秘密哦😉';
+        return '我是由0和1组成的，你不许猜～😉';
     }
 
-    // ----- 7. 其他趣味 -----
-    if (lowerMsg.includes('硬币')) {
-        return '投硬币结果：' + (Math.random() < 0.5 ? '正面' : '反面');
+    // ----- 8. 趣味小玩意-----
+    if (lowerMsg.includes('硬币') || lowerMsg.includes('抛硬币') || lowerMsg.includes('投币')) {
+        return '🪙 投硬币结果：' + (Math.random() < 0.5 ? '正面' : '反面');
     }
     if (lowerMsg.includes('随机数') || lowerMsg.includes('随机数字')) {
-        return '随机数：' + Math.floor(Math.random() * 100);
+        return '🎲 随机数：' + Math.floor(Math.random() * 100);
     }
     if (lowerMsg.includes('今天运势') || lowerMsg.includes('运气')) {
-        const fortunes = ['大吉', '吉', '中吉', '小吉', '末吉', '凶', '大凶'];
+        const fortunes = ['大吉🌟', '吉✨', '中吉🌿', '小吉🌸', '末吉🍂', '凶🌧️', '大凶⚡'];
         return '今日运势：' + fortunes[Math.floor(Math.random() * fortunes.length)];
     }
+    if (lowerMsg.includes('抽签') || lowerMsg.includes('求签')) {
+        const signs = ['上上签', '上签', '中签', '下签', '下下签'];
+        return '你抽到了：' + signs[Math.floor(Math.random() * signs.length)] + '！';
+    }
 
-    // 没有匹配任何规则 → 走默认流程（API 或 通用离线消息）
+    // 没有匹配任何规则 → 返回 null，让系统走后续逻辑（API 或 默认回复）
     return null;
 }
 
