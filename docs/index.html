@@ -2002,16 +2002,17 @@ function setupDesktopPhotoWidget() {
         renderCalendar();
         await renderProfile();
     })();
+// 在 init 函数末尾添加
+renderForumSections();
+if (document.getElementById('p-forum').classList.contains('active')) {
+    renderPosts(currentSectionId);
+}
 // 立即刷新一次
 updateClock();
 
 // 启动定时器，并保存句柄以便必要时重启
 if (window.clockInterval) clearInterval(window.clockInterval);
 window.clockInterval = setInterval(updateClock, 1000);
-// ========== 🆕 论坛数据初始化 ==========
-forumSections = FORUM_WORLD.sections;
-let currentSectionId = 'tools'; // 默认显示工具补给站
-let forumPosts = JSON.parse(localStorage.getItem('m_forum_posts') || '[]');
 
 // 首次启动时，插入几条示例帖子（符合打工人摸鱼主题）
 if (forumPosts.length === 0) {
@@ -2310,6 +2311,49 @@ async function generateAIPost() {
         btn.innerHTML = '🧠';
     }
 }
+
+// ========== 修改路由 to 函数，进入论坛时渲染 ==========
+const originalTo = to;
+to = function(id) {
+    if (originalTo) originalTo.call(this, id);
+    if (id === 'p-forum') {
+        if (!currentSectionId || currentSectionId === '') {
+            const firstAvail = forumSections.find(s => !s.requireAuth && !s.requireContribution);
+            currentSectionId = firstAvail ? firstAvail.id : 'tools';
+        }
+        renderForumSections();
+        const sectionName = forumSections.find(s => s.id === currentSectionId)?.name || '工具补给站';
+        const header = document.getElementById('forum-section-header');
+        if (header) header.innerText = sectionName;
+        renderPosts(currentSectionId);
+    }
+};
+
+// ========== 世界观弹窗 ==========
+const originalOpenMod = openMod;
+openMod = function(id) {
+    if (id === 'm-forum-world') {
+        const modalHtml = `
+            <div class="modal" id="m-forum-world" style="display:flex;">
+                <div class="modal-body">
+                    <h3>🌍🌍 打工人摸鱼论坛 · 世界观</h3>
+                    <p style="margin-bottom:12px;"><strong>口号：</strong>「${FORUM_WORLD.slogan}」</p>
+                    <p style="margin-bottom:12px;"><strong>文化符号：</strong>带薪拉屎 · 钓鱼 · 潜水 · 上岸</p>
+                    <p style="margin-bottom:12px;"><strong>绝对禁忌：</strong></p>
+                    <ul style="padding-left:20px; color:var(--note-text-gray);">
+                        ${FORUM_WORLD.rules.map(r => `<li style="margin-bottom:4px;">${r}</li>`).join('')}
+                    </ul>
+                    <button class="modal-cancel" onclick="closeMod('m-forum-world')">关闭</button>
+                </div>
+            </div>
+        `;
+        const div = document.createElement('div');
+        div.innerHTML = modalHtml;
+        document.body.appendChild(div);
+        return;
+    }
+    if (originalOpenMod) originalOpenMod.call(this, id);
+};
 
 // ========== 绑定事件监听 ==========
 // 在 bindEvents 函数中添加以下代码
