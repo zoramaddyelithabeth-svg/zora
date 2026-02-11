@@ -178,11 +178,37 @@
         const box = document.getElementById('album-box'); box.innerHTML = '';
         photos.forEach(src => box.innerHTML += `<div onclick="viewImg('${src}')" style="background-image:url(${src})"></div>`);
         
-        // 纪念日
-        const aList = document.getElementById('anni-list'); aList.innerHTML = '';
-        annis.sort((a,b)=>new Date(a.d)-new Date(b.d)).forEach((a, i) => {
-            aList.innerHTML += `<div class="list-item"><span>📅 ${a.d} <b>${a.t}</b></span><span class="del-text" onclick="delAnni(${i})">删除</span></div>`;
-        });
+        // 纪念日 - 安全渲染
+const aList = document.getElementById('anni-list');
+aList.innerHTML = ''; // 清空
+
+// 先把纪念日按日期排序
+annis.sort((a, b) => new Date(a.d) - new Date(b.d));
+
+annis.forEach((a, index) => {
+    // 创建一个外层 div
+    const item = document.createElement('div');
+    item.className = 'list-item';
+    // 把当前这个纪念日在数组里的位置存进去，方便后面删除
+    item.dataset.anniIndex = index;
+
+    // 左边的文字（日期和事项）
+    const leftSpan = document.createElement('span');
+    // 📅 2026-02-14 情人节
+    leftSpan.textContent = `📅 ${a.d} ${a.t}`;  // ⚠️ 这里用了 textContent，绝对安全
+
+    // 右边的“删除”按钮
+    const delSpan = document.createElement('span');
+    delSpan.className = 'del-text';
+    delSpan.textContent = '删除';
+
+    // 把左边和右边放进 item
+    item.appendChild(leftSpan);
+    item.appendChild(delSpan);
+
+    // 把 item 放进列表容器
+    aList.appendChild(item);
+});
 
         // 通讯录
         const cList = document.getElementById('con-list'); cList.innerHTML = '';
@@ -247,6 +273,23 @@
         }
     }
 
+    // 监听纪念日列表的点击事件（事件委托）
+document.getElementById('anni-list').addEventListener('click', function(e) {
+    // 检查点的是不是“删除”文字
+    const delBtn = e.target.closest('.del-text');
+    if (!delBtn) return; // 如果点的不是删除，不管
+
+    // 找到整个条目（.list-item）
+    const item = delBtn.closest('.list-item');
+    if (!item) return;
+
+    // 取出之前存在 dataset 里的索引
+    const index = parseInt(item.dataset.anniIndex, 10);
+    if (!isNaN(index)) {
+        delAnni(index);  // 调用原来的删除函数
+    }
+});
+    
     // --- 聊天与AI ---
     function saveApi() {
         apiCfg = { enabled: document.getElementById('api-toggle').checked, url: document.getElementById('api-url').value, key: document.getElementById('api-key').value };
