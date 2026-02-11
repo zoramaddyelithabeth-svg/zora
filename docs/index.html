@@ -597,6 +597,14 @@
 .forum-post-btn:hover {
     transform: scale(1.1);
 }
+<!-- 原有的发帖按钮 -->
+<div class="forum-post-btn" onclick="openForumPostModal()">
+    <span>✏️</span>
+</div>
+<!-- 🆕 AI漂流瓶按钮 -->
+<div class="forum-ai-btn" onclick="openAIConfigOrGenerate()">
+    <span>🧠</span>
+</div>
 /* 匿名标签 */
 .anonymous-badge {
     background: var(--note-hover);
@@ -605,6 +613,29 @@
     font-size: 10px;
     color: var(--note-text-gray);
     margin-left: 6px;
+}
+/* AI漂流瓶按钮（与发帖按钮对称） */
+.forum-ai-btn {
+    position: fixed;
+    bottom: 80px;
+    right: 90px; /* 放在发帖按钮左边 */
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(145deg, #8B5CF6, #6D28D9); /* 紫色调，区分于蓝色 */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    cursor: pointer;
+    transition: var(--note-transition);
+    z-index: 100;
+}
+.forum-ai-btn:hover {
+    transform: scale(1.1);
+    background: linear-gradient(145deg, #7C3AED, #5B21B6);
 }
     </style>
 </head>
@@ -1134,6 +1165,8 @@ function to(id) {
     let annis = JSON.parse(localStorage.getItem('m_annis') || '[]');
     let cons = JSON.parse(localStorage.getItem('m_cons') || '[{"id":"init-001","name":"木木"}]');
     let apiCfg = JSON.parse(localStorage.getItem('m_api_cfg') || '{"enabled":false,"url":"","key":""}');
+// ========== 智谱 AI 配置（独立于聊天AI）==========
+let zhipuConfig = JSON.parse(localStorage.getItem('m_zhipu_config') || '{"enabled":false,"apiKey":"","model":"glm-4"}');
     let wallpaperId = localStorage.getItem('m_wallpaper_id');
     let messages = JSON.parse(localStorage.getItem('m_messages') || '{}');
     let currentChatContactId = null;
@@ -1920,6 +1953,8 @@ function setupDesktopPhotoWidget() {
         document.getElementById('bottom-settings')?.addEventListener('click', function() { openMod('m-api'); });
         document.getElementById('bottom-memory')?.addEventListener('click', function() { openMod('m-music-player'); });
     }
+        // 智谱 AI 配置保存按钮
+        document.getElementById('save-zhipu-config-btn')?.addEventListener('click', saveZhipuConfig);
 
     // ==================== 时钟 ====================
     function updateClock() {
@@ -1949,7 +1984,7 @@ function setupDesktopPhotoWidget() {
         renderCalendar();
         await renderProfile();
     })();
-    // ========== 🆕 论坛数据初始化 ==========
+// ========== 🆕 论坛数据初始化 ==========
 let forumSections = FORUM_WORLD.sections;
 let currentSectionId = 'tools'; // 默认显示工具补给站
 let forumPosts = JSON.parse(localStorage.getItem('m_forum_posts') || '[]');
@@ -2055,6 +2090,25 @@ function openForumPostModal() {
     document.getElementById('submit-post-btn').onclick = submitForumPost;
 }
 
+<!-- 智谱 AI 配置弹窗 -->
+<div class="modal" id="m-zhipu-config">
+    <div class="modal-body">
+        <h3>🧠 智谱 AI 漂流瓶</h3>
+        <p style="color:var(--note-text-gray); margin-bottom:12px;">启用后点击🧠按钮，AI 会自动生成符合当前分区的摸鱼帖子。</p>
+        <label style="display:flex; align-items:center; margin-bottom:12px;">
+            <input type="checkbox" id="zhipu-enable" style="width:auto; margin-right:8px;"> 启用 AI 生成
+        </label>
+        <input type="password" id="zhipu-apikey" placeholder="智谱 API Key" value="">
+        <select id="zhipu-model" style="margin:8px 0; padding:12px; border:1px solid var(--note-border); border-radius:var(--note-radius-hard);">
+            <option value="glm-4">glm-4（推荐）</option>
+            <option value="glm-3-turbo">glm-3-turbo</option>
+            <option value="glm-4v">glm-4v（图像理解，暂不支持）</option>
+        </select>
+        <button class="modal-btn" id="save-zhipu-config-btn">保存配置</button>
+        <button class="modal-cancel" onclick="closeMod('m-zhipu-config')">取消</button>
+    </div>
+</div>
+
 // ========== 提交帖子 ==========
 function submitForumPost() {
     const sectionId = document.getElementById('post-section').value;
@@ -2129,6 +2183,113 @@ to = function(id) {
         renderPosts(currentSectionId);
     }
 };
+// ========== 智谱 AI 配置界面回填与保存 ==========
+function openAIConfigOrGenerate() {
+    if (!zhipuConfig.enabled) {
+        // 未启用：打开配置弹窗
+        document.getElementById('zhipu-enable').checked = zhipuConfig.enabled;
+        document.getElementById('zhipu-apikey').value = zhipuConfig.apiKey || '';
+        document.getElementById('zhipu-model').value = zhipuConfig.model || 'glm-4';
+        openMod('m-zhipu-config');
+    } else {
+        // 已启用：直接生成帖子
+        generateAIPost();
+    }
+}
+
+// 保存智谱配置
+function saveZhipuConfig() {
+    zhipuConfig.enabled = document.getElementById('zhipu-enable').checked;
+    zhipuConfig.apiKey = document.getElementById('zhipu-apikey').value.trim();
+    zhipuConfig.model = document.getElementById('zhipu-model').value;
+    localStorage.setItem('m_zhipu_config', JSON.stringify(zhipuConfig));
+    closeMod('m-zhipu-config');
+    if (zhipuConfig.enabled && zhipuConfig.apiKey) {
+        alert('配置已保存，点击🧠按钮即可生成帖子');
+    }
+}
+
+// ========== AI 生成帖子（智谱 API）==========
+async function generateAIPost() {
+    if (!zhipuConfig.enabled || !zhipuConfig.apiKey) {
+        alert('请先在🧠配置中启用并填写 API Key');
+        openAIConfigOrGenerate();
+        return;
+    }
+
+    // 获取当前分区信息
+    const section = forumSections.find(s => s.id === currentSectionId);
+    if (!section) {
+        alert('请先选择一个分区');
+        return;
+    }
+
+    // 显示加载状态（可简单提示）
+    const btn = document.querySelector('.forum-ai-btn');
+    btn.style.background = '#999';
+    btn.style.pointerEvents = 'none';
+    btn.innerHTML = '⏳';
+
+    try {
+        // 构造 prompt（融入论坛世界观）
+        const prompt = `你是「打工人摸鱼论坛」的“漂流瓶生成器”，论坛口号：${FORUM_WORLD.slogan}。
+请为「${section.name}」分区生成一条匿名帖子，内容幽默、真实、短小精悍，20~60字，符合该分区主题。
+直接返回帖子正文，不要任何解释，不要加引号。`;
+
+        const response = await fetch('https://open.bigmodel.cn/api/paas/v4/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${zhipuConfig.apiKey}`
+            },
+            body: JSON.stringify({
+                model: zhipuConfig.model,
+                messages: [
+                    { role: 'system', content: '你是一个风趣幽默的打工人，擅长分享职场摸鱼技巧和日常吐槽。' },
+                    { role: 'user', content: prompt }
+                ],
+                temperature: 0.8,
+                max_tokens: 150
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`API 请求失败: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const content = data.choices[0].message.content.trim();
+
+        // 创建新帖子
+        const now = new Date();
+        const timeStr = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+        const newPost = {
+            id: Date.now() + '-' + Math.random().toString(36).substr(2, 4),
+            sectionId: currentSectionId,
+            author: 'AI漂流瓶',
+            time: timeStr,
+            content: content,
+            anonymous: true,
+            likes: 0,
+            replies: 0
+        };
+        forumPosts.push(newPost);
+        localStorage.setItem('m_forum_posts', JSON.stringify(forumPosts));
+        renderPosts(currentSectionId);
+    } catch (error) {
+        console.error('AI 生成失败', error);
+        alert('生成失败，请检查 API Key 或网络。\n' + error.message);
+    } finally {
+        // 恢复按钮
+        btn.style.background = 'linear-gradient(145deg, #8B5CF6, #6D28D9)';
+        btn.style.pointerEvents = 'auto';
+        btn.innerHTML = '🧠';
+    }
+}
+
+// ========== 绑定事件监听 ==========
+// 在 bindEvents 函数中添加以下代码
+document.getElementById('save-zhipu-config-btn')?.addEventListener('click', saveZhipuConfig);
 </script>
 </body>
 </html>
