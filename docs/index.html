@@ -340,9 +340,12 @@ document.getElementById('anni-list').addEventListener('click', function(e) {
         localStorage.setItem('m_api_cfg', JSON.stringify(apiCfg));
         closeMod('m-api');
     }
-    async function sendMsg() {
-        const input = document.getElementById('chat-in'); const val = input.value.trim();
-        if(!val) return; append('mine', val); input.value = '';
+        async function sendMsg() {
+        const input = document.getElementById('chat-in'); 
+        const val = input.value.trim();
+        if(!val) return; 
+        append('mine', val); 
+        input.value = '';
         
         if (!apiCfg.enabled) { 
             setTimeout(() => append('other', "已收到消息（当前为本地模式，可在设置中开启AI）"), 600); 
@@ -350,45 +353,47 @@ document.getElementById('anni-list').addEventListener('click', function(e) {
         }
         
         // 先把等待气泡添加进去，并保存对这个气泡的引用
-const tempBubble = append('other', "...");
+        const tempBubble = append('other', "...");
 
-try {
-    const res = await fetch(apiCfg.url, {
-        method: 'POST',
-        headers: { 
-            'Content-Type': 'application/json', 
-            'Authorization': `Bearer ${apiCfg.key}` 
-        },
-        body: JSON.stringify({
-            model: 'deepseek-ai/DeepSeek-V3',
-            messages: [
-                { role: "system", content: "你叫木木，温柔简练。" },
-                { role: "user", content: val }
-            ]
-        })
-    });
-    const data = await res.json();
-    // 直接更新刚刚那个气泡的文字
-    tempBubble.textContent = data.choices[0].message.content;
-} catch(e) { 
-    tempBubble.textContent = "连接超时，请检查配置。";
-}
-   function append(side, text) {
-    const flow = document.getElementById('chat-flow');
-    
-    const row = document.createElement('div');
-    row.className = `msg-row ${side}`;
-    
-    const bubble = document.createElement('div');
-    bubble.className = 'bubble';
-    bubble.textContent = text;   // ⚠️ 关键：纯文本，不执行任何 HTML
-    
-    row.appendChild(bubble);
-    flow.appendChild(row);
-    
-    flow.scrollTop = flow.scrollHeight;
-    return bubble; // 返回气泡元素，用于 AI 回复时直接更新文字
-}
+        try {
+            const res = await fetch(apiCfg.url, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json', 
+                    'Authorization': `Bearer ${apiCfg.key}` 
+                },
+                body: JSON.stringify({
+                    model: 'deepseek-ai/DeepSeek-V3',
+                    messages: [
+                        { role: "system", content: "你叫木木，温柔简练。" },
+                        { role: "user", content: val }
+                    ]
+                })
+            });
+            const data = await res.json();
+            // 直接更新刚刚那个气泡的文字
+            tempBubble.textContent = data.choices[0].message.content;
+        } catch(e) { 
+            tempBubble.textContent = "连接超时，请检查配置。";
+        }
+    }  // ← 这里有一个 } 闭合 sendMsg
+
+    function append(side, text) {
+        const flow = document.getElementById('chat-flow');
+        
+        const row = document.createElement('div');
+        row.className = `msg-row ${side}`;
+        
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        bubble.textContent = text;   // ⚠️ 关键：纯文本，不执行任何 HTML
+        
+        row.appendChild(bubble);
+        flow.appendChild(row);
+        
+        flow.scrollTop = flow.scrollHeight;
+        return bubble; // 返回气泡元素，用于 AI 回复时直接更新文字
+    }
 
     // --- 实时更新时间 ---
     function updateClock() {
