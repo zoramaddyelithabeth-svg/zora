@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>SmartOS Pro Ultra</title>
+    <title>SmartOS Pro Ultra · 安全唯一ID版</title>
     <style>
         :root {
             --wechat-green: #07C160;
@@ -22,15 +22,12 @@
             .app-container { max-width: 375px; height: 812px; border-radius: 40px; border: 8px solid #333; }
         }
 
-        /* 状态栏 & 导航 */
         .status-bar { height: 44px; padding: 14px 20px 0; display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 600; z-index: 1000; position: absolute; top: 0; width: 100%; }
         .nav-bar { height: 50px; background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); border-bottom: 0.5px solid #ddd; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; flex-shrink: 0; }
         
-        /* 页面引擎 */
         .page { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #F2F2F7; display: none; flex-direction: column; z-index: 10; padding-top: 44px; }
         .page.active { display: flex; }
 
-        /* 桌面 & 图标 */
         .home-bg { transition: background 0.8s ease; background-size: cover !important; background-position: center !important; }
         .home-clock { text-align: center; padding: 30px 0; text-shadow: 0 1px 5px rgba(0,0,0,0.1); }
         .home-clock h1 { font-size: 64px; font-weight: 200; letter-spacing: -2px; }
@@ -40,23 +37,28 @@
         .app-icon { width: 60px; height: 60px; background: var(--glass); border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 28px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.4); box-shadow: 0 8px 15px rgba(0,0,0,0.05); }
         .app-name { font-size: 11px; margin-top: 8px; font-weight: 500; }
 
-        /* 相册 (4列紧密布局) */
         #album-box { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; padding: 2px 0; overflow-y: auto; flex: 1; background: #fff; }
         #album-box div { aspect-ratio: 1/1; background-size: cover; background-position: center; transition: opacity 0.2s; }
         #album-box div:active { opacity: 0.7; }
 
-        /* 日历样式 */
         .cal-header { background: #fff; padding: 15px; text-align: center; border-bottom: 0.5px solid #eee; }
         .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); background: #fff; padding: 10px; border-bottom: 0.5px solid #eee; }
         .cal-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 14px; position: relative; }
         .cal-day.today { background: var(--ios-red); color: #fff; border-radius: 50%; }
         .cal-day.has-event::after { content: ''; width: 4px; height: 4px; background: #999; border-radius: 50%; position: absolute; bottom: 4px; }
+        .cal-weekday {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #999;
+            font-weight: 600;
+        }
 
-        /* 列表项与通讯录 */
         .list-item { padding: 15px; border-bottom: 0.5px solid #eee; background: #fff; display: flex; align-items: center; justify-content: space-between; font-size: 16px; }
         .del-text { color: var(--ios-red); font-size: 14px; font-weight: 500; padding: 5px; }
 
-        /* 聊天气泡 */
         #chat-flow { flex: 1; overflow-y: auto; background: #ededed; padding: 15px; display: flex; flex-direction: column; gap: 12px; }
         .msg-row { display: flex; gap: 10px; max-width: 85%; }
         .msg-row.mine { align-self: flex-end; flex-direction: row-reverse; }
@@ -64,105 +66,154 @@
         .mine .bubble { background: var(--wechat-green); color: #fff; }
         .other .bubble { background: #fff; color: #000; }
 
-        /* 沉浸式查看器 */
         #viewer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 2000; display: none; flex-direction: column; justify-content: center; align-items: center; }
         #viewer img { max-width: 100%; max-height: 85%; object-fit: contain; }
         .viewer-btns { position: absolute; bottom: 60px; display: flex; gap: 20px; z-index: 2001; }
         .v-btn { padding: 12px 25px; border-radius: 25px; background: rgba(255,255,255,0.25); color: #fff; border: none; backdrop-filter: blur(15px); font-size: 14px; }
 
-        /* 弹窗通用 */
         .modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 1500; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         .modal-body { width: 85%; background: #fff; border-radius: 24px; padding: 25px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
         .modal-body h3 { margin-bottom: 10px; }
         .modal-body input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 10px; outline: none; font-size: 16px; }
         .modal-btn { width: 100%; padding: 14px; background: var(--ios-blue); color: #fff; border: none; border-radius: 12px; margin-top: 10px; font-weight: 600; }
-        .cal-weekday {
-    aspect-ratio: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    color: #999;
-    font-weight: 600;
-}
     </style>
 </head>
 <body>
-
 <div class="app-container">
     <div class="status-bar" id="status-bar">
         <span id="st-time">00:00</span>
         <div>📶 🔋</div>
     </div>
 
+    <!-- 桌面（无内联onclick） -->
     <div class="page active home-bg" id="p-home">
         <div class="home-clock">
             <h1 id="big-clock">00:00</h1>
             <p id="big-date" style="opacity:0.8"></p>
         </div>
         <div class="app-grid">
-            <div class="app-item" onclick="to('p-chat')"><div class="app-icon">💬</div><div class="app-name">微信</div></div>
-            <div class="app-item" onclick="to('p-album')"><div class="app-icon">🖼️</div><div class="app-name">相册</div></div>
-            <div class="app-item" onclick="to('p-cal')"><div class="app-icon">📅</div><div class="app-name">日历</div></div>
-            <div class="app-item" onclick="to('p-con')"><div class="app-icon">👥</div><div class="app-name">通讯录</div></div>
-            <div class="app-item" onclick="to('p-safari')"><div class="app-icon">🌐</div><div class="app-name">Safari</div></div>
+            <div class="app-item" data-page="p-chat"><div class="app-icon">💬</div><div class="app-name">微信</div></div>
+            <div class="app-item" data-page="p-album"><div class="app-icon">🖼️</div><div class="app-name">相册</div></div>
+            <div class="app-item" data-page="p-cal"><div class="app-icon">📅</div><div class="app-name">日历</div></div>
+            <div class="app-item" data-page="p-con"><div class="app-icon">👥</div><div class="app-name">通讯录</div></div>
+            <div class="app-item" data-page="p-safari"><div class="app-icon">🌐</div><div class="app-name">Safari</div></div>
         </div>
     </div>
 
+    <!-- 聊天 -->
     <div class="page" id="p-chat">
-        <div class="nav-bar"><span onclick="to('p-home')" style="color:var(--ios-blue)">〈 桌面</span><b id="chat-title">木木</b><span onclick="openMod('m-api')" style="color:var(--ios-blue); font-size:13px;">设置</span></div>
+        <div class="nav-bar">
+            <span class="nav-back" data-home="p-home" style="color:var(--ios-blue)">〈 桌面</span>
+            <b id="chat-title">木木</b>
+            <span class="nav-setting" data-mod="m-api" style="color:var(--ios-blue); font-size:13px;">设置</span>
+        </div>
         <div id="chat-flow"></div>
         <div style="padding:10px; background:#f7f7f7; display:flex; gap:10px; padding-bottom: 25px;">
             <input type="text" id="chat-in" placeholder="用回车发送..." style="flex:1; padding:10px; border-radius:8px; border:1px solid #ddd;">
-            <button onclick="sendMsg()" style="background:var(--wechat-green); color:#fff; border:none; padding:0 15px; border-radius:8px;">发送</button>
+            <button id="send-btn" style="background:var(--wechat-green); color:#fff; border:none; padding:0 15px; border-radius:8px;">发送</button>
         </div>
     </div>
 
+    <!-- 相册 -->
     <div class="page" id="p-album">
-        <div class="nav-bar"><span onclick="to('p-home')" style="color:var(--ios-blue)">〈 返回</span><b>所有照片</b><span onclick="document.getElementById('up').click()" style="color:var(--ios-blue)">上传</span></div>
-        <input type="file" id="up" hidden multiple onchange="upImg(this)" accept="image/*">
+        <div class="nav-bar">
+            <span class="nav-back" data-home="p-home" style="color:var(--ios-blue)">〈 返回</span>
+            <b>所有照片</b>
+            <span id="upload-trigger" style="color:var(--ios-blue)">上传</span>
+        </div>
+        <input type="file" id="up" hidden multiple accept="image/*">
         <div id="album-box"></div>
     </div>
 
+    <!-- 日历 -->
     <div class="page" id="p-cal">
-        <div class="nav-bar"><span onclick="to('p-home')" style="color:var(--ios-blue)">〈 返回</span><b>日历</b><span onclick="openMod('m-anni')" style="color:var(--ios-blue)">添加</span></div>
+        <div class="nav-bar">
+            <span class="nav-back" data-home="p-home" style="color:var(--ios-blue)">〈 返回</span>
+            <b>日历</b>
+            <span class="nav-add" data-mod="m-anni" style="color:var(--ios-blue)">添加</span>
+        </div>
         <div class="cal-header"><h3 id="cal-month"></h3></div>
         <div class="cal-grid" id="cal-body"></div>
         <div id="anni-list" style="flex:1; overflow-y:auto; background:#fff;"></div>
     </div>
 
+    <!-- 通讯录 -->
     <div class="page" id="p-con">
-        <div class="nav-bar"><span onclick="to('p-home')" style="color:var(--ios-blue)">〈 返回</span><b>通讯录</b><span onclick="openMod('m-con')" style="color:var(--ios-blue)">➕</span></div>
+        <div class="nav-bar">
+            <span class="nav-back" data-home="p-home" style="color:var(--ios-blue)">〈 返回</span>
+            <b>通讯录</b>
+            <span class="nav-add" data-mod="m-con" style="color:var(--ios-blue)">➕</span>
+        </div>
         <div id="con-list" style="flex:1; overflow-y:auto;"></div>
     </div>
 
+    <!-- Safari -->
     <div class="page" id="p-safari">
-        <div class="nav-bar"><span onclick="to('p-home')" style="color:var(--ios-blue)">〈 桌面</span><b>浏览器</b></div>
+        <div class="nav-bar">
+            <span class="nav-back" data-home="p-home" style="color:var(--ios-blue)">〈 桌面</span>
+            <b>浏览器</b>
+        </div>
         <iframe src="https://m.bing.com" style="flex:1; border:none;"></iframe>
     </div>
 
+    <!-- 大图查看器 -->
     <div id="viewer" onclick="closeViewer()">
         <img id="v-img" src="" onclick="event.stopPropagation()">
         <div class="viewer-btns" onclick="event.stopPropagation()">
-            <button class="v-btn" onclick="setWallpaper()">设为壁纸</button>
-            <button class="v-btn" onclick="closeViewer()">返回</button>
+            <button class="v-btn" id="set-wallpaper-btn">设为壁纸</button>
+            <button class="v-btn" id="close-viewer-btn">返回</button>
         </div>
     </div>
 
-    <div class="modal" id="m-api"><div class="modal-body"><h3>AI 联网设置</h3><label><input type="checkbox" id="api-toggle"> 开启 AI 响应</label><input type="text" id="api-url" placeholder="API URL (含 v1/chat/completions)"><input type="password" id="api-key" placeholder="API Key"><button class="modal-btn" onclick="saveApi()">保存配置</button><button onclick="closeMod('m-api')" style="width:100%; background:none; border:none; margin-top:10px; color:#999;">取消</button></div></div>
+    <!-- 弹窗 -->
+    <div class="modal" id="m-api">
+        <div class="modal-body">
+            <h3>AI 联网设置</h3>
+            <label><input type="checkbox" id="api-toggle"> 开启 AI 响应</label>
+            <input type="text" id="api-url" placeholder="API URL (含 v1/chat/completions)">
+            <input type="password" id="api-key" placeholder="API Key">
+            <button class="modal-btn" id="save-api-btn">保存配置</button>
+            <button class="modal-cancel" data-mod="m-api" style="width:100%; background:none; border:none; margin-top:10px; color:#999;">取消</button>
+        </div>
+    </div>
     
-    <div class="modal" id="m-anni"><div class="modal-body"><h3>新纪念日</h3><input type="text" id="at" placeholder="事项名称"><input type="date" id="ad"><button class="modal-btn" onclick="saveAnni()">保存</button><button onclick="closeMod('m-anni')" style="width:100%; background:none; border:none; margin-top:10px; color:#999;">取消</button></div></div>
+    <div class="modal" id="m-anni">
+        <div class="modal-body">
+            <h3>新纪念日</h3>
+            <input type="text" id="at" placeholder="事项名称">
+            <input type="date" id="ad">
+            <button class="modal-btn" id="save-anni-btn">保存</button>
+            <button class="modal-cancel" data-mod="m-anni" style="width:100%; background:none; border:none; margin-top:10px; color:#999;">取消</button>
+        </div>
+    </div>
     
-    <div class="modal" id="m-con"><div class="modal-body"><h3>新联系人</h3><input type="text" id="cn" placeholder="姓名"><button class="modal-btn" onclick="saveCon()">添加</button><button onclick="closeMod('m-con')" style="width:100%; background:none; border:none; margin-top:10px; color:#999;">取消</button></div></div>
+    <div class="modal" id="m-con">
+        <div class="modal-body">
+            <h3>新联系人</h3>
+            <input type="text" id="cn" placeholder="姓名">
+            <button class="modal-btn" id="save-con-btn">添加</button>
+            <button class="modal-cancel" data-mod="m-con" style="width:100%; background:none; border:none; margin-top:10px; color:#999;">取消</button>
+        </div>
+    </div>
 </div>
 
 <script>
-    // --- 核心路由与初始化 ---
+    // --- 数据持久化 ---
+    let photos = JSON.parse(localStorage.getItem('m_photos') || '[]');
+    let annis = JSON.parse(localStorage.getItem('m_annis') || '[]');
+    let cons = JSON.parse(localStorage.getItem('m_cons') || '[{"id":"init-001","name":"木木"}]');
+    let apiCfg = JSON.parse(localStorage.getItem('m_api_cfg') || '{"enabled":false,"url":"","key":""}');
+    let wall = localStorage.getItem('m_wall') || '';
+
+    if (wall) document.getElementById('p-home').style.background = `url(${wall})`;
+
+    // --- 核心路由 ---
     function to(id) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         if (id === 'p-cal') renderCalendar();
     }
+
     function openMod(id) {
         if (id === 'm-api') {
             document.getElementById('api-toggle').checked = apiCfg.enabled;
@@ -172,15 +223,6 @@
         document.getElementById(id).style.display = 'flex';
     }
     function closeMod(id) { document.getElementById(id).style.display = 'none'; }
-
-    // --- 数据持久化 ---
-    let photos = JSON.parse(localStorage.getItem('m_photos') || '[]');
-    let annis = JSON.parse(localStorage.getItem('m_annis') || '[]');
-    let cons = JSON.parse(localStorage.getItem('m_cons') || '[{"name":"木木"}]');
-    let apiCfg = JSON.parse(localStorage.getItem('m_api_cfg') || '{"enabled":false,"url":"","key":""}');
-    let wall = localStorage.getItem('m_wall') || '';
-
-    if (wall) document.getElementById('p-home').style.background = `url(${wall})`;
 
     // --- 渲染所有动态列表 ---
     function renderAll() {
@@ -197,14 +239,14 @@
         });
         box.appendChild(fragment);
 
-        // ---------- 纪念日（安全渲染）----------
+        // ---------- 纪念日（安全渲染 + 唯一ID）----------
         const aList = document.getElementById('anni-list');
         aList.innerHTML = '';
         annis.sort((a, b) => new Date(a.d) - new Date(b.d));
-        annis.forEach((a, index) => {
+        annis.forEach(a => {
             const item = document.createElement('div');
             item.className = 'list-item';
-            item.dataset.anniIndex = index;
+            item.dataset.anniId = a.id;
 
             const leftSpan = document.createElement('span');
             leftSpan.textContent = `📅 ${a.d} ${a.t}`;
@@ -218,27 +260,28 @@
             aList.appendChild(item);
         });
 
-       // ---------- 通讯录（安全渲染 + 唯一ID）----------
-const cList = document.getElementById('con-list');
-cList.innerHTML = '';
-cons.forEach(c => {
-    const item = document.createElement('div');
-    item.className = 'list-item';
-    item.dataset.conId = c.id;   // ✅ 存储唯一ID
+        // ---------- 通讯录（安全渲染 + 唯一ID）----------
+        const cList = document.getElementById('con-list');
+        cList.innerHTML = '';
+        cons.forEach(c => {
+            const item = document.createElement('div');
+            item.className = 'list-item';
+            item.dataset.conId = c.id;
 
-    const nameSpan = document.createElement('span');
-    nameSpan.textContent = `👤 ${c.name}`;
+            const nameSpan = document.createElement('span');
+            nameSpan.textContent = `👤 ${c.name}`;
 
-    const delSpan = document.createElement('span');
-    delSpan.className = 'del-text';
-    delSpan.textContent = '删除';
+            const delSpan = document.createElement('span');
+            delSpan.className = 'del-text';
+            delSpan.textContent = '删除';
 
-    item.appendChild(nameSpan);
-    item.appendChild(delSpan);
-    cList.appendChild(item);
-});
+            item.appendChild(nameSpan);
+            item.appendChild(delSpan);
+            cList.appendChild(item);
+        });
+    }
 
-    // --- 相册逻辑（查看、壁纸、上传）---
+    // --- 相册逻辑 ---
     function upImg(el) {
         const files = Array.from(el.files);
         files.forEach(file => {
@@ -266,37 +309,41 @@ cons.forEach(c => {
         closeViewer();
     }
 
-    // --- 通讯录与纪念日 CRUD ---
+    // --- 通讯录 CRUD（唯一ID）---
     function saveCon() {
         const n = document.getElementById('cn').value;
         if (n) {
-           cons.push({ 
-    id: Date.now() + '-' + Math.random().toString(36).substr(2, 6),  // 唯一ID
-    name: n 
-});
+            cons.push({
+                id: Date.now() + '-' + Math.random().toString(36).substr(2, 6),
+                name: n
+            });
             localStorage.setItem('m_cons', JSON.stringify(cons));
             renderAll();
             closeMod('m-con');
             document.getElementById('cn').value = '';
         }
     }
-   function delCon(id) {
-    if (confirm("确定删除该联系人？")) {
-        // 找到数组中 id 匹配的那一项并删除
-        const index = cons.findIndex(c => c.id === id);
-        if (index !== -1) {
-            cons.splice(index, 1);
-            localStorage.setItem('m_cons', JSON.stringify(cons));
-            renderAll();
+    function delCon(id) {
+        if (confirm("确定删除该联系人？")) {
+            const index = cons.findIndex(c => c.id === id);
+            if (index !== -1) {
+                cons.splice(index, 1);
+                localStorage.setItem('m_cons', JSON.stringify(cons));
+                renderAll();
+            }
         }
     }
-}
 
+    // --- 纪念日 CRUD（唯一ID）---
     function saveAnni() {
         const t = document.getElementById('at').value,
               d = document.getElementById('ad').value;
         if (t && d) {
-            annis.push({ t, d });
+            annis.push({
+                id: Date.now() + '-' + Math.random().toString(36).substr(2, 6),
+                t: t,
+                d: d
+            });
             localStorage.setItem('m_annis', JSON.stringify(annis));
             renderAll();
             renderCalendar();
@@ -305,14 +352,17 @@ cons.forEach(c => {
             document.getElementById('ad').value = '';
         }
     }
-    function delAnni(i) {
-        annis.splice(i, 1);
-        localStorage.setItem('m_annis', JSON.stringify(annis));
-        renderAll();
-        renderCalendar();
+    function delAnni(id) {
+        const index = annis.findIndex(a => a.id === id);
+        if (index !== -1) {
+            annis.splice(index, 1);
+            localStorage.setItem('m_annis', JSON.stringify(annis));
+            renderAll();
+            renderCalendar();
+        }
     }
 
-    // --- 日历生成（安全 DOM 操作）---
+    // --- 日历生成 ---
     function renderCalendar() {
         const now = new Date();
         const y = now.getFullYear();
@@ -327,7 +377,6 @@ cons.forEach(c => {
 
         const fragment = document.createDocumentFragment();
 
-        // 星期标题（独立类名，避免挤压）
         ['日', '一', '二', '三', '四', '五', '六'].forEach(w => {
             const div = document.createElement('div');
             div.className = 'cal-weekday';
@@ -335,12 +384,10 @@ cons.forEach(c => {
             fragment.appendChild(div);
         });
 
-        // 空白占位
         for (let i = 0; i < firstDay; i++) {
             fragment.appendChild(document.createElement('div'));
         }
 
-        // 日期格子
         for (let d = 1; d <= lastDate; d++) {
             const dateStr = `${y}-${(m + 1).toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}`;
             const isToday = (d === now.getDate()) ? 'today' : '';
@@ -415,47 +462,93 @@ cons.forEach(c => {
         return bubble;
     }
 
-    // --- 事件委托监听（全部放在这里，避免重复绑定）---
-    function initEventListeners() {
-        // 纪念日删除
-        document.getElementById('anni-list').addEventListener('click', function (e) {
+    // --- 事件监听统一绑定 ---
+    function bindEvents() {
+        // 桌面图标导航
+        document.querySelectorAll('.app-item[data-page]').forEach(el => {
+            el.addEventListener('click', function() {
+                to(this.dataset.page);
+            });
+        });
+
+        // 返回按钮（带 data-home）
+        document.querySelectorAll('.nav-back[data-home]').forEach(el => {
+            el.addEventListener('click', function() {
+                to(this.dataset.home);
+            });
+        });
+
+        // 打开弹窗（设置、添加纪念日、添加联系人）
+        document.querySelectorAll('.nav-setting[data-mod], .nav-add[data-mod]').forEach(el => {
+            el.addEventListener('click', function() {
+                openMod(this.dataset.mod);
+            });
+        });
+
+        // 上传触发
+        document.getElementById('upload-trigger')?.addEventListener('click', function() {
+            document.getElementById('up').click();
+        });
+
+        // 发送按钮
+        document.getElementById('send-btn')?.addEventListener('click', sendMsg);
+        document.getElementById('chat-in')?.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMsg();
+        });
+
+        // 弹窗取消按钮
+        document.querySelectorAll('.modal-cancel').forEach(el => {
+            el.addEventListener('click', function() {
+                closeMod(this.dataset.mod);
+            });
+        });
+
+        // 保存配置按钮
+        document.getElementById('save-api-btn')?.addEventListener('click', saveApi);
+        document.getElementById('save-anni-btn')?.addEventListener('click', saveAnni);
+        document.getElementById('save-con-btn')?.addEventListener('click', saveCon);
+
+        // 壁纸设置、关闭查看器
+        document.getElementById('set-wallpaper-btn')?.addEventListener('click', setWallpaper);
+        document.getElementById('close-viewer-btn')?.addEventListener('click', closeViewer);
+
+        // 纪念日删除（事件委托）
+        document.getElementById('anni-list')?.addEventListener('click', function(e) {
             const delBtn = e.target.closest('.del-text');
             if (!delBtn) return;
             const item = delBtn.closest('.list-item');
             if (!item) return;
-            const index = parseInt(item.dataset.anniIndex, 10);
-            if (!isNaN(index)) delAnni(index);
+            const id = item.dataset.anniId;
+            if (id) delAnni(id);
         });
 
-        // 通讯录点击监听
-document.getElementById('con-list').addEventListener('click', function (e) {
-    const item = e.target.closest('.list-item');
-    if (!item) return;
-    const id = item.dataset.conId;   // 获取唯一ID
-    if (!id) return;
+        // 通讯录删除 + 进入聊天（事件委托）
+        document.getElementById('con-list')?.addEventListener('click', function(e) {
+            const item = e.target.closest('.list-item');
+            if (!item) return;
+            const id = item.dataset.conId;
+            if (!id) return;
 
-    // 如果点的是删除按钮
-    if (e.target.classList.contains('del-text')) {
-        e.stopPropagation();
-        delCon(id);
-        return;
-    }
+            if (e.target.classList.contains('del-text')) {
+                e.stopPropagation();
+                delCon(id);
+                return;
+            }
 
-    // 进入聊天
-    const contact = cons.find(c => c.id === id);
-    const name = contact ? contact.name : '联系人';
-    to('p-chat');
-    document.getElementById('chat-title').textContent = name;
-});
+            const contact = cons.find(c => c.id === id);
+            const name = contact ? contact.name : '联系人';
+            to('p-chat');
+            document.getElementById('chat-title').textContent = name;
+        });
 
-        // 相册点击查看大图
-        document.getElementById('album-box').addEventListener('click', function (e) {
+        // 相册点击查看（事件委托）
+        document.getElementById('album-box')?.addEventListener('click', function(e) {
             const thumb = e.target.closest('[data-src]');
             if (thumb) viewImg(thumb.dataset.src);
         });
     }
 
-    // --- 实时更新时间 ---
+    // --- 实时时钟 ---
     function updateClock() {
         const now = new Date();
         const timeStr = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
@@ -469,8 +562,8 @@ document.getElementById('con-list').addEventListener('click', function (e) {
         document.getElementById('status-bar').style.color = isNight ? "#fff" : "#000";
     }
 
-    // --- 启动一切 ---
-    initEventListeners();      // 绑定所有事件委托
+    // --- 启动 ---
+    bindEvents();
     setInterval(updateClock, 1000);
     updateClock();
     renderAll();
