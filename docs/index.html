@@ -1953,20 +1953,38 @@ function setupDesktopPhotoWidget() {
         document.getElementById('bottom-settings')?.addEventListener('click', function() { openMod('m-api'); });
         document.getElementById('bottom-memory')?.addEventListener('click', function() { openMod('m-music-player'); });
     }
-        // 智谱 AI 配置保存按钮
-        document.getElementById('save-zhipu-config-btn')?.addEventListener('click', saveZhipuConfig);
-
+       
     // ==================== 时钟 ====================
     function updateClock() {
-        const now = new Date();
-        const timeStr = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
-        document.getElementById('st-time').innerText = timeStr;
-        document.getElementById('big-clock').innerText = timeStr;
-        document.getElementById('big-date').innerText = now.toLocaleDateString('zh-CN', { month: 'long', day: 'numeric', weekday: 'short' });
-        const isNight = now.getHours() >= 18 || now.getHours() < 6;
-        document.getElementById('p-home').style.color = isNight ? "#fff" : "#000";
-        document.getElementById('status-bar').style.color = isNight ? "#fff" : "#000";
-    }
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const timeStr = `${hours}:${minutes}`;
+    
+    // 状态栏时间
+    const stTime = document.getElementById('st-time');
+    if (stTime) stTime.innerText = timeStr;
+    
+    // 大时钟
+    const bigClock = document.getElementById('big-clock');
+    if (bigClock) bigClock.innerText = timeStr;
+    
+    // 日期（手动拼装，避免 toLocaleDateString 兼容问题）
+    const year = now.getFullYear();
+    const month = (now.getMonth() + 1).toString().padStart(2, '0');
+    const day = now.getDate().toString().padStart(2, '0');
+    const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+    const weekday = weekdays[now.getDay()];
+    const dateStr = `${year}年${month}月${day}日 ${weekday}`;
+    
+    const bigDate = document.getElementById('big-date');
+    if (bigDate) bigDate.innerText = dateStr;
+    
+    // 夜间模式（文字颜色自适应）
+    const isNight = now.getHours() >= 18 || now.getHours() < 6;
+    document.getElementById('p-home')?.style.setProperty('color', isNight ? '#fff' : '#000');
+    document.getElementById('status-bar')?.style.setProperty('color', isNight ? '#fff' : '#000');
+}
 
     // ==================== 启动 ====================
     (async function init() {
@@ -1984,8 +2002,14 @@ function setupDesktopPhotoWidget() {
         renderCalendar();
         await renderProfile();
     })();
+// 立即刷新一次
+updateClock();
+
+// 启动定时器，并保存句柄以便必要时重启
+if (window.clockInterval) clearInterval(window.clockInterval);
+window.clockInterval = setInterval(updateClock, 1000);
 // ========== 🆕 论坛数据初始化 ==========
-let forumSections = FORUM_WORLD.sections;
+forumSections = FORUM_WORLD.sections;
 let currentSectionId = 'tools'; // 默认显示工具补给站
 let forumPosts = JSON.parse(localStorage.getItem('m_forum_posts') || '[]');
 
