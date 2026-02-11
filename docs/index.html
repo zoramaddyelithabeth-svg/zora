@@ -3,8 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>SmartOS · 表情包库 & 自定义音乐</title>
+    <title>SmartOS · 新桌面·全功能</title>
     <style>
+/* 桌面图片小组件 - 仿截图风格 */
+.photo-widget {
+    background: var(--note-bg-white);
+    border: 1px solid var(--note-border);
+    border-radius: var(--note-radius-soft);
+    box-shadow: 0 1px 3px var(--note-shadow-light);
+    margin: 0 var(--note-spacing) 12px;
+    width: calc(100% - 24px);
+    height: 80px;  /* 截图里的高度，可调整 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    overflow: hidden;
+    transition: var(--note-transition);
+}
+.photo-widget:hover {
+    background: var(--note-hover);
+}
+.photo-widget-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--note-text-gray);
+    font-size: 12px;
+}
+.photo-widget-placeholder span:first-child {
+    font-size: 24px;
+    margin-bottom: 4px;
+}
+.photo-widget-image {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+}
         /* ====== 🌸 极简便签·统一主题 ====== */
         :root {
             --theme-primary: #AED5F3 !important;
@@ -37,12 +74,14 @@
             .app-container { max-width: 375px; height: 812px; border-radius: 40px; border: 8px solid #333; }
         }
 
-        /* ----- 状态栏 & 导航卡片 ----- */
+        /* ----- 状态栏 ----- */
         .status-bar {
             height: 44px; padding: 14px 20px 0; display: flex; justify-content: space-between; align-items: center;
             font-size: 14px; font-weight: 600; z-index: 1000; position: absolute; top: 0; width: 100%;
             color: var(--note-text-dark) !important;
         }
+
+        /* ----- 导航栏（统一卡片）----- */
         .nav-bar {
             height: 50px; background: var(--note-bg-white) !important;
             border: 1px solid var(--note-border) !important; border-radius: var(--note-radius-soft) !important;
@@ -61,26 +100,109 @@
         }
         .page.active { display: flex; }
 
-        /* ----- 桌面（壁纸）----- */
-        .home-bg { transition: background 0.8s ease; background-size: cover !important; background-position: center !important; }
-        .home-clock { text-align: center; padding: 30px 0; color: var(--note-text-dark) !important; }
-        .home-clock h1 { font-size: 64px; font-weight: 200; letter-spacing: -2px; }
-        .app-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 20px 25px;
+        /* ====== 🏠 新桌面（仿截图）====== */
+        .home-bg {
+            transition: background 0.8s ease;
+            background-size: cover !important;
+            background-position: center !important;
+            display: flex;
+            flex-direction: column;
+            padding-top: 44px;
+            height: 100%;
         }
+        .home-clock {
+            text-align: center;
+            padding: 20px 0 10px;
+            color: var(--note-text-dark) !important;
+        }
+        .home-clock h1 {
+            font-size: 82px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+        .home-clock p {
+            font-size: 20px;
+            font-weight: 400;
+            color: var(--note-text-gray);
+            margin-top: 0;
+        }
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            padding: 20px 25px;
+            flex: 1;
+        }
+
+<!-- 图片小组件：点击添加图片，显示缩略图 -->
+<div class="photo-widget" id="desktop-photo-widget">
+    <div class="photo-widget-placeholder" id="photo-widget-placeholder">
+        <span>📷</span>
+        <span>点击添加图片</span>
+    </div>
+    <div class="photo-widget-image" id="photo-widget-image" style="display: none;"></div>
+</div>
         .app-item {
-            display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.1s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.1s;
         }
         .app-item:active { transform: scale(0.9); }
         .app-icon {
-            width: 60px; height: 60px; background: var(--note-bg-white) !important; border-radius: 18px;
-            display: flex; align-items: center; justify-content: center; font-size: 28px;
-            border: 1px solid var(--note-border) !important; box-shadow: 0 2px 4px var(--note-shadow-light) !important;
+            width: 60px;
+            height: 60px;
+            background: var(--note-bg-white) !important;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            border: 1px solid var(--note-border) !important;
+            box-shadow: 0 2px 4px var(--note-shadow-light) !important;
+            color: var(--note-text-dark) !important;
+            margin-bottom: 8px;
+        }
+        .app-name {
+            font-size: 11px;
+            font-weight: 500;
             color: var(--note-text-dark) !important;
         }
-        .app-name { font-size: 11px; margin-top: 8px; font-weight: 500; color: var(--note-text-dark) !important; }
+        /* 底部导航栏（短信·设置·记忆） */
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background: var(--note-bg-white) !important;
+            border-top: 1px solid var(--note-border) !important;
+            border-radius: 0 0 var(--note-radius-soft) var(--note-radius-soft) !important;
+            padding: 8px 16px;
+            margin: 0 var(--note-spacing) var(--note-spacing) !important;
+            width: calc(100% - 24px);
+            box-shadow: 0 -1px 3px var(--note-shadow-light) !important;
+        }
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            color: var(--note-text-gray);
+            font-size: 11px;
+        }
+        .bottom-nav-item i {
+            font-size: 22px;
+            margin-bottom: 2px;
+            color: var(--note-text-gray);
+        }
+        .bottom-nav-item.active i,
+        .bottom-nav-item.active span {
+            color: var(--theme-primary) !important;
+        }
 
-        /* ----- 相册卡片网格 ----- */
+        /* ----- 相册卡片网格（全功能）----- */
         #album-box {
             display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; padding: 2px 0;
             overflow-y: auto; flex: 1; background: var(--note-bg-light) !important;
@@ -91,7 +213,7 @@
         }
         #album-box div:active { opacity: 0.7; }
 
-        /* ----- 日历卡片 ----- */
+        /* ----- 日历卡片（全功能）----- */
         .cal-header {
             background: var(--note-bg-white) !important; padding: 15px; text-align: center;
             border-bottom: 1px solid var(--note-border) !important;
@@ -119,7 +241,7 @@
             color: var(--note-text-gray) !important; font-weight: 600;
         }
 
-        /* ----- 通讯录/纪念日卡片列表 ----- */
+        /* ----- 通讯录/纪念日卡片列表（全功能）----- */
         .list-item {
             padding: 15px; border-bottom: 1px solid var(--note-border) !important;
             background: var(--note-bg-white) !important; display: flex; align-items: center;
@@ -179,7 +301,7 @@
             box-shadow: 0 4px 12px var(--note-shadow-dark) !important;
         }
         .modal-body h3 { margin-bottom: 10px; color: var(--note-text-dark) !important; }
-        .modal-body input, .modal-body select {
+        .modal-body input, .modal-body select, .modal-body textarea {
             width: 100%; padding: 12px; margin: 8px 0; border: 1px solid var(--note-border) !important;
             border-radius: var(--note-radius-hard) !important; outline: none; font-size: 16px;
             background: var(--note-bg-white) !important; color: var(--note-text-dark) !important;
@@ -202,7 +324,7 @@
         .theme-color-option.active { border: 3px solid #333; }
         .theme-color-picker { margin: 15px 0 5px; }
 
-        /* ----- 个人资料卡片 ----- */
+        /* ----- 个人资料卡片（全功能）----- */
         .profile-card {
             background: var(--note-bg-white) !important;
             border: 1px solid var(--note-border) !important;
@@ -296,6 +418,31 @@
         }
         .music-delete-btn:hover { color: var(--ios-red); }
 
+        /* ----- 日记条目样式 ----- */
+        .diary-entry {
+            background: var(--note-bg-white);
+            border-radius: var(--note-radius-soft);
+            border: 1px solid var(--note-border);
+            padding: 16px;
+            margin: var(--note-spacing);
+            width: calc(100% - 24px);
+        }
+        /* ----- 短信列表样式 ----- */
+        .sms-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--note-spacing);
+        }
+        .sms-item {
+            background: var(--note-bg-white);
+            border-radius: var(--note-radius-soft);
+            border: 1px solid var(--note-border);
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
         /* ----- 输入框等 ----- */
         #chat-in {
             background: var(--note-bg-white) !important;
@@ -328,23 +475,42 @@
         <div>📶 🔋</div>
     </div>
 
-    <!-- 桌面 -->
+    <!-- ========== 🏠 新桌面（超大时钟 + 8个应用 + 底部导航） ========== -->
     <div class="page active home-bg" id="p-home">
         <div class="home-clock">
             <h1 id="big-clock">00:00</h1>
-            <p id="big-date" style="opacity:0.8"></p>
+            <p id="big-date"></p>
         </div>
         <div class="app-grid">
+            <!-- 原有6个应用 -->
             <div class="app-item" data-page="p-chat"><div class="app-icon">💬</div><div class="app-name">微信</div></div>
             <div class="app-item" data-page="p-album"><div class="app-icon">🖼️</div><div class="app-name">相册</div></div>
             <div class="app-item" data-page="p-cal"><div class="app-icon">📅</div><div class="app-name">日历</div></div>
             <div class="app-item" data-page="p-con"><div class="app-icon">👥</div><div class="app-name">通讯录</div></div>
             <div class="app-item" data-page="p-safari"><div class="app-icon">🌐</div><div class="app-name">Safari</div></div>
             <div class="app-item" data-page="p-profile"><div class="app-icon">👤</div><div class="app-name">个人</div></div>
+            <!-- 🆕 新增2个应用 -->
+            <div class="app-item" data-page="p-forum"><div class="app-icon">🗣️</div><div class="app-name">论坛</div></div>
+            <div class="app-item" data-page="p-diary"><div class="app-icon">🎵</div><div class="app-name">音乐</div></div>
+        </div>
+        <!-- 底部导航栏（短信·设置·记忆） -->
+        <div class="bottom-nav">
+            <div class="bottom-nav-item" id="bottom-sms">
+                <i>💬</i>
+                <span>短信</span>
+            </div>
+            <div class="bottom-nav-item" id="bottom-settings">
+                <i>⚙️</i>
+                <span>设置</span>
+            </div>
+            <div class="bottom-nav-item" id="bottom-memory">
+                <i>📓</i>
+                <span>音乐</span>
+            </div>
         </div>
     </div>
 
-    <!-- 聊天页面 -->
+    <!-- ========== 聊天页面（完整保留） ========== -->
     <div class="page" id="p-chat">
         <div class="nav-bar">
             <span class="nav-back" data-home="p-home" style="color:var(--ios-blue)">〈 桌面</span>
@@ -358,7 +524,7 @@
         </div>
     </div>
 
-    <!-- 相册 -->
+    <!-- ========== 相册页面（完整保留） ========== -->
     <div class="page" id="p-album">
         <div class="nav-bar">
             <span class="nav-back" data-home="p-home" style="color:var(--ios-blue)">〈 返回</span>
@@ -369,7 +535,7 @@
         <div id="album-box"></div>
     </div>
 
-    <!-- 日历 -->
+    <!-- ========== 日历页面（完整保留） ========== -->
     <div class="page" id="p-cal">
         <div class="nav-bar">
             <span class="nav-back" data-home="p-home" style="color:var(--ios-blue)">〈 返回</span>
@@ -381,7 +547,7 @@
         <div id="anni-list" style="flex:1; overflow-y:auto; background:#fff;"></div>
     </div>
 
-    <!-- 通讯录 -->
+    <!-- ========== 通讯录页面（完整保留） ========== -->
     <div class="page" id="p-con">
         <div class="nav-bar">
             <span class="nav-back" data-home="p-home" style="color:var(--ios-blue)">〈 返回</span>
@@ -391,7 +557,7 @@
         <div id="con-list" style="flex:1; overflow-y:auto;"></div>
     </div>
 
-    <!-- Safari -->
+    <!-- ========== Safari页面 ========== -->
     <div class="page" id="p-safari">
         <div class="nav-bar">
             <span class="nav-back" data-home="p-home" style="color:var(--ios-blue)">〈 桌面</span>
@@ -400,7 +566,7 @@
         <iframe src="https://m.bing.com" style="flex:1; border:none;"></iframe>
     </div>
 
-    <!-- ========== 个人资料页面（表情包库 & Music） ========== -->
+    <!-- ========== 个人资料页面（完整保留：头像/昵称/签名/地区/生日/表情包库/Music/外观） ========== -->
     <div class="page" id="p-profile">
         <div class="nav-bar">
             <span class="nav-back" data-home="p-home" style="color:var(--ios-blue)">〈 返回</span>
@@ -412,59 +578,59 @@
                 <div class="profile-avatar" id="profile-avatar">👤</div>
                 <div class="profile-name" id="profile-nickname">韩闻熙</div>
                 <div class="profile-signature" id="profile-signature">PrettyWhenuCry</div>
-                
-                <div class="profile-info-item" onclick="openMod('m-profile-nickname')">
-                    <span class="profile-info-label">昵称</span>
-                    <span class="profile-info-value" id="profile-nickname-value">韩闻熙</span>
-                </div>
-                <div class="profile-info-item" onclick="openMod('m-profile-signature')">
-                    <span class="profile-info-label">个性签名</span>
-                    <span class="profile-info-value" id="profile-signature-value">PrettyWhenuCry</span>
-                </div>
-                <div class="profile-info-item" onclick="openMod('m-profile-region')">
-                    <span class="profile-info-label">地区</span>
-                    <span class="profile-info-value" id="profile-region-value">冰岛</span>
-                </div>
-                <div class="profile-info-item" onclick="openMod('m-profile-birthday')">
-                    <span class="profile-info-label">生日</span>
-                    <span class="profile-info-value" id="profile-birthday-value">03-14</span>
-                </div>
-
-                <!-- 🆕 更多服务 → 表情包库 & Music -->
+                <div class="profile-info-item" onclick="openMod('m-profile-nickname')"><span class="profile-info-label">昵称</span><span class="profile-info-value" id="profile-nickname-value">韩闻熙</span></div>
+                <div class="profile-info-item" onclick="openMod('m-profile-signature')"><span class="profile-info-label">个性签名</span><span class="profile-info-value" id="profile-signature-value">PrettyWhenuCry</span></div>
+                <div class="profile-info-item" onclick="openMod('m-profile-region')"><span class="profile-info-label">地区</span><span class="profile-info-value" id="profile-region-value">冰岛</span></div>
+                <div class="profile-info-item" onclick="openMod('m-profile-birthday')"><span class="profile-info-label">生日</span><span class="profile-info-value" id="profile-birthday-value">03-14</span></div>
                 <div class="profile-section-title">更多服务</div>
-                <div class="profile-link-item" id="emoticon-library-link">
-                    <i>😊</i> 表情包库
-                </div>
-                <div class="profile-link-item" id="music-link">
-                    <i>🎵</i> Music
-                </div>
-
-                <!-- 外观设置 -->
+                <div class="profile-link-item" id="emoticon-library-link"><i>😊</i> 表情包库</div>
+                <div class="profile-link-item" id="music-link"><i>🎵</i> Music</div>
                 <div class="profile-section-title">外观设置</div>
                 <div class="appearance-section">
-                    <div class="appearance-item">
-                        <span class="appearance-label">主题颜色</span>
-                        <span onclick="openMod('m-api')" style="color:var(--theme-primary); cursor:pointer;">自定义</span>
-                    </div>
-                    <div class="appearance-item">
-                        <span class="appearance-label">聊天背景</span>
-                        <span onclick="document.getElementById('up-wallpaper').click()" style="color:var(--theme-primary); cursor:pointer;">更换</span>
-                        <input type="file" id="up-wallpaper" hidden accept="image/*">
-                    </div>
-                    <div class="appearance-item">
-                        <span class="appearance-label">气泡样式</span>
-                        <span onclick="openMod('m-bubble-style')" style="color:var(--theme-primary); cursor:pointer;">便签</span>
-                    </div>
-                    <div class="appearance-item">
-                        <span class="appearance-label">字体大小</span>
-                        <input type="range" min="12" max="20" value="15" class="font-size-slider" id="font-size-slider">
-                    </div>
+                    <div class="appearance-item"><span class="appearance-label">主题颜色</span><span onclick="openMod('m-api')" style="color:var(--theme-primary); cursor:pointer;">自定义</span></div>
+                    <div class="appearance-item"><span class="appearance-label">聊天背景</span><span onclick="document.getElementById('up-wallpaper').click()" style="color:var(--theme-primary); cursor:pointer;">更换</span><input type="file" id="up-wallpaper" hidden accept="image/*"></div>
+                    <div class="appearance-item"><span class="appearance-label">气泡样式</span><span onclick="openMod('m-bubble-style')" style="color:var(--theme-primary); cursor:pointer;">便签</span></div>
+                    <div class="appearance-item"><span class="appearance-label">字体大小</span><input type="range" min="12" max="20" value="15" class="font-size-slider" id="font-size-slider"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ========== 🆕 表情包库弹窗 ========== -->
+    <!-- ========== 🆕 论坛页面（占位） ========== -->
+    <div class="page" id="p-forum">
+        <div class="nav-bar">
+            <span class="nav-back" data-home="p-home" style="color:var(--ios-blue)">〈 返回</span>
+            <b>论坛</b>
+            <span style="width:40px;"></span>
+        </div>
+        <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--note-text-gray);">
+            <i style="font-size:48px; margin-bottom:20px; color:var(--theme-primary);">🗣️</i>
+            <p>论坛建设中……</p>
+            <p style="font-size:14px; margin-top:20px;">后续可发帖、评论、点赞</p>
+        </div>
+    </div>
+
+    <!-- ========== 🆕 日记本页面（全功能） ========== -->
+    <div class="page" id="p-diary">
+        <div class="nav-bar">
+            <span class="nav-back" data-home="p-home" style="color:var(--ios-blue)">〈 返回</span>
+            <b>日记本</b>
+            <span onclick="openMod('m-diary-add')" style="color:var(--ios-blue); cursor:pointer;">➕</span>
+        </div>
+        <div id="diary-list" style="flex:1; overflow-y: auto; padding: var(--note-spacing);"></div>
+    </div>
+
+    <!-- ========== 🆕 短信页面（全功能） ========== -->
+    <div class="page" id="p-sms">
+        <div class="nav-bar">
+            <span class="nav-back" data-home="p-home" style="color:var(--ios-blue)">〈 返回</span>
+            <b>短信</b>
+            <span onclick="openMod('m-sms-compose')" style="color:var(--ios-blue); cursor:pointer;">✏️</span>
+        </div>
+        <div id="sms-list" class="sms-list"></div>
+    </div>
+
+    <!-- ========== 表情包库弹窗 ========== -->
     <div class="modal" id="m-emoticon-library">
         <div class="modal-body">
             <h3>😊 表情包库</h3>
@@ -478,15 +644,13 @@
         </div>
     </div>
 
-    <!-- ========== 🎵 Music 弹窗（支持自定义添加）========== -->
+    <!-- ========== Music 弹窗 ========== -->
     <div class="modal" id="m-music-player">
         <div class="modal-body">
             <h3>🎵 我的音乐</h3>
-            <!-- 音频播放器 -->
             <div style="margin:15px 0;">
                 <audio id="music-audio" controls style="width:100%;"></audio>
             </div>
-            <!-- 添加自定义音乐 -->
             <div class="music-add-section">
                 <div class="music-add-row">
                     <input type="text" id="music-title" placeholder="歌曲名">
@@ -497,9 +661,29 @@
                     <button class="modal-btn" id="add-music-btn" style="width:auto; padding:12px 16px; margin-top:0;">添加</button>
                 </div>
             </div>
-            <!-- 音乐列表 -->
             <ul class="music-list" id="music-list"></ul>
             <button class="modal-cancel" data-mod="m-music-player">关闭</button>
+        </div>
+    </div>
+
+    <!-- 日记添加弹窗 -->
+    <div class="modal" id="m-diary-add">
+        <div class="modal-body">
+            <h3>写日记</h3>
+            <textarea id="diary-content" rows="5" placeholder="今天发生了什么？" style="resize: vertical;"></textarea>
+            <button class="modal-btn" id="save-diary-btn">保存</button>
+            <button class="modal-cancel" data-mod="m-diary-add" style="margin-top:10px;">取消</button>
+        </div>
+    </div>
+
+    <!-- 短信编写弹窗 -->
+    <div class="modal" id="m-sms-compose">
+        <div class="modal-body">
+            <h3>新短信</h3>
+            <input type="text" id="sms-contact" placeholder="联系人">
+            <textarea id="sms-content" rows="3" placeholder="短信内容"></textarea>
+            <button class="modal-btn" id="send-sms-btn">发送</button>
+            <button class="modal-cancel" data-mod="m-sms-compose">取消</button>
         </div>
     </div>
 
@@ -552,7 +736,7 @@
 </div>
 
 <script>
-    // ==================== IndexedDB 图片仓库 ====================
+    // ==================== IndexedDB 图片仓库（完整保留）====================
     let db;
     const DB_NAME = 'SmartOSDB';
     const DB_VERSION = 1;
@@ -597,7 +781,7 @@
         });
     }
 
-    // ==================== 数据持久化（全功能保留）====================
+    // ==================== 数据持久化（全功能）====================
     let photos = JSON.parse(localStorage.getItem('m_photos') || '[]');
     let annis = JSON.parse(localStorage.getItem('m_annis') || '[]');
     let cons = JSON.parse(localStorage.getItem('m_cons') || '[{"id":"init-001","name":"木木"}]');
@@ -607,10 +791,10 @@
     let currentChatContactId = null;
     let themeColor = localStorage.getItem('m_theme_color') || '#AED5F3';
 
-    // 个人资料存储
+    // 个人资料
     let profile = JSON.parse(localStorage.getItem('m_profile') || '{"nickname":"韩闻熙","signature":"PrettyWhenuCry","region":"冰岛","birthday":"2000-03-14","avatarId":null}');
 
-    // ========== 🆕 表情包库 ==========
+    // 表情包库（完整20个）
     const DEFAULT_EMOTICONS = [
         { url: "https://i.imgs.ovh/2026/01/21/yRkuGr.gif", name: "潦草黄狗-跳舞" },
         { url: "https://i.imgs.ovh/2026/01/21/yRkBjh.gif", name: "潦草黄狗-比心" },
@@ -636,7 +820,7 @@
         localStorage.setItem('m_emoticons', JSON.stringify(emoticons));
     }
 
-    // ========== 🎵 音乐库（可自定义）==========
+    // 音乐库
     const DEFAULT_MUSIC = [
         { id: 'default-1', title: "起风了", artist: "买辣椒也用券", src: "" },
         { id: 'default-2', title: "Lemon", artist: "米津玄師", src: "" },
@@ -648,6 +832,12 @@
         musicList = DEFAULT_MUSIC.map((m, index) => ({ ...m, id: m.id || Date.now() + index + '-' + Math.random().toString(36).substr(2, 4) }));
         localStorage.setItem('m_music_list', JSON.stringify(musicList));
     }
+
+    // 🆕 日记数据
+    let diaries = JSON.parse(localStorage.getItem('m_diaries') || '[]');
+
+    // 🆕 短信数据
+    let smsMessages = JSON.parse(localStorage.getItem('m_sms') || '[]');
 
     // ==================== 主题色应用 ====================
     function applyTheme(color) {
@@ -669,6 +859,8 @@
         document.getElementById(id).classList.add('active');
         if (id === 'p-cal') renderCalendar();
         if (id === 'p-profile') renderProfile();
+        if (id === 'p-diary') renderDiaries();
+        if (id === 'p-sms') renderSmsList();
     }
 
     function openMod(id) {
@@ -715,19 +907,14 @@
             grid.appendChild(item);
         });
     }
-
     function addEmoticon() {
         const url = document.getElementById('emoticon-url').value.trim();
         const name = document.getElementById('emoticon-name').value.trim();
         if (!url || !name) { alert('请填写URL和名称'); return; }
-        const newEm = {
-            id: Date.now() + '-' + Math.random().toString(36).substr(2, 6),
-            url, name
-        };
+        const newEm = { id: Date.now() + '-' + Math.random().toString(36).substr(2, 6), url, name };
         emoticons.push(newEm);
         localStorage.setItem('m_emoticons', JSON.stringify(emoticons));
-        document.getElementById('emoticon-url').value = '';
-        document.getElementById('emoticon-name').value = '';
+        document.getElementById('emoticon-url').value = ''; document.getElementById('emoticon-name').value = '';
         renderEmoticons();
     }
 
@@ -736,61 +923,35 @@
         const list = document.getElementById('music-list');
         if (!list) return;
         list.innerHTML = '';
-        musicList.forEach((music, index) => {
+        musicList.forEach(music => {
             const li = document.createElement('li');
             li.className = 'music-item';
             li.onclick = (e) => {
-                // 如果点击的是删除按钮，不触发播放
                 if (e.target.classList.contains('music-delete-btn') || e.target.parentElement.classList.contains('music-delete-btn')) return;
                 const audio = document.getElementById('music-audio');
                 if (music.src && music.src.trim() !== '') {
-                    // 尝试播放
                     audio.src = music.src;
-                    audio.play().catch(err => {
-                        alert('播放失败：' + (err.message || '可能是跨域或无效链接'));
-                    });
-                } else {
-                    alert('此歌曲无音频链接，仅作展示');
-                }
+                    audio.play().catch(err => alert('播放失败：' + (err.message || '可能是跨域或无效链接')));
+                } else alert('此歌曲无音频链接，仅作展示');
             };
-            li.innerHTML = `
-                <span class="play-icon">▶️</span>
-                <span class="title">${music.title}</span>
-                <span class="artist">${music.artist}</span>
-                <span class="music-delete-btn" data-id="${music.id}">🗑️</span>
-            `;
+            li.innerHTML = `<span class="play-icon">▶️</span><span class="title">${music.title}</span><span class="artist">${music.artist}</span><span class="music-delete-btn" data-id="${music.id}">🗑️</span>`;
             list.appendChild(li);
         });
-        // 为删除按钮绑定事件
         document.querySelectorAll('.music-delete-btn').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                const id = this.dataset.id;
-                deleteMusic(id);
-            });
+            btn.addEventListener('click', function(e) { e.stopPropagation(); deleteMusic(this.dataset.id); });
         });
     }
-
     function addMusic() {
         const title = document.getElementById('music-title').value.trim();
         const artist = document.getElementById('music-artist').value.trim();
         const url = document.getElementById('music-url').value.trim();
-        if (!title || !artist) {
-            alert('请填写歌曲名和歌手');
-            return;
-        }
-        const newMusic = {
-            id: Date.now() + '-' + Math.random().toString(36).substr(2, 6),
-            title, artist, src: url || ''
-        };
+        if (!title || !artist) { alert('请填写歌曲名和歌手'); return; }
+        const newMusic = { id: Date.now() + '-' + Math.random().toString(36).substr(2, 6), title, artist, src: url || '' };
         musicList.push(newMusic);
         localStorage.setItem('m_music_list', JSON.stringify(musicList));
-        document.getElementById('music-title').value = '';
-        document.getElementById('music-artist').value = '';
-        document.getElementById('music-url').value = '';
+        document.getElementById('music-title').value = ''; document.getElementById('music-artist').value = ''; document.getElementById('music-url').value = '';
         renderMusicList();
     }
-
     function deleteMusic(id) {
         if (confirm('确定从列表中移除这首歌吗？')) {
             musicList = musicList.filter(m => m.id !== id);
@@ -818,21 +979,161 @@
             try {
                 const blob = await getImageFromDB(parseInt(profile.avatarId));
                 const url = URL.createObjectURL(blob);
-                const img = document.createElement('img');
-                img.src = url;
-                avatarDiv.appendChild(img);
+                const img = document.createElement('img'); img.src = url; avatarDiv.appendChild(img);
             } catch(e) { avatarDiv.innerHTML = '👤'; }
         } else { avatarDiv.innerHTML = '👤'; }
     }
-
-    // ==================== 保存个人资料 ====================
     function saveProfileNickname() { const val = document.getElementById('profile-nickname-input').value.trim(); if (val) { profile.nickname = val; localStorage.setItem('m_profile', JSON.stringify(profile)); renderProfile(); closeMod('m-profile-nickname'); } }
     function saveProfileSignature() { const val = document.getElementById('profile-signature-input').value.trim(); if (val !== undefined) { profile.signature = val; localStorage.setItem('m_profile', JSON.stringify(profile)); renderProfile(); closeMod('m-profile-signature'); } }
     function saveProfileRegion() { const val = document.getElementById('profile-region-input').value.trim(); if (val) { profile.region = val; localStorage.setItem('m_profile', JSON.stringify(profile)); renderProfile(); closeMod('m-profile-region'); } }
     function saveProfileBirthday() { const val = document.getElementById('profile-birthday-input').value; if (val) { profile.birthday = val; localStorage.setItem('m_profile', JSON.stringify(profile)); renderProfile(); closeMod('m-profile-birthday'); } }
     async function uploadAvatar(file) { if (file.size > 2 * 1024 * 1024) { alert('头像图片不能超过2MB'); return; } const id = await saveImageToDB(file); profile.avatarId = id; localStorage.setItem('m_profile', JSON.stringify(profile)); renderProfile(); }
 
-    // ==================== 渲染所有动态列表（完整版）====================
+    // ==================== 日记功能 ====================
+    function renderDiaries() {
+        const container = document.getElementById('diary-list');
+        if (!container) return;
+        container.innerHTML = '';
+        if (diaries.length === 0) {
+            container.innerHTML = '<div style="text-align:center; color:var(--note-text-gray); padding:40px;">📓 暂无日记，点击右上角➕添加</div>';
+            return;
+        }
+        diaries.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(d => {
+            const div = document.createElement('div');
+            div.className = 'diary-entry';
+            div.innerHTML = `<div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                                <span style="font-weight:600;">${d.date}</span>
+                                <span style="color:var(--note-text-gray); cursor:pointer;" onclick="deleteDiary('${d.id}')">🗑️</span>
+                            </div>
+                            <div style="white-space:pre-wrap;">${d.content}</div>`;
+            container.appendChild(div);
+        });
+    }
+    function addDiary() {
+        const content = document.getElementById('diary-content').value.trim();
+        if (!content) { alert('日记内容不能为空'); return; }
+        const now = new Date();
+        const dateStr = `${now.getFullYear()}-${(now.getMonth()+1).toString().padStart(2,'0')}-${now.getDate().toString().padStart(2,'0')}`;
+        const newDiary = { id: Date.now() + '-' + Math.random().toString(36).substr(2, 6), date: dateStr, content };
+        diaries.push(newDiary);
+        localStorage.setItem('m_diaries', JSON.stringify(diaries));
+        document.getElementById('diary-content').value = '';
+        closeMod('m-diary-add');
+        renderDiaries();
+    }
+    function deleteDiary(id) {
+        if (confirm('删除这篇日记？')) {
+            diaries = diaries.filter(d => d.id !== id);
+            localStorage.setItem('m_diaries', JSON.stringify(diaries));
+            renderDiaries();
+        }
+    }
+
+    // ==================== 短信功能 ====================
+    function renderSmsList() {
+        const container = document.getElementById('sms-list');
+        if (!container) return;
+        container.innerHTML = '';
+        if (smsMessages.length === 0) {
+            container.innerHTML = '<div style="text-align:center; color:var(--note-text-gray); padding:40px;">💬 暂无短信，点击右上角✏️发送</div>';
+            return;
+        }
+        smsMessages.sort((a,b) => new Date(b.time) - new Date(a.time)).forEach(s => {
+            const div = document.createElement('div');
+            div.className = 'sms-item';
+            div.innerHTML = `<div style="display:flex; flex-direction:column; width:100%;">
+                                <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                                    <span style="font-weight:600;">${s.contact || '陌生人'}</span>
+                                    <span style="color:var(--note-text-gray); font-size:12px;">${s.time}</span>
+                                </div>
+                                <div style="color:var(--note-text-dark);">${s.content}</div>
+                                <div style="display:flex; justify-content:flex-end; margin-top:8px;">
+                                    <span style="color:var(--note-text-gray); font-size:12px; cursor:pointer;" onclick="deleteSms('${s.id}')">删除</span>
+                                </div>
+                            </div>`;
+            container.appendChild(div);
+        });
+    }
+    function sendSms() {
+        const contact = document.getElementById('sms-contact').value.trim() || '未知号码';
+        const content = document.getElementById('sms-content').value.trim();
+        if (!content) { alert('短信内容不能为空'); return; }
+        const now = new Date();
+        const timeStr = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+        const newSms = { id: Date.now() + '-' + Math.random().toString(36).substr(2, 6), contact, content, time: timeStr };
+        smsMessages.push(newSms);
+        localStorage.setItem('m_sms', JSON.stringify(smsMessages));
+        document.getElementById('sms-contact').value = '';
+        document.getElementById('sms-content').value = '';
+        closeMod('m-sms-compose');
+        renderSmsList();
+    }
+    function deleteSms(id) {
+        smsMessages = smsMessages.filter(s => s.id !== id);
+        localStorage.setItem('m_sms', JSON.stringify(smsMessages));
+        renderSmsList();
+    }
+
+// ==================== 桌面图片小组件 ====================
+let desktopPhotoId = localStorage.getItem('m_desktop_photo_id');
+
+// 初始化小组件显示
+function renderDesktopPhoto() {
+    const placeholder = document.getElementById('photo-widget-placeholder');
+    const imageDiv = document.getElementById('photo-widget-image');
+    if (!placeholder || !imageDiv) return;
+    if (desktopPhotoId) {
+        // 有图片，显示图片，隐藏占位符
+        placeholder.style.display = 'none';
+        imageDiv.style.display = 'block';
+        getImageFromDB(parseInt(desktopPhotoId)).then(blob => {
+            const url = URL.createObjectURL(blob);
+            imageDiv.style.backgroundImage = `url(${url})`;
+        }).catch(() => {
+            // 加载失败，显示占位符并清除无效 ID
+            placeholder.style.display = 'flex';
+            imageDiv.style.display = 'none';
+            localStorage.removeItem('m_desktop_photo_id');
+            desktopPhotoId = null;
+        });
+    } else {
+        // 无图片，显示占位符
+        placeholder.style.display = 'flex';
+        imageDiv.style.display = 'none';
+    }
+}
+
+// 点击小组件上传图片
+function setupDesktopPhotoWidget() {
+    const widget = document.getElementById('desktop-photo-widget');
+    if (!widget) return;
+    widget.addEventListener('click', async function(e) {
+        // 创建文件输入框
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = async (ev) => {
+            const file = ev.target.files[0];
+            if (!file) return;
+            if (file.size > 5 * 1024 * 1024) {
+                alert('图片不能超过5MB');
+                return;
+            }
+            const id = await saveImageToDB(file);
+            desktopPhotoId = id;
+            localStorage.setItem('m_desktop_photo_id', id);
+            renderDesktopPhoto();
+        };
+        input.click();
+    });
+}
+
+// 在启动时调用渲染和绑定
+// 请在 init 函数里合适位置（如 await renderAll() 之后）添加：
+// renderDesktopPhoto();
+// setupDesktopPhotoWidget();
+
+    // ==================== 相册逻辑 ====================
     async function renderAll() {
         // 相册
         const box = document.getElementById('album-box');
@@ -890,7 +1191,7 @@
         });
     }
 
-    // ==================== 相册逻辑 ====================
+    // ==================== 相册上传、查看、壁纸 ====================
     async function upImg(el) {
         const files = Array.from(el.files);
         for (const file of files) {
@@ -1175,7 +1476,7 @@
 
     // ==================== 事件监听统一绑定 ====================
     function bindEvents() {
-        // 桌面图标导航
+        // 桌面图标
         document.querySelectorAll('.app-item[data-page]').forEach(el => {
             el.addEventListener('click', function() { to(this.dataset.page); });
         });
@@ -1183,22 +1484,16 @@
         document.querySelectorAll('.nav-back[data-home]').forEach(el => {
             el.addEventListener('click', function() { to(this.dataset.home); });
         });
-        // 打开弹窗
+        // 打开弹窗（原有）
         document.querySelectorAll('.nav-setting[data-mod], .nav-add[data-mod]').forEach(el => {
             el.addEventListener('click', function() { openMod(this.dataset.mod); });
         });
         // 相册上传
-        document.getElementById('upload-trigger')?.addEventListener('click', function() {
-            document.getElementById('up').click();
-        });
-        document.getElementById('up')?.addEventListener('change', function(e) {
-            upImg(e.target);
-        });
+        document.getElementById('upload-trigger')?.addEventListener('click', function() { document.getElementById('up').click(); });
+        document.getElementById('up')?.addEventListener('change', function(e) { upImg(e.target); });
         // 聊天发送
         document.getElementById('send-btn')?.addEventListener('click', sendMsg);
-        document.getElementById('chat-in')?.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendMsg();
-        });
+        document.getElementById('chat-in')?.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMsg(); });
         // 弹窗取消
         document.querySelectorAll('.modal-cancel').forEach(el => {
             el.addEventListener('click', function() { closeMod(this.dataset.mod); });
@@ -1209,65 +1504,37 @@
         document.getElementById('save-con-btn')?.addEventListener('click', saveCon);
         document.getElementById('set-wallpaper-btn')?.addEventListener('click', setWallpaper);
         document.getElementById('close-viewer-btn')?.addEventListener('click', closeViewer);
-
-        // 主题色预设
+        // 主题色
         document.querySelectorAll('.theme-color-option').forEach(el => {
-            el.addEventListener('click', function() {
-                const color = this.dataset.color;
-                document.getElementById('custom-color-picker').value = color;
-                applyTheme(color);
-            });
+            el.addEventListener('click', function() { const color = this.dataset.color; document.getElementById('custom-color-picker').value = color; applyTheme(color); });
         });
-        document.getElementById('custom-color-picker')?.addEventListener('input', function(e) {
-            applyTheme(e.target.value);
-        });
-
+        document.getElementById('custom-color-picker')?.addEventListener('input', function(e) { applyTheme(e.target.value); });
         // 纪念日删除
         document.getElementById('anni-list')?.addEventListener('click', function(e) {
-            const delBtn = e.target.closest('.del-text');
-            if (!delBtn) return;
-            const item = delBtn.closest('.list-item');
-            if (!item) return;
-            const id = item.dataset.anniId;
-            if (id) delAnni(id);
+            const delBtn = e.target.closest('.del-text'); if (!delBtn) return;
+            const item = delBtn.closest('.list-item'); if (!item) return;
+            const id = item.dataset.anniId; if (id) delAnni(id);
         });
-
         // 通讯录点击
         document.getElementById('con-list')?.addEventListener('click', function(e) {
-            const item = e.target.closest('.list-item');
-            if (!item) return;
-            const id = item.dataset.conId;
-            if (!id) return;
-            if (e.target.classList.contains('del-text')) {
-                e.stopPropagation();
-                delCon(id);
-                return;
-            }
-            const contact = cons.find(c => c.id === id);
-            const name = contact ? contact.name : '联系人';
-            currentChatContactId = id;
-            document.getElementById('chat-title').textContent = name;
+            const item = e.target.closest('.list-item'); if (!item) return;
+            const id = item.dataset.conId; if (!id) return;
+            if (e.target.classList.contains('del-text')) { e.stopPropagation(); delCon(id); return; }
+            const contact = cons.find(c => c.id === id); const name = contact ? contact.name : '联系人';
+            currentChatContactId = id; document.getElementById('chat-title').textContent = name;
             document.getElementById('chat-flow').innerHTML = '';
-            if (messages[id]) {
-                messages[id].forEach(msg => append(msg.side, msg.text, msg.time || ''));
-            }
+            if (messages[id]) messages[id].forEach(msg => append(msg.side, msg.text, msg.time || ''));
             to('p-chat');
         });
-
         // 相册点击查看
         document.getElementById('album-box')?.addEventListener('click', function(e) {
-            const thumb = e.target.closest('[data-imgId]');
-            if (thumb) viewImg(thumb.dataset.imgId);
+            const thumb = e.target.closest('[data-imgId]'); if (thumb) viewImg(thumb.dataset.imgId);
         });
 
-        // ========== 个人资料事件 ==========
+        // 个人资料事件
         document.getElementById('profile-avatar')?.addEventListener('click', function() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
-            input.onchange = async (e) => {
-                if (e.target.files[0]) await uploadAvatar(e.target.files[0]);
-            };
+            const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/*';
+            input.onchange = async (e) => { if (e.target.files[0]) await uploadAvatar(e.target.files[0]); };
             input.click();
         });
         document.getElementById('save-profile-nickname-btn')?.addEventListener('click', saveProfileNickname);
@@ -1276,34 +1543,37 @@
         document.getElementById('save-profile-birthday-btn')?.addEventListener('click', saveProfileBirthday);
         document.getElementById('up-wallpaper')?.addEventListener('change', async function(e) {
             if (e.target.files[0]) {
-                const file = e.target.files[0];
-                if (file.size > 5 * 1024 * 1024) { alert('图片超过5MB'); return; }
-                const id = await saveImageToDB(file);
-                localStorage.setItem('m_wallpaper_id', id);
-                wallpaperId = id;
-                await applyWallpaper();
-                alert('聊天背景已更换');
+                const file = e.target.files[0]; if (file.size > 5*1024*1024) { alert('图片超过5MB'); return; }
+                const id = await saveImageToDB(file); localStorage.setItem('m_wallpaper_id', id); wallpaperId = id;
+                await applyWallpaper(); alert('聊天背景已更换');
             }
         });
         document.getElementById('font-size-slider')?.addEventListener('input', function(e) {
-            const size = e.target.value + 'px';
-            document.documentElement.style.setProperty('--note-text-size', size);
+            const size = e.target.value + 'px'; document.documentElement.style.setProperty('--note-text-size', size);
             document.querySelectorAll('.bubble').forEach(el => el.style.fontSize = size);
         });
         document.getElementById('save-bubble-style-btn')?.addEventListener('click', function() {
-            const style = document.getElementById('bubble-style-select').value;
-            alert('气泡样式已切换为：' + style + '（演示功能）');
+            alert('气泡样式已切换为：' + document.getElementById('bubble-style-select').value + '（演示功能）');
             closeMod('m-bubble-style');
         });
 
-        // ========== 表情包库 & Music 入口 ==========
+        // 表情包 & Music
         document.getElementById('emoticon-library-link')?.addEventListener('click', function() { openMod('m-emoticon-library'); });
         document.getElementById('music-link')?.addEventListener('click', function() { openMod('m-music-player'); });
         document.getElementById('add-emoticon-btn')?.addEventListener('click', addEmoticon);
         document.getElementById('add-music-btn')?.addEventListener('click', addMusic);
+
+        // 🆕 日记本
+        document.getElementById('save-diary-btn')?.addEventListener('click', addDiary);
+        // 🆕 短信
+        document.getElementById('send-sms-btn')?.addEventListener('click', sendSms);
+        // 🆕 底部导航
+        document.getElementById('bottom-sms')?.addEventListener('click', function() { to('p-sms'); });
+        document.getElementById('bottom-settings')?.addEventListener('click', function() { openMod('m-api'); });
+        document.getElementById('bottom-memory')?.addEventListener('click', function() { openMod('m-music-player'); });
     }
 
-    // ==================== 实时时钟 ====================
+    // ==================== 时钟 ====================
     function updateClock() {
         const now = new Date();
         const timeStr = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
@@ -1315,7 +1585,7 @@
         document.getElementById('status-bar').style.color = isNight ? "#fff" : "#000";
     }
 
-    // ==================== 启动一切 ====================
+    // ==================== 启动 ====================
     (async function init() {
         await openDB();
         photos = JSON.parse(localStorage.getItem('m_photos') || '[]');
@@ -1326,6 +1596,8 @@
         setInterval(updateClock, 1000);
         updateClock();
         await renderAll();
+        renderDesktopPhoto();
+        setupDesktopPhotoWidget();
         renderCalendar();
         await renderProfile();
     })();
